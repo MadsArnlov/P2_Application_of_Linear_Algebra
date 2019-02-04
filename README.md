@@ -1,1 +1,1 @@
-# P2_Applicabtion_of_Linear_Algebra
+# P2 Application of Linear Algebra

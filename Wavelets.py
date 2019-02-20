@@ -10,17 +10,16 @@ import numpy as np
 
 def liftingsteps(s, j, n):
     for i in range(n):
-        s = np.hstack((lifting(s, j-1 - i), s[2**(j-i):]))
+        s = lifting(s, j - i)
     return s
 
 
 def lifting(s, j):
-    s_new = np.ones(2**(j))
-    d_new = np.copy(s_new)
-    for k in range(2**(j)):
-        d_new[k] = s[2*k + 1] - predict(s[2*k])
-        s_new[k] = s[2*k] + update(d_new, k)
-    s = np.hstack((s_new, d_new))
+    for i in list(range(0, 2**(j), 2)):
+        s[i + 1] = (s[i] + s[i + 1])/2
+        s[i] = s[i] - s[i + 1]
+    s[range(2**(j))] = s[list(range(1, 2**(j) + 1, 2)) +
+      list(range(0, 2**(j), 2))]
     return s
 
 
@@ -35,7 +34,6 @@ def update(d, k):
 sj = np.array([56, 40, 8, 24, 48, 48, 40, 16])
 j = int(np.log2(len(sj)))
 sj = liftingsteps(sj, j, 3)
-
 
 # =============================================================================
 # Tried to implement code from ``Ripples in Mathematics''

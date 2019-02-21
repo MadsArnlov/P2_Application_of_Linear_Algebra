@@ -63,15 +63,15 @@ def multiresolution(s, n):
     plt.show()
 
 
-def log2(x):
+def testFunction(x):
     value = np.log(2 + np.sin(3*np.pi*np.sqrt(x)))
-    for k in range(len(value)):
+    for k in range(1, len(value) + 1):
         if k % 32 == 1:
-            value[k] = value[k] + 2
+            value[k - 1] = value[k - 1] + 2
     return value
 
 
-sj = log2(np.linspace(0, 1, 2**10))
+sj = testFunction(np.linspace(0, 1, 2**10))
 
 #sj = np.array([56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 100])
 #sj = zeroPadding(sj)

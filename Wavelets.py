@@ -6,7 +6,7 @@ Created on Wed Feb 20 09:42:00 2019
 """
 
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 def Wa(s, n):
     for i in range(n):
@@ -50,12 +50,33 @@ def zeroPadding(s):
         s = np.hstack((s, np.zeros(2**(int(np.log2(len(s))) + 1) - len(s))))
     return s
 
-sj = np.array([56, 40, 8, 24, 48, 48, 40, 16])
-sj = zeroPadding(sj)
-j = int(np.log2(len(sj)))
-sj = Wa(sj, 3)
-sj = Ws(sj, 3)
 
+def multiresolution(s, n):
+    s = Wa(s, n)
+    plt.figure(figsize=(12, 8))
+    for sequence in range(n + 1):
+        s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
+                            s[int(2**(n - sequence - 1)):]))
+        s_plot = Ws(s_plot, n)
+        plt.subplot(n + 1, 1, sequence + 1)
+        plt.plot(s_plot)
+    plt.show()
+
+
+def log2(x):
+    value = np.log(2 + np.sin(3*np.pi*np.sqrt(x)))
+    for k in range(len(value)):
+        if k % 32 == 1:
+            value[k] = value[k] + 2
+    return value
+
+
+sj = log2(np.linspace(0, 1, 2**10))
+
+#sj = np.array([56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 100])
+#sj = zeroPadding(sj)
+j = int(np.log2(len(sj)))
+multiresolution(sj, 10)
 # =============================================================================
 # Tried to implement code from ``Ripples in Mathematics''
 # =============================================================================

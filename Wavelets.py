@@ -73,8 +73,8 @@ def testFunction(x):
 
 sj = testFunction(np.linspace(0, 1, 2**10))
 
-#sj = np.array([56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 56, 40, 8, 24, 48, 48, 40, 16, 3, 60, 100])
-#sj = zeroPadding(sj)
+#sj = np.array([56, 40, 8, 24, 48, 48, 40, 16])
+sj = zeroPadding(sj)
 j = int(np.log2(len(sj)))
 multiresolution(sj, 10)
 # =============================================================================

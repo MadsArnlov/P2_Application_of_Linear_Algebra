@@ -8,6 +8,7 @@ Created on Wed Feb 20 09:42:00 2019
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def Wa(s, n):
     for i in range(n):
         s = Ta(s, j - i)
@@ -16,7 +17,7 @@ def Wa(s, n):
 
 def Ta(s, j):
     for i in list(range(0, 2**(j), 2)):
-        s[i + 1] = (s[i] + s[i + 1])/2
+        s[i + 1] = predict(s[i] + s[i + 1])
         s[i] = s[i] - s[i + 1]
     s[range(2**(j))] = s[list(range(1, 2**(j) + 1, 2)) +
                          list(range(0, 2**(j), 2))]
@@ -37,8 +38,8 @@ def Ts(s, j):
     return s
 
 
-def predict(s):
-    return s
+def predict(component):
+    return component/2
 
 
 def update(d, k):
@@ -53,6 +54,7 @@ def zeroPadding(s):
 
 def multiresolution(s, n):
     s = Wa(s, n)
+    print(s)
     plt.figure(figsize=(12, 8))
     for sequence in range(n + 1):
         s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
@@ -74,18 +76,43 @@ def testFunction(x):
 sj = testFunction(np.linspace(0, 1, 2**10))
 
 #sj = np.array([56, 40, 8, 24, 48, 48, 40, 16])
-sj = zeroPadding(sj)
-j = int(np.log2(len(sj)))
-multiresolution(sj, 10)
+#sj = zeroPadding(sj)
+#j = int(np.log2(len(sj)))
+#multiresolution(sj, j)
 
 
-a = np.random.uniform(low=-3.8, high=10.1, size=(5000, ))
-b = np.fft.ifft(a)
+#a = np.random.uniform(low=-3.8, high=10.1, size=(5000, ))
+#b = np.fft.fft(a)
+#plt.figure(figsize=(12, 8))
+#plt.subplot(2, 1, 1)
+#plt.plot(abs(b))
+#plt.subplot(2, 1, 2)
+#plt.plot(np.linspace(500, 25000, 5000), a)
+
+np.random.seed(5)
+t = np.arange(128)
+n = np.zeros((128,), dtype=complex)
+n[60:74] = np.exp(1j*np.random.uniform(0, 2*np.pi, (14,)))
+s = np.fft.ifft(n)
+s[60:80] += 0.1
+#b = 1
+#for i in range(60, 100):
+#    s[i] /= np.math.factorial(b)
+#    b += 1
 plt.figure(figsize=(12, 8))
-plt.subplot(2, 1, 1)
-plt.plot(b)
-plt.subplot(2, 1, 2)
-plt.plot(np.linspace(500, 25000, 5000), a)
+plt.subplot(3, 1, 1)
+plt.plot(t, abs(s))
+plt.subplot(3, 1, 2)
+plt.plot(t, s)
+plt.subplot(3, 1, 3)
+plt.plot(t, s.real, 'b-', t, s.imag, 'r--')
+plt.legend(('real', 'imaginary'))
+plt.show()
+
+sj = zeroPadding(abs(s))
+j = int(np.log2(len(sj)))
+multiresolution(sj, j)
+
 # =============================================================================
 # Tried to implement code from ``Ripples in Mathematics''
 # =============================================================================

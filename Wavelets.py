@@ -77,6 +77,15 @@ sj = testFunction(np.linspace(0, 1, 2**10))
 sj = zeroPadding(sj)
 j = int(np.log2(len(sj)))
 multiresolution(sj, 10)
+
+
+a = np.random.uniform(low=-3.8, high=10.1, size=(5000, ))
+b = np.fft.ifft(a)
+plt.figure(figsize=(12, 8))
+plt.subplot(2, 1, 1)
+plt.plot(b)
+plt.subplot(2, 1, 2)
+plt.plot(np.linspace(500, 25000, 5000), a)
 # =============================================================================
 # Tried to implement code from ``Ripples in Mathematics''
 # =============================================================================

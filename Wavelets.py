@@ -54,7 +54,6 @@ def zeroPadding(s):
 
 def multiresolution(s, n):
     s = Wa(s, n)
-    print(s)
     plt.figure(figsize=(12, 8))
     for sequence in range(n + 1):
         s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
@@ -90,18 +89,18 @@ sj = testFunction(np.linspace(0, 1, 2**10))
 #plt.plot(np.linspace(500, 25000, 5000), a)
 
 np.random.seed(5)
-t = np.arange(128)
-n = np.zeros((128,), dtype=complex)
-n[60:74] = np.exp(1j*np.random.uniform(0, 2*np.pi, (14,)))
+t = np.arange(32)
+n = np.zeros((32,), dtype=complex)
+n[10:13] = np.exp(1j*np.random.uniform(0, 2*np.pi, (3,)))
 s = np.fft.ifft(n)
-s[60:80] += 0.1
+s[25] += 0.1
 #b = 1
 #for i in range(60, 100):
 #    s[i] /= np.math.factorial(b)
 #    b += 1
 plt.figure(figsize=(12, 8))
 plt.subplot(3, 1, 1)
-plt.plot(t, abs(s))
+plt.plot(t, abs(s), 'b.')
 plt.subplot(3, 1, 2)
 plt.plot(t, s)
 plt.subplot(3, 1, 3)

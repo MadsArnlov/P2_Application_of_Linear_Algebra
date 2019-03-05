@@ -79,25 +79,36 @@ sj = testFunction(np.linspace(0, 1, 2**10))
 #j = int(np.log2(len(sj)))
 #multiresolution(sj, j)
 
-
-#a = np.random.uniform(low=-3.8, high=10.1, size=(5000, ))
-#b = np.fft.fft(a)
-#plt.figure(figsize=(12, 8))
-#plt.subplot(2, 1, 1)
-#plt.plot(abs(b))
-#plt.subplot(2, 1, 2)
-#plt.plot(np.linspace(500, 25000, 5000), a)
-
 np.random.seed(5)
-t = np.arange(32)
-n = np.zeros((32,), dtype=complex)
-n[10:13] = np.exp(1j*np.random.uniform(0, 2*np.pi, (3,)))
-s = np.fft.ifft(n)
+
+
+def dataGenerator(l=32, r1=10, r2=13):
+    """
+    Returns a synthetic signal in time representing data.
+
+    Parameters
+    ----------
+    l:  int
+        The length of the signal.
+    r1: int
+        Start value for range of non-zero values in frequency signal.
+    r2: int
+        End value for range of non-zero values in frequency signal.
+    """
+    t = np.arange(l)
+    n = np.zeros((l,), dtype=complex)
+    n[r1:r2] = np.exp(1j*np.random.uniform(0, 2*np.pi, (r2-r1,)))
+    return np.fft.ifft(n), t
+
+s, t = dataGenerator(32, 10, 13)
+"Deviation"
 s[25] += 0.1
 #b = 1
 #for i in range(60, 100):
 #    s[i] /= np.math.factorial(b)
 #    b += 1
+
+"Plot of the generated signal in time"
 plt.figure(figsize=(12, 8))
 plt.subplot(3, 1, 1)
 plt.plot(t, abs(s), 'b.')
@@ -108,6 +119,7 @@ plt.plot(t, s.real, 'b-', t, s.imag, 'r--')
 plt.legend(('real', 'imaginary'))
 plt.show()
 
+"Multiresolution plot of the signal"
 sj = zeroPadding(abs(s))
 j = int(np.log2(len(sj)))
 multiresolution(sj, j)

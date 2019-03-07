@@ -71,8 +71,8 @@ def Ts(S, j, transform='haar'):
             S[i + 1] = 2*S[i + 1] - S[i]
             return S
     if transform == 'CDF':
-        s = np.zeros(len(S)//2)
-        d = np.zeros_like(s)
+        s = S[:len(S)//2 + 1]
+        d = S[len(S//2):]
         K = 4/np.sqrt(2)
         N = len(S)
         for k in range(6):
@@ -148,10 +148,10 @@ def dataGenerator(l=32, r1=10, r2=13):
 
 np.random.seed(6)
 s1, t1 = dataGenerator(64, 57, 64)
-t1 = np.arange(256)
+t1 = np.arange(256*2)
 s2, t2 = dataGenerator(64, 0, 4)
-s1 = np.hstack((s1, s1, s1, s1))
-s2 = np.hstack((s2, s2, s2, s2))
+s2 = np.hstack((s2, s2, s2, s2, s2, s2, s2, s1))
+s1 = np.hstack((s1, s1, s1, s1, s1, s1, s1, s1))
 "Deviation"
 #a = np.random.randint(0, 64*2)
 #b = np.random.randint(0, 64*2)
@@ -175,8 +175,8 @@ plt.show()
 "Multiresolution plot of the signal"
 s1 = zeroPadding(abs(s1))
 j = int(np.log2(len(s1)))
-multiresolution(s1, j, 'haar')
+multiresolution(s1, j, 'cdf')
 
 s2 = zeroPadding(abs(s2))
-multiresolution(s2, j, 'haar')
+multiresolution(s2, 4, 'cdf')
 

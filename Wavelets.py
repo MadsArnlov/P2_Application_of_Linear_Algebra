@@ -109,6 +109,18 @@ def update(d, k):
     return d[k]/2
 
 
+def multiresolution(s, n, transform='haar'):
+    s = Wa(s, n, transform)
+    plt.figure(figsize=(12, 12))
+    for sequence in range(n + 1):
+        s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
+                            s[int(2**(n - sequence - 1)):]))
+        s_plot = Ws(s_plot, n)
+        plt.subplot(n + 1, 1, sequence + 1)
+        plt.plot(s_plot)
+    plt.show()
+
+
 def zeroPadding(s):
     if np.log2(len(s)) - int(np.log2(len(s))) != 0.0:
         s = np.hstack((s, np.zeros(2**(int(np.log2(len(s))) + 1) - len(s))))
@@ -134,27 +146,18 @@ def dataGenerator(l=32, r1=10, r2=13):
     return np.fft.ifft(n), t
 
 
-def multiresolution(s, n, transform='haar'):
-    s = Wa(s, n, transform)
-    plt.figure(figsize=(12, 8))
-    for sequence in range(n + 1):
-        s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
-                            s[int(2**(n - sequence - 1)):]))
-        s_plot = Ws(s_plot, n)
-        plt.subplot(n + 1, 1, sequence + 1)
-        plt.plot(s_plot)
-    plt.show()
-
-
-np.random.seed(69)
-s1, t1 = dataGenerator(64, 10, 13)
-s2, t2 = dataGenerator(64, 20, 25)
+np.random.seed(6)
+s1, t1 = dataGenerator(64, 57, 64)
+t1 = np.arange(256)
+s2, t2 = dataGenerator(64, 0, 4)
+s1 = np.hstack((s1, s1, s1, s1))
+s2 = np.hstack((s2, s2, s2, s2))
 "Deviation"
-a = np.random.randint(0, 64)
-b = np.random.randint(0, 64)
-s1[a] *= 25
-s2[b] *= 25
-print(a, b)
+#a = np.random.randint(0, 64*2)
+#b = np.random.randint(0, 64*2)
+#s1[a:] *= 2
+#s2[b:] *= 2
+#print(a, b)
 #b = 1
 #for i in range(50, len(s1)):
 #    s1[i] += b
@@ -163,20 +166,17 @@ print(a, b)
 
 "Plot of the generated signal in time"
 plt.figure(figsize=(12, 8))
-plt.subplot(3, 1, 1)
+plt.subplot(2, 1, 1)
 plt.plot(t1, abs(s1), 'b.')
-plt.subplot(3, 1, 2)
-plt.plot(t1, s1)
-plt.subplot(3, 1, 3)
-plt.plot(t1, s1.real, 'b-', t1, s1.imag, 'r--')
-plt.legend(('real', 'imaginary'))
+plt.subplot(2, 1, 2)
+plt.plot(t1, abs(s2), 'r.')
 plt.show()
 
 "Multiresolution plot of the signal"
 s1 = zeroPadding(abs(s1))
 j = int(np.log2(len(s1)))
-multiresolution(s1, 6, 'cdf')
+multiresolution(s1, j, 'haar')
 
 s2 = zeroPadding(abs(s2))
-multiresolution(s2, 6, 'cdf')
+multiresolution(s2, j, 'haar')
 

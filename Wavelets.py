@@ -115,7 +115,7 @@ def multiresolution(s, n, transform='haar'):
     for sequence in range(n + 1):
         s_plot = np.hstack((np.zeros(int(2**(n - sequence - 1))),
                             s[int(2**(n - sequence - 1)):]))
-        s_plot = Ws(s_plot, n)
+        s_plot = Ws(s_plot, n, transform)
         plt.subplot(n + 1, 1, sequence + 1)
         plt.plot(s_plot)
     plt.show()

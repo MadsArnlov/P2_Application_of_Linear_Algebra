@@ -18,7 +18,7 @@ haar = [[1/2, 1/2], [1/2, -1/2]]
 # =============================================================================
 # Data generation
 # =============================================================================
-def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 20, phase1 = 0.5, phase2 = 10, phase3 = 0):
+def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 100, phase1 = 0.5, phase2 = 10, phase3 = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
@@ -40,7 +40,7 @@ def wave_generator(J = 10, freq = 10, phase = 0):
 #def zeropadding(signal):
 
 # =============================================================================
-# Convolution
+# Convolution and multiresolution
 # =============================================================================
 def cir_conv_downs(signal, filt):
     h = ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
@@ -49,9 +49,6 @@ def cir_conv_downs(signal, filt):
     g = g[0:len(g):2]
     return h, g
 
-# =============================================================================
-# Multiresolution
-# =============================================================================
 def multiresolution(signal, filt, path = [0]):
     multires = []
     multires.append(signal)
@@ -72,16 +69,14 @@ def multiresolution(signal, filt, path = [0]):
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
         plt.plot(multires[i+1][0], 'r.')
-        plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
         plt.subplot(len(multires), 2, 4+(i*2))
         plt.plot(multires[i+1][1], 'r.')
-        plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     plt.show()
 
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(13), haar, path = [0,0,0])
+multiresolution(data_generator(15), haar, path = [0,0,0])
 
 end = time.time()
 print(end - start)

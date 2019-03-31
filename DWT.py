@@ -14,6 +14,8 @@ start = time.time()
 # Filters
 # =============================================================================
 haar = [[1/2, 1/2], [1/2, -1/2]]
+db4 = [[-0.0105974018, 0.0328830117, 0.0308413818, -0.1870348117, -0.0279837694, 0.6308807679, 0.7148465706, 0.2303778133],
+              [-0.2303778133, 0.7148465706, -0.6308807679, -0.0279837694, 0.1870348117, 0.0308413818, -0.0328830117, -0.0105974018]]
 
 # =============================================================================
 # Data generation
@@ -63,7 +65,7 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    plt.figure(figsize=(14, 7))
+    plt.figure(figsize=(14, 10))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b,')
     for i in range(len(path)):
@@ -75,7 +77,7 @@ def multiresolution(signal, filt, path = [0]):
         plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
 
-    plt.figure(figsize=(14, 7))
+    plt.figure(figsize=(14, 10))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b,')
     for i in range(len(path)):
@@ -87,7 +89,7 @@ def multiresolution(signal, filt, path = [0]):
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(12), haar, path = [0,0,0])
+multiresolution(data_generator(12), db4, path = [0,0,0])
 
 end = time.time()
 print(end - start)

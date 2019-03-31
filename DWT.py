@@ -77,13 +77,12 @@ def multiresolution(signal, filt, path = [0]):
     t1 = np.arange(1 , (len(multires[1][0])+1))
     plt.subplot(2, 2, 3)
     plt.plot(t1, multires[1][0], 'r.')
-    plt.ylabel('h')
+    plt.ylabel('L')
 
     plt.subplot(2, 2, 4)
     plt.plot(t1, multires[1][1], 'r.')
-    plt.ylabel('g')
+    plt.ylabel('B')
 
-    plt.xlabel('Samples')
     plt.show()
 
 # =============================================================================

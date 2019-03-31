@@ -67,9 +67,10 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(14, 7))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b,')
+    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
         plt.plot(multires[i+1][0], 'r,')
@@ -79,19 +80,22 @@ def multiresolution(signal, filt, path = [0]):
         plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
 
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(14, 7))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b,')
+    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 1, i+2)
         plt.plot(range(len(multires[i+1][0])), multires[i+1][0], 'r,',range(len(multires[i+1][0]), 2*len(multires[i+1][0])), multires[i+1][1], 'g,')
         plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     plt.show()
 
+
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(12), db4, path = [0,0,0])
+J = 12
+multiresolution(data_generator(12), db4, path = np.zeros(3))
 
 end = time.time()
 print(end - start)

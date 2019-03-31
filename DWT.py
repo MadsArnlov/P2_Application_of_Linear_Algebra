@@ -94,8 +94,7 @@ def multiresolution(signal, filt, path = [0]):
 # =============================================================================
 # Execution
 # =============================================================================
-J = 12
-multiresolution(data_generator(12), db4, path = np.zeros(3))
+multiresolution(data_generator(12), haar, path = [1,1,1,1])
 
 end = time.time()
 print(end - start)

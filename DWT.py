@@ -18,7 +18,7 @@ haar = [[1/2, 1/2], [1/2, -1/2]]
 # =============================================================================
 # Data generation
 # =============================================================================
-def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 100, phase1 = 0.5, phase2 = 10, phase3 = 0):
+def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 60, phase1 = 0.5, phase2 = 10, phase3 = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
@@ -65,12 +65,12 @@ def multiresolution(signal, filt, path = [0]):
     
     plt.figure(figsize=(14, 7))
     plt.subplot(len(multires), 1, 1)
-    plt.plot(multires[0], 'b.')
+    plt.plot(multires[0], 'b,')
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
-        plt.plot(multires[i+1][0], 'r.')
+        plt.plot(multires[i+1][0], 'r,')
         plt.subplot(len(multires), 2, 4+(i*2))
-        plt.plot(multires[i+1][1], 'r.')
+        plt.plot(multires[i+1][1], 'r,')
     plt.show()
 
     plt.figure(figsize=(14, 7))
@@ -85,7 +85,7 @@ def multiresolution(signal, filt, path = [0]):
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(15), haar, path = [0,0,0])
+multiresolution(data_generator(12), haar, path = [0,0,0])
 
 end = time.time()
 print(end - start)

@@ -53,6 +53,7 @@ def cir_conv_downs(signal, filt):
 # Multiresolution
 # =============================================================================
 def multiresolution(signal, filt, path = [0]):
+    time = len(signal)
     multires = []
     multires.append(signal)
     for i in range(len(path)):
@@ -66,23 +67,12 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    
     plt.figure(figsize=(13, 7))
-    t = np.arange(1 , len(multires[0])+1)
-    plt.subplot(2, 1, 1)
-    plt.plot(t, multires[0], 'b.')
-    plt.ylabel('Original signal')
-
-    t1 = np.arange(1 , (len(multires[1][0])+1))
-    plt.subplot(2, 2, 3)
-    plt.plot(t1, multires[1][0], 'r.')
-    plt.ylabel('L')
-
-    plt.subplot(2, 2, 4)
-    plt.plot(t1, multires[1][1], 'r.')
-    plt.ylabel('B')
-
-    plt.show()
+    for i in multires:
+        t = np.arange(1 , (time/(2*i))+1)
+        plt.subplot(len(multires), 2, multires[i]+2)
+        plt.plot(t, multires[0], 'b.')
+        plt.show()
 
 # =============================================================================
 # Execution

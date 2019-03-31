@@ -73,6 +73,15 @@ def multiresolution(signal, filt, path = [0]):
         plt.plot(multires[i+1][1], 'r.')
     plt.show()
 
+    plt.figure(figsize=(14, 7))
+    plt.subplot(len(multires), 1, 1)
+    plt.plot(multires[0], 'b,')
+    for i in range(len(path)):
+        plt.subplot(len(multires), 1, i+2)
+        plt.plot(range(len(multires[i+1][0])), multires[i+1][0], 'r,',range(len(multires[i+1][0]), 2*len(multires[i+1][0])), multires[i+1][1], 'g,')
+        plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+    plt.show()
+
 # =============================================================================
 # Execution
 # =============================================================================

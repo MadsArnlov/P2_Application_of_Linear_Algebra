@@ -42,9 +42,9 @@ def wave_generator(J = 10, freq = 10, phase = 0):
 # =============================================================================
 # Convolution
 # =============================================================================
-def cir_conv_downs(signal, filter):
-    h = sc.ndimage.convolve1d(signal, filter[0], output = 'float', mode = 'wrap', origin = -1)
-    g = sc.ndimage.convolve1d(signal, filter[1], output = 'float', mode = 'wrap', origin = -1)
+def cir_conv_downs(signal, filt):
+    h = sc.ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
+    g = sc.ndimage.convolve1d(signal, filt[1], output = 'float', mode = 'wrap', origin = -1)
     h = h[0:len(h):2]
     g = g[0:len(g):2]
     return h, g
@@ -52,15 +52,18 @@ def cir_conv_downs(signal, filter):
 # =============================================================================
 # Multiresolution
 # =============================================================================
-def multiresolution(signal, filter, path = [0]):
+def multiresolution(signal, filt, path = [0]):
     multires = []
     multires.append(signal)
     for i in range(len(path)):
-        if path[i] == 0:
-            signal = cir_conv_downs(signal[0], filter)
+        if i == 0:
+            signal = cir_conv_downs(signal, filt)
+            multires.append(signal)
+        elif path[i] == 0:
+            signal = cir_conv_downs(signal[0], filt)
             multires.append(signal)
         elif path[i] == 1:
-            signal = cir_conv_downs(signal[1], filter)
+            signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
 
     plt.figure(figsize=(13, 7))

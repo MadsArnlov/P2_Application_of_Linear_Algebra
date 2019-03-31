@@ -121,10 +121,10 @@ def multiresolution(s, n, transform='haar'):
     plt.show()
 
 
-def zeroPadding(s):
-    if np.log2(len(s)) - int(np.log2(len(s))) != 0.0:
-        s = np.hstack((s, np.zeros(2**(int(np.log2(len(s))) + 1) - len(s))))
-    return s
+def zeroPadding(signal):
+    if np.log2(len(signal)) - int(np.log2(len(signal))) != 0.0:
+        signal = np.hstack((signal, np.zeros(2**(int(np.log2(len(signal))) + 1) - len(signal))))
+    return signal
 
 
 def dataGenerator(l=32, r1=10, r2=13):

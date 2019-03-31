@@ -8,6 +8,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sc
+from scipy import ndimage
 start = time.time()
 
 # =============================================================================

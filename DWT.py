@@ -66,12 +66,13 @@ def multiresolution(signal, filt, path = [0]):
         elif path[i] == 1:
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
-
+    
+    
     plt.figure(figsize=(13, 7))
     t = np.arange(1 , len(multires[0])+1)
     plt.subplot(2, 1, 1)
     plt.plot(t, multires[0], 'b.')
-    plt.ylabel('Signal')
+    plt.ylabel('Original signal')
 
     t1 = np.arange(1 , (len(multires[1][0])+1))
     plt.subplot(2, 2, 3)
@@ -88,7 +89,7 @@ def multiresolution(signal, filt, path = [0]):
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(wave_generator(), haar)
+multiresolution(data_generator(), haar)
 
 end = time.time()
 print(end - start)

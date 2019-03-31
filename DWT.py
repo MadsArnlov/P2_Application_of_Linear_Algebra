@@ -66,11 +66,11 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    plt.figure(figsize=(13, 7))
     for i in range(len(multires)):
-        plt.subplot(len(multires), 2, [i]+2)
+        plt.subplot(len(multires), 2, i+2)
         plt.plot(multires[0], 'b.')
-        plt.show()
+    plt.figure(figsize=(13, 7))
+    plt.show()
 
 # =============================================================================
 # Execution

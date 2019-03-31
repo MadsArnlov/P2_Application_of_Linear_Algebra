@@ -79,7 +79,7 @@ def multiresolution(signal, filt, path = [0]):
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(), haar, path = [0,0])
+multiresolution(data_generator(), haar, path = [0,0,0,0,0])
 
 end = time.time()
 print(end - start)

@@ -69,13 +69,11 @@ def multiresolution(signal, filt, path = [0]):
     plt.figure(figsize=(13, 7))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b.')
-    i2 = 0
     for i in range(len(path)*2+1):
         plt.subplot(len(multires), 2, i+3)
-        plt.plot(multires[i+1][i2], 'r.')
-        i2 += 1
-        if i2 == 2:
-            i2 = 0
+        plt.plot(multires[i+1][0], 'r.')
+        plt.subplot(len(multires), 2, i+4)
+        plt.plot(multires[i+1][1], 'r.')
     plt.show()
 
 # =============================================================================

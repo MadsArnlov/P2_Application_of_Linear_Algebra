@@ -7,7 +7,6 @@ Created on Sat Mar 30 12:10:44 2019
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy as sp
 from scipy import ndimage
 start = time.time()
 
@@ -44,8 +43,8 @@ def wave_generator(J = 10, freq = 10, phase = 0):
 # Convolution
 # =============================================================================
 def cir_conv_downs(signal, filt):
-    h = sp.ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
-    g = sp.ndimage.convolve1d(signal, filt[1], output = 'float', mode = 'wrap', origin = -1)
+    h = ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
+    g = ndimage.convolve1d(signal, filt[1], output = 'float', mode = 'wrap', origin = -1)
     h = h[0:len(h):2]
     g = g[0:len(g):2]
     return h, g

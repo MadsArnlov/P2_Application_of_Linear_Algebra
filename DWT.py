@@ -41,7 +41,11 @@ def wave_generator(J = 10, freq = 10, phase = 0):
 # =============================================================================
 # Data manipulation
 # =============================================================================
-#def zeropadding(signal):
+def zero_padding(signal):
+    if np.log2(len(signal)) - int(np.log2(len(signal))) != 0.0:
+        signal = np.hstack((signal, np.zeros(2**(int(np.log2(len(signal))) + 1) - len(signal))))
+    return signal
+
 
 # =============================================================================
 # Convolution and multiresolution

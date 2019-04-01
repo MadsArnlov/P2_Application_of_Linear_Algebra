@@ -13,17 +13,31 @@ start = time.time()
 # =============================================================================
 # Filters
 # =============================================================================
-haar = [[1/2, 1/2],
-        [1/2, -1/2]]
+haar = [[1/np.sqrt(2), 1/np.sqrt(2)],
+        [1/np.sqrt(2), -1/np.sqrt(2)]]
 db4 = [[-0.0105974018, 0.0328830117, 0.0308413818, -0.1870348117,
         -0.0279837694, 0.6308807679, 0.7148465706, 0.2303778133],
        [-0.2303778133, 0.7148465706, -0.6308807679, -0.0279837694,
         0.1870348117, 0.0308413818, -0.0328830117, -0.0105974018]]
+bo15 = [[0.0165728152, -0.0165728152, -0.1215339780, 0.1215339780, 0.7071067812, 
+         0.7071067812, 0.1215339780, -0.1215339780, -0.0165728152, 0.0165728152], 
+         [0, 0, 0, 0, -0.7071067812, 0.7071067812, 0, 0, 0, 0]]
 
 # =============================================================================
-# Data generation
+# Inverse Filters
 # =============================================================================
-def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 60, phase1 = 0.5, phase2 = 10, phase3 = 0):
+inv_haar = [[1/np.sqrt(2), 1/np.sqrt(2)], 
+            [-1/np.sqrt(2), 1/np.sqrt(2)]]
+
+inv_db4 = [[0.23037781330885523, 0.7148465705525415, 0.6308807679295904, -0.02798376941698385, 
+            -0.18703481171888114, 0.030841381835986965, 0.032883011666982945, -0.010597401784997278], 
+           [-0.010597401784997278, -0.032883011666982945, 0.030841381835986965, 0.18703481171888114,
+            -0.02798376941698385, -0.6308807679295904, 0.7148465705525415, -0.23037781330885523]]
+
+# =============================================================================
+# Data Generation
+# =============================================================================
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
@@ -33,7 +47,7 @@ def data_generator(J = 10, freq1 = 10, freq2 = 15, freq3 = 60, phase1 = 0.5, pha
     x_sum = x1 + x2 + x3
     return x_sum
 
-def wave_generator(J = 10, freq = 10, phase = 0):
+def wave_generator(J = 18, freq = 10, phase = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
@@ -41,7 +55,7 @@ def wave_generator(J = 10, freq = 10, phase = 0):
     return wave
 
 # =============================================================================
-# Data manipulation
+# Data ;anipulation
 # =============================================================================
 def zero_padding(signal):
     if np.log2(len(signal)) - int(np.log2(len(signal))) != 0.0:
@@ -50,7 +64,7 @@ def zero_padding(signal):
 
 
 # =============================================================================
-# Convolution and multiresolution
+# Convolution and Multiresolution
 # =============================================================================
 def cir_conv_downs(signal, filt):
     h = ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
@@ -59,6 +73,17 @@ def cir_conv_downs(signal, filt):
     g = g[0:len(g):2]
     return h, g
 
+def cir_conv_ups(sub_signal, inv_filt, path):
+    zeros = np.zeros(len(sub_signal)*2)
+    for i in range(len(sub_signal)):
+        zeros[i*2] = sub_signal[i]
+    sub_signal_ups = zeros
+    if path == 0:
+        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[0], output = 'float', mode = 'wrap', origin = -1)
+    elif path == 1: 
+        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[1], output = 'float', mode = 'wrap', origin = -1)
+    return inv
+            
 def multiresolution(signal, filt, path = [0]):
     multires = []
     multires.append(signal)
@@ -73,7 +98,7 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    plt.figure(figsize=(14, 7))
+    plt.figure(figsize=(14, 10))
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b,')
     plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
@@ -86,21 +111,43 @@ def multiresolution(signal, filt, path = [0]):
         plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
 
-    plt.figure(figsize=(14, 7))
-    plt.subplot(len(multires), 1, 1)
-    plt.plot(multires[0], 'b,')
-    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+    #plt.figure(figsize=(14, 7))
+    #plt.subplot(len(multires), 1, 1)
+    #plt.plot(multires[0], 'b,')
+    #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+    #for i in range(len(path)):
+    #    plt.subplot(len(multires), 1, i+2)
+    #    plt.plot(range(len(multires[i+1][0])), multires[i+1][0], 'r,',range(len(multires[i+1][0]), 2*len(multires[i+1][0])), multires[i+1][1], 'g,')
+    #    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+    #plt.show()
+    
+    return multires, path
+    
+def inv_multiresolution(inv_filt, multires, path):
+    inv_multires = []
     for i in range(len(path)):
-        plt.subplot(len(multires), 1, i+2)
-        plt.plot(range(len(multires[i+1][0])), multires[i+1][0], 'r,',range(len(multires[i+1][0]), 2*len(multires[i+1][0])), multires[i+1][1], 'g,')
-        plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+        if i == 0:
+            if path[-1-i] == 0:
+                inv_multires.append(cir_conv_ups(multires[-1][0], inv_filt, path[-1-i]))
+            elif path[-1-i] == 1:
+                inv_multires.append(cir_conv_ups(multires[-1][1], inv_filt, path[-1-i]))    
+        if path[-1-i] == 0:
+            inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
+        elif path[-1-i] == 1:
+            inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
+    
+    plt.figure(figsize=(14,7))
+    for i in range(len(inv_multires)):
+        plt.subplot(len(inv_multires), 1, i+1)
+        plt.plot(inv_multires[i], 'k,')
+        plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
-
 
 # =============================================================================
 # Execution
 # =============================================================================
-multiresolution(data_generator(12), haar, path = [1,1,1,1])
+multires, path = multiresolution(np.hstack([data_generator(18, 400, 200, 10), data_generator(18, 400, 200, 5)]), db4, path = np.zeros(11))
+inv_multiresolution(inv_db4, multires, path)
 
 end = time.time()
 print(end - start)

@@ -37,14 +37,18 @@ inv_db4 = [[0.23037781330885523, 0.7148465705525415, 0.6308807679295904, -0.0279
 # =============================================================================
 # Data Generation
 # =============================================================================
-def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0):
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
     x1 = np.sin(A * freq1 + phase1)
     x2 = np.sin(A * freq2 + phase2)
     x3 = np.sin(A * freq3 + phase3)
-    x_sum = x1 + x2 + x3
+    x_imp = np.zeros(N)
+    for i in range(0, len(x_imp), int((N/imp_freq))):
+        x_imp[i] = 2
+        x_imp[i+1] = -2
+    x_sum = x1 + x2 + x3 + x_imp
     return x_sum
 
 def wave_generator(J = 18, freq = 10, phase = 0):
@@ -100,7 +104,7 @@ def multiresolution(signal, filt, path = [0]):
     
     plt.figure(figsize=(14, 10))
     plt.subplot(len(multires), 1, 1)
-    plt.plot(multires[0], 'b,')
+    plt.plot(multires[0], 'b-')
     plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
@@ -146,7 +150,7 @@ def inv_multiresolution(inv_filt, multires, path):
 # =============================================================================
 # Execution
 # =============================================================================
-multires, path = multiresolution(np.hstack([data_generator(18, 400, 200, 10), data_generator(18, 400, 200, 5)]), db4, path = np.zeros(11))
+multires, path = multiresolution(np.hstack([data_generator(25, 200, 400, 7500, imp_freq = 10), data_generator(25, 200, 400, 15000, imp_freq = 7)]), db4, path = np.ones(11))
 inv_multiresolution(inv_db4, multires, path)
 
 end = time.time()

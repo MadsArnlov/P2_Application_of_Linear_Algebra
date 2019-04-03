@@ -46,8 +46,8 @@ def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase
     x3 = np.sin(A * freq3 + phase3)
     x_imp = np.zeros(N)
     for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
-        x_imp[i] = 2
-        x_imp[i+1] = -2
+        x_imp[i] = 1
+        x_imp[i+1] = -1
     x_sum = x1 + x2 + x3 + x_imp
     return x_sum
 

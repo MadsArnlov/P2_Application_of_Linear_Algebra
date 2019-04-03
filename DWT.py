@@ -45,7 +45,7 @@ def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase
     x2 = np.sin(A * freq2 + phase2)
     x3 = np.sin(A * freq3 + phase3)
     x_imp = np.zeros(N)
-    for i in range(0, len(x_imp), int((N/imp_freq))):
+    for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
         x_imp[i] = 2
         x_imp[i+1] = -2
     x_sum = x1 + x2 + x3 + x_imp
@@ -109,10 +109,10 @@ def multiresolution(signal, filt, path = [0]):
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
         plt.plot(multires[i+1][0], 'r,')
-        plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
+        #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
         plt.plot(multires[i+1][1], 'r,')
-        plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
+        #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
 
     #plt.figure(figsize=(14, 7))
@@ -144,13 +144,13 @@ def inv_multiresolution(inv_filt, multires, path):
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k,')
-        plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
+        #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
 
 # =============================================================================
 # Execution
 # =============================================================================
-multires, path = multiresolution(np.hstack([data_generator(25, 200, 400, 7500, imp_freq = 10), data_generator(25, 200, 400, 15000, imp_freq = 7)]), db4, path = np.ones(11))
+multires, path = multiresolution(np.hstack([data_generator(18, 5, 0, 0, imp_freq = 10), data_generator(18, 5, 0, 0, imp_freq = 7)]), db4, path = np.ones(6))
 inv_multiresolution(inv_db4, multires, path)
 
 end = time.time()

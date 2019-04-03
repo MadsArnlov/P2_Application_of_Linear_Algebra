@@ -150,7 +150,7 @@ def inv_multiresolution(inv_filt, multires, path):
 # =============================================================================
 # Execution
 # =============================================================================
-multires, path = multiresolution(np.hstack([data_generator(18, 5, 0, 0, imp_freq = 10), data_generator(18, 5, 0, 0, imp_freq = 7)]), db4, path = np.ones(6))
+multires, path = multiresolution(np.hstack([data_generator(18, 5, 100, 30, imp_freq = 10), data_generator(18, 15, 100, 30, imp_freq = 7)]), db4, path = np.ones(6))
 inv_multiresolution(inv_db4, multires, path)
 
 end = time.time()

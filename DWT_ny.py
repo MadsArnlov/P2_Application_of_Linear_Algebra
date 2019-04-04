@@ -178,6 +178,8 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Execution
 # =============================================================================
+#import Simple_sine_with_impulses as file
+#import Wave_high_frequencies as file
 import Synthetic_signal as file
 
 path = np.ones(8)

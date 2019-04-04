@@ -138,7 +138,7 @@ def inv_multiresolution(inv_filt, multires, path):
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k-')
-        #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
+        plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
     return inv_multires[-1]
 
@@ -154,15 +154,22 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Execution
 # =============================================================================
-from Simple_sine_with_impulses import J, freq1, phase1, freq2, phase2, freq3, phase3, imp_freq, scaling, shift
+import Simple_sine_with_impulses as file
 
-path = np.ones(10)
-filt = db4
-inv_filt = inv_db4
+path = np.zeros(10)
+filt = haar
+inv_filt = inv_haar
 
-shifted_signal = np.hstack([np.zeros(shift), data_generator(J, freq1, freq2, freq3, phase1, phase2, phase3, imp_freq, scaling)[0:2**J-shift]])
+shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
+                            file.freq2, file.freq3, file.phase1, file.phase2,
+                            file.phase3, file.imp_freq, file.scaling)
+                            [0:2**file.J-file.shift]])
 
-multires, path = multiresolution(data_generator(J, freq1, freq2, freq3, phase1, phase2, phase3, imp_freq, scaling), filt, path)
+multires, path = multiresolution(data_generator(file.J, file.freq1, file.freq2,
+                                                file.freq3, file.phase1,
+                                                file.phase2, file.phase3,
+                                                file.imp_freq, file.scaling),
+                                                filt, path)
 inv_multires = inv_multiresolution(inv_filt, multires, path)
 
 multires, path = multiresolution(shifted_signal, filt, path)

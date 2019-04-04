@@ -156,9 +156,9 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 import Simple_sine_with_impulses as file
 
-path = np.zeros(10)
-filt = haar
-inv_filt = inv_haar
+path = np.ones(8)
+filt = db4
+inv_filt = inv_db4
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.phase1, file.phase2,

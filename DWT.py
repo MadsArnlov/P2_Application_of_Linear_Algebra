@@ -51,8 +51,8 @@ def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase
         for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
             x_imp[i] = 1
             x_imp[i+1] = -1
-            x_sum = x1 + x2 + x3 + x_imp
-        return x_sum
+    x_sum = x1 + x2 + x3 + x_imp
+    return x_sum
 
 def wave_generator(J = 18, freq = 10, phase = 0):
     N = 2**J
@@ -111,10 +111,10 @@ def multiresolution(signal, filt, path = [0]):
     plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
-        plt.plot(multires[i+1][0], 'r,')
+        plt.plot(multires[i+1][0], 'r-')
         #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
-        plt.plot(multires[i+1][1], 'r,')
+        plt.plot(multires[i+1][1], 'r-')
         #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
     
@@ -137,7 +137,7 @@ def inv_multiresolution(inv_filt, multires, path):
     plt.figure(figsize=(14, 10))
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
-        plt.plot(inv_multires[i], 'k,')
+        plt.plot(inv_multires[i], 'k-')
         #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
     return inv_multires[-1]
@@ -149,20 +149,20 @@ def cross_corr(signal1, signal2):
     correlation = np.correlate(signal1, signal2, 'full')
     plt.plot(correlation, 'g')
     plt.show()
-    print(len(signal1) - (np.argmax(correlation) + 1))
+    print("Signal 2 er forskudt med", len(signal1) - (np.argmax(correlation) + 1), "samples")
 
 # =============================================================================
 # Execution
 # =============================================================================
-shifted_signal = np.hstack([np.zeros(2**14), data_generator(18, 11, 250, 3, imp_freq = 14)[0:2**18-2**14]])
+shifted_signal = np.hstack([np.zeros(2**14), data_generator(18, 11, 250, 3)[0:2**18-2**14]])
 
-multires, path = multiresolution(data_generator(18, 11, 250, 3, imp_freq = 14), db4, path = np.zeros(10))
-inv_multires = inv_multiresolution(inv_db4, multires, path)
+multires, path = multiresolution(data_generator(18, 11, 250, 3), haar, path = np.zeros(12))
+inv_multires = inv_multiresolution(inv_haar, multires, path)
 
-multires, path = multiresolution(shifted_signal, db4, path = np.zeros(10))
-inv_multires2 = inv_multiresolution(inv_db4, multires, path)
+multires, path = multiresolution(shifted_signal, haar, path = np.zeros(12))
+inv_multires2 = inv_multiresolution(inv_haar, multires, path)
 
 cross_corr(inv_multires, inv_multires2)
 
 end = time.time()
-print(end - start)
+print('Koden eksekveres på', end - start, "sekunder")

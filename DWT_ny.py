@@ -38,15 +38,23 @@ def filters(name = "db4"):
 
 def plot_filter(filtername):
     filt, inv_filt = filters(filtername)
-    plt.figure(figsize=(14, 10))
-    for i in range(len(filt)):
+    plt.figure(figsize=(14, 10)).suptitle("Filter Coefficients for {:s}".format(filtername), fontsize=18, y=0.95)
+    for i in range(2):
         plt.subplot(2, 2, i+1)
-        plt.plot(filt[i][i], 'c-')
+        plt.plot(filt[i], 'c-')
+        if i == 0:
+            plt.title("Low-pass Decomposition", fontsize=16)
+        else:
+            plt.title("High-pass Decomposition", fontsize=16)
         plt.axis([0, len(filt[i]), min(filt[i]), max(filt[i])])
-    for i in range(len(inv_filt)):
-        plt.subplot(2, 2, i+1)
-        plt.plot(inv_filt[i][i], 'c-')
-        plt.axis([0, len(inv_filt[i]), min(inv_filt[i]), max(inv_filt[i])])
+    for i in range(2):
+        plt.subplot(2, 2, i+3)
+        plt.plot(inv_filt[i], 'c-')
+        if i == 0:
+            plt.title("Low-pass Reconstruction", fontsize=16)
+        else:
+            plt.title("High-pass Reconstruction", fontsize=16)
+        plt.axis([0, len(inv_filt[i]), min(inv_filt[i]), max(inv_filt[i])])    
     plt.show()
 
 # =============================================================================
@@ -119,7 +127,7 @@ def multiresolution(signal, filt, path = [0]):
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
     
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(14, 10)).suptitle("Multiresolution Analysis with {:d} levels".format(len(path)), fontsize=18, y=0.93)
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b-')
     plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
@@ -148,7 +156,7 @@ def inv_multiresolution(inv_filt, multires, path):
             elif path[-1-i] == 1:
                 inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
     
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(14, 10)).suptitle("Multiresolution Synthesis with {} levels".format(len(path)), fontsize=18, y=0.93)
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k-')
@@ -162,6 +170,7 @@ def inv_multiresolution(inv_filt, multires, path):
 def cross_corr(signal1, signal2):
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14,4))
+    plt.title("Cross Correlation", fontsize=18)
     plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
     plt.show()
     print("Signal 2 er forskudt med", len(signal1) - (np.argmax(correlation) + 1), "samples")
@@ -173,6 +182,7 @@ import Synthetic_signal as file
 
 path = np.ones(8)
 filt, inv_filt = filters("db4")
+plot_filter("db4")
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.phase1, file.phase2,
@@ -191,7 +201,7 @@ inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
 cross_corr(inv_multires, inv_multires2)
 
-plot_filter('haar')
+
 
 end = time.time()
 print('Koden eksekveres på', end - start, "sekunder")

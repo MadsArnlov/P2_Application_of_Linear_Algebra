@@ -1,6 +1,6 @@
 "Simple sine wave with impulses"
 J = 18                          # Indicates the length of the signal as 2^J
-freq1 = 10                     # Frequency of the single sine wave
+freq1 = 100                     # Frequency of the single sine wave
 phase1 = 25                     # Phase of the first sine wave
 freq2 = 0                       # Makes the 2nd sine zero
 phase2 = 0                      # Phase of the 2nd wave is zero

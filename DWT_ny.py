@@ -39,7 +39,8 @@ def filters(name = "db4"):
 # =============================================================================
 # Data Generation
 # =============================================================================
-def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0, scaling1 = 1):
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, 
+                   phase2 = 0, phase3 = 0, imp_freq = 0, scaling1 = 1):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N

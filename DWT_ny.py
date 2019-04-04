@@ -147,7 +147,7 @@ def inv_multiresolution(inv_filt, multires, path):
 # =============================================================================
 def cross_corr(signal1, signal2):
     correlation = np.correlate(signal1, signal2, 'full')
-    plt.figure(figsize=(14,10))
+    plt.figure(figsize=(14,4))
     plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
     plt.show()
     print("Signal 2 er forskudt med", len(signal1) - (np.argmax(correlation) + 1), "samples")
@@ -157,8 +157,8 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 import Wave_high_frequencies as file
 
-path = np.zeros(8)
-filt, inv_filt = filters("bo13")
+path = np.ones(8)
+filt, inv_filt = filters("db4")
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.phase1, file.phase2,

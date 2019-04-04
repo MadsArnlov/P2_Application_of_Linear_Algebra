@@ -173,7 +173,7 @@ def cross_corr(signal1, signal2):
     plt.title("Cross Correlation", fontsize=18)
     plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
     plt.show()
-    print("Signal 2 er forskudt med", len(signal1) - (np.argmax(correlation) + 1), "samples")
+    print("Signal 2 is shifted in time with", len(signal1) - (np.argmax(correlation) + 1), "samples")
 
 # =============================================================================
 # Execution
@@ -206,4 +206,4 @@ cross_corr(inv_multires, inv_multires2)
 
 
 end = time.time()
-print('Koden eksekveres på', end - start, "sekunder")
+print('The code is executed in', end - start, "seconds")

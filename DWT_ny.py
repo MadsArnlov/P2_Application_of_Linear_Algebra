@@ -39,11 +39,11 @@ def filters(name = "db4"):
 # =============================================================================
 # Data Generation
 # =============================================================================
-def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0, scaling = 1):
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0, scaling1 = 1):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
-    x1 = np.sin(A * freq1 + phase1)*scaling
+    x1 = np.sin(A * freq1 + phase1)*scaling1
     x2 = np.sin(A * freq2 + phase2)
     x3 = np.sin(A * freq3 + phase3)
     x_imp = np.zeros(N)
@@ -155,20 +155,20 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Execution
 # =============================================================================
-import Wave_high_frequencies as file
+import Synthetic_signal as file
 
 path = np.ones(8)
 filt, inv_filt = filters("db4")
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.phase1, file.phase2,
-                            file.phase3, file.imp_freq, file.scaling)
+                            file.phase3, file.imp_freq, file.scaling1)
                             [0:2**file.J-file.shift]])
 
 multires, path = multiresolution(data_generator(file.J, file.freq1, file.freq2,
                                                 file.freq3, file.phase1,
                                                 file.phase2, file.phase3,
-                                                file.imp_freq, file.scaling),
+                                                file.imp_freq, file.scaling1),
                                                 filt, path)
 inv_multires = inv_multiresolution(inv_filt, multires, path)
 

@@ -36,6 +36,19 @@ def filters(name = "db4"):
                     [-0.0883883476, -0.0883883476, 0.7071067812, -0.7071067812, 0.0883883476, 0.0883883476]]
     return filt, inv_filt
 
+def plot_filter(filtername):
+    filt, inv_filt = filters(filtername)
+    plt.figure(figsize=(14, 10))
+    for i in range(len(filt)):
+        plt.subplot(2, 2, i+1)
+        plt.plot(filt[i][i], 'c-')
+        plt.axis([0, len(filt[i]), min(filt[i]), max(filt[i])])
+    for i in range(len(inv_filt)):
+        plt.subplot(2, 2, i+1)
+        plt.plot(inv_filt[i][i], 'c-')
+        plt.axis([0, len(inv_filt[i]), min(inv_filt[i]), max(inv_filt[i])])
+    plt.show()
+
 # =============================================================================
 # Data Generation
 # =============================================================================
@@ -177,6 +190,8 @@ multires, path = multiresolution(shifted_signal, filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
 cross_corr(inv_multires, inv_multires2)
+
+plot_filter('haar')
 
 end = time.time()
 print('Koden eksekveres på', end - start, "sekunder")

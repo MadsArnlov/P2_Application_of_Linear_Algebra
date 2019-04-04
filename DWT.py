@@ -15,10 +15,12 @@ start = time.time()
 # =============================================================================
 haar = [[1/np.sqrt(2), 1/np.sqrt(2)],
         [1/np.sqrt(2), -1/np.sqrt(2)]]
+
 db4 = [[-0.0105974018, 0.0328830117, 0.0308413818, -0.1870348117,
         -0.0279837694, 0.6308807679, 0.7148465706, 0.2303778133],
        [-0.2303778133, 0.7148465706, -0.6308807679, -0.0279837694,
         0.1870348117, 0.0308413818, -0.0328830117, -0.0105974018]]
+
 bo15 = [[0.0165728152, -0.0165728152, -0.1215339780, 0.1215339780, 0.7071067812, 
          0.7071067812, 0.1215339780, -0.1215339780, -0.0165728152, 0.0165728152], 
          [0, 0, 0, 0, -0.7071067812, 0.7071067812, 0, 0, 0, 0]]
@@ -37,19 +39,20 @@ inv_db4 = [[0.23037781330885523, 0.7148465705525415, 0.6308807679295904, -0.0279
 # =============================================================================
 # Data Generation
 # =============================================================================
-def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0):
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, phase2 = 0, phase3 = 0, imp_freq = 0, scaling = 1):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
-    x1 = np.sin(A * freq1 + phase1)
+    x1 = np.sin(A * freq1 + phase1)*scaling
     x2 = np.sin(A * freq2 + phase2)
     x3 = np.sin(A * freq3 + phase3)
     x_imp = np.zeros(N)
-    for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
-        x_imp[i] = 1
-        x_imp[i+1] = -1
-    x_sum = x1 + x2 + x3 + x_imp
-    return x_sum
+    if imp_freq != 0:
+        for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
+            x_imp[i] = 1
+            x_imp[i+1] = -1
+            x_sum = x1 + x2 + x3 + x_imp
+        return x_sum
 
 def wave_generator(J = 18, freq = 10, phase = 0):
     N = 2**J
@@ -59,7 +62,7 @@ def wave_generator(J = 18, freq = 10, phase = 0):
     return wave
 
 # =============================================================================
-# Data ;anipulation
+# Data Manipulation
 # =============================================================================
 def zero_padding(signal):
     if np.log2(len(signal)) - int(np.log2(len(signal))) != 0.0:
@@ -114,16 +117,6 @@ def multiresolution(signal, filt, path = [0]):
         plt.plot(multires[i+1][1], 'r,')
         #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
-
-    #plt.figure(figsize=(14, 7))
-    #plt.subplot(len(multires), 1, 1)
-    #plt.plot(multires[0], 'b,')
-    #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
-    #for i in range(len(path)):
-    #    plt.subplot(len(multires), 1, i+2)
-    #    plt.plot(range(len(multires[i+1][0])), multires[i+1][0], 'r,',range(len(multires[i+1][0]), 2*len(multires[i+1][0])), multires[i+1][1], 'g,')
-    #    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
-    #plt.show()
     
     return multires, path
     
@@ -135,23 +128,41 @@ def inv_multiresolution(inv_filt, multires, path):
                 inv_multires.append(cir_conv_ups(multires[-1][0], inv_filt, path[-1-i]))
             elif path[-1-i] == 1:
                 inv_multires.append(cir_conv_ups(multires[-1][1], inv_filt, path[-1-i]))    
-        if path[-1-i] == 0:
-            inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
-        elif path[-1-i] == 1:
-            inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
+        else:
+            if path[-1-i] == 0:
+                inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
+            elif path[-1-i] == 1:
+                inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
     
-    plt.figure(figsize=(14,7))
+    plt.figure(figsize=(14, 10))
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k,')
         #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
+    return inv_multires[-1]
+
+# =============================================================================
+# Cross Correlation
+# =============================================================================
+def cross_corr(signal1, signal2):
+    correlation = np.correlate(signal1, signal2, 'full')
+    plt.plot(correlation, 'g')
+    plt.show()
+    print(len(signal1) - (np.argmax(correlation) + 1))
 
 # =============================================================================
 # Execution
 # =============================================================================
-multires, path = multiresolution(np.hstack([data_generator(18, 5, 100, 30, imp_freq = 10), data_generator(18, 15, 100, 30, imp_freq = 7)]), db4, path = np.ones(6))
-inv_multiresolution(inv_db4, multires, path)
+shifted_signal = np.hstack([np.zeros(2**14), data_generator(18, 11, 250, 3, imp_freq = 14)[0:2**18-2**14]])
+
+multires, path = multiresolution(data_generator(18, 11, 250, 3, imp_freq = 14), db4, path = np.zeros(10))
+inv_multires = inv_multiresolution(inv_db4, multires, path)
+
+multires, path = multiresolution(shifted_signal, db4, path = np.zeros(10))
+inv_multires2 = inv_multiresolution(inv_db4, multires, path)
+
+cross_corr(inv_multires, inv_multires2)
 
 end = time.time()
 print(end - start)

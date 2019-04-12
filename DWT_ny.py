@@ -60,20 +60,21 @@ def plot_filter(filtername):
 # =============================================================================
 # Data Generation
 # =============================================================================
-def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, phase1 = 0, 
-                   phase2 = 0, phase3 = 0, imp_freq = 0, scaling1 = 1):
+def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, freq4 = 1000, phase1 = 0, 
+                   phase2 = 0, phase3 = 0, phase4 = 0, imp_freq = 0, scaling1 = 1):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
     x1 = np.sin(A * freq1 + phase1)*scaling1
     x2 = np.sin(A * freq2 + phase2)
     x3 = np.sin(A * freq3 + phase3)
+    x4 = np.sin(A * freq4 + phase4)
     x_imp = np.zeros(N)
     if imp_freq != 0:
         for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
             x_imp[i] = 1
             x_imp[i+1] = -1
-    x_sum = x1 + x2 + x3 + x_imp
+    x_sum = x1 + x2 + x3 + x4 + x_imp
     return x_sum
 
 def wave_generator(J = 18, freq = 10, phase = 0):
@@ -187,13 +188,13 @@ filt, inv_filt = filters("db4")
 plot_filter("db4")
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
-                            file.freq2, file.freq3, file.phase1, file.phase2,
-                            file.phase3, file.imp_freq, file.scaling1)
+                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
+                            file.phase3, file.phase4, file.imp_freq, file.scaling1)
                             [0:2**file.J-file.shift]])
 
 multires, path = multiresolution(data_generator(file.J, file.freq1, file.freq2,
-                                                file.freq3, file.phase1,
-                                                file.phase2, file.phase3,
+                                                file.freq3, file.freq4, file.phase1,
+                                                file.phase2, file.phase3, file.phase4,
                                                 file.imp_freq, file.scaling1),
                                                 filt, path)
 inv_multires = inv_multiresolution(inv_filt, multires, path)

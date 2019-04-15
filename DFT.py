@@ -7,7 +7,6 @@ Created on Mon Apr 15 10:37:12 2019
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy as sp
 start = time.time()
 
 def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 0, 
@@ -25,19 +24,23 @@ def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 
             x_imp[i] = 1
             x_imp[i+1] = -1
     x_sum = x1 + x2 + x3 + x4 + x_imp
-    return x_sum, N
+    return x_sum
 
-def fft(x_sum, N):
-    t = np.arange(N)
-    
+def fft(x_sum):
+    x_fft = np.fft.rfft(x_sum, norm = 'ortho')
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
-    plt.plot(t, x_sum, 'r.')
-#    plt.subplot(2, 1, 2)
-#    plt.plot(x_fft, 'b.')
-#    plt.show()
+    plt.plot(x_sum, 'r-')
+    plt.subplot(2, 1, 2)
+    plt.plot(x_fft, 'b-')
+    plt.show()
+    return x_fft
 
-x_sum, N = data_generator(18, 30, 100)
-fft(x_sum, N)
+x_fft1 = fft(data_generator(18, 10000, 20000, 16000))
+x_fft2 = fft(data_generator(18, 10000, 20000, 16000))
+
+x_fft3 = x_fft2 - x_fft1
+plt.plot(x_fft3, 'b-')
+plt.show()
 
 end = time.time()

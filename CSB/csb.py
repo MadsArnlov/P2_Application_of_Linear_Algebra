@@ -49,6 +49,10 @@ def secant(f, x0, x1, eps):
     return x1, count
 
 
+def f_4(lamb):
+    return lamb*np.cosh(75/lamb) - lamb - 15
+
+
 def f(x, h0, lamb):
     return h0 + lamb*np.cosh(x/lamb)
 

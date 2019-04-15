@@ -9,19 +9,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def bisect(fcn, a, b, eps):
+def bisect(f, a, b, eps):
     """
     Bisection method for solution of the equation `fcn(x)=0` to an
     accuracy `eps`, in the interval [a,b].
     """
-    if fcn(a) * fcn(b) > 0:
+    if f(a) * f(b) > 0:
         print('Two endpoints have same sign')
         return
 
     count = 0
     while abs(b - a) >= eps:
         m = (a + b) / 2
-        if fcn(a) * fcn(m) <= 0:
+        if f(a) * f(m) <= 0:
             b = m
         else:
             a = m
@@ -49,31 +49,65 @@ def secant(f, x0, x1, eps):
     return x1, count
 
 
-def f_4(lamb):
-    return lamb*np.cosh(75/lamb) - lamb - 15
+def f_iter(g, x0, solution, eps, N):
+    x = [x0]
+    for k in range(1, N+1):
+        if abs(x[-1] - solution) >= eps:
+            x.append(g(x[k - 1]))
+    return x
 
 
 def f(x, h0, lamb):
     return h0 + lamb*np.cosh(x/lamb)
 
 
-h0 = [0, 5, 25]
-lamb = [10, 17, 25]
+def f_4(lamb):
+    return lamb*np.cosh(75/lamb) - lamb - 15
 
-x = np.linspace(-30, 30, 2000)
 
-plt.figure(figsize=(14, 6))
-plt.subplot(1, 2, 1)
-plt.plot(x, f(x, h0[0], lamb[0]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[0]))
-plt.plot(x, f(x, h0[0], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
-plt.plot(x, f(x, h0[0], lamb[2]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[2]))
-plt.grid()
-plt.legend()
-plt.subplot(1, 2, 2)
-plt.plot(x, f(x, h0[0], lamb[1]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
-plt.plot(x, f(x, h0[1], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[1], lamb[1]))
-plt.plot(x, f(x, h0[2], lamb[1]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[2], lamb[1]))
-plt.grid()
-plt.legend()
-plt.savefig("kædelinie.pdf")
-plt.show()
+def df_4(lamb):
+    return np.cosh(75/lamb) - 75*np.sinh(75/lamb)/lamb - 1
+
+
+def g1(lamb):
+    return (lamb+15)/np.cosh(75/lamb)
+
+
+def g2(lamb):
+    return lamb*np.cosh(75/lamb) - 15
+
+
+a, b, eps, N = 180, 210, 1E-2, 100
+
+m, count_B = bisect(f_4, a, b, eps)
+x0, count_N = newton(f_4, df_4, a, eps)
+x1, count_S = secant(f_4, a, b, eps)
+
+solution = 189.94865405998303
+
+lamb_test = f_iter(g1, a, solution, eps, N)
+
+print(lamb_test)
+
+#h0 = [0, 5, 25]
+#lamb = [10, 17, 25]
+
+#lamb = np.linspace(180, 210, 10000)
+#
+#plt.figure(figsize=(14, 6))
+#plt.plot(lamb,f_4(lamb))
+##plt.subplot(1, 2, 1)
+##plt.plot(x, f(x, h0[0], lamb[0]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[0]))
+##plt.plot(x, f(x, h0[0], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
+##plt.plot(x, f(x, h0[0], lamb[2]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[2]))
+##plt.grid()
+##plt.legend()
+##plt.subplot(1, 2, 2)
+##plt.plot(x, f(x, h0[0], lamb[1]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
+##plt.plot(x, f(x, h0[1], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[1], lamb[1]))
+##plt.plot(x, f(x, h0[2], lamb[1]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[2], lamb[1]))
+#plt.grid()
+##plt.legend()
+#plt.savefig("kædelinie.pdf")
+#plt.show()
+

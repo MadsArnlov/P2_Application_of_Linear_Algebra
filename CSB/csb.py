@@ -85,15 +85,14 @@ x1, count_S = secant(f_4, a, b, eps)
 
 solution = 189.94865405998303
 
-lamb_test = f_iter(g1, a, solution, eps, N)
+lamb_test = f_iter(g2, a, solution, eps, N)
 
-print(lamb_test)
 
 #h0 = [0, 5, 25]
 #lamb = [10, 17, 25]
 
 #lamb = np.linspace(180, 210, 10000)
-#
+##
 #plt.figure(figsize=(14, 6))
 #plt.plot(lamb,f_4(lamb))
 ##plt.subplot(1, 2, 1)
@@ -108,6 +107,6 @@ print(lamb_test)
 ##plt.plot(x, f(x, h0[2], lamb[1]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[2], lamb[1]))
 #plt.grid()
 ##plt.legend()
-#plt.savefig("kædelinie.pdf")
+#plt.savefig("funktion.pdf")
 #plt.show()
 

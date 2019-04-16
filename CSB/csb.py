@@ -73,11 +73,19 @@ def g1(lamb):
     return (lamb+15)/np.cosh(75/lamb)
 
 
+def dg1(lamb):
+    return 1/np.cosh(75/lamb) + (75*(lamb+15)*np.sinh(75/lamb))/(np.cosh(75/lamb)**2 * lamb**2)
+
+
 def g2(lamb):
     return lamb*np.cosh(75/lamb) - 15
 
 
-a, b, eps, N = 180, 210, 1E-2, 100
+def dg2(lamb):
+    return np.cosh(75/lamb) - (75*np.sinh(75/lamb))/lamb
+
+
+a, b, eps, N = 180, 210, 1E-8, 100
 
 m, count_B = bisect(f_4, a, b, eps)
 x0, count_N = newton(f_4, df_4, a, eps)
@@ -85,28 +93,37 @@ x1, count_S = secant(f_4, a, b, eps)
 
 solution = 189.94865405998303
 
-lamb_test = f_iter(g2, a, solution, eps, N)
+fejl = [abs(solution - m), abs(solution - x0), abs(solution - x1)]
+
+print(fejl)
+
+#lamb_test = f_iter(g1, a, solution, eps, N)
+
+
 
 
 #h0 = [0, 5, 25]
 #lamb = [10, 17, 25]
 
 #lamb = np.linspace(180, 210, 10000)
-##
+#
 #plt.figure(figsize=(14, 6))
-#plt.plot(lamb,f_4(lamb))
-##plt.subplot(1, 2, 1)
-##plt.plot(x, f(x, h0[0], lamb[0]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[0]))
-##plt.plot(x, f(x, h0[0], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
-##plt.plot(x, f(x, h0[0], lamb[2]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[2]))
-##plt.grid()
-##plt.legend()
-##plt.subplot(1, 2, 2)
-##plt.plot(x, f(x, h0[0], lamb[1]), 'k-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[0], lamb[1]))
-##plt.plot(x, f(x, h0[1], lamb[1]), 'b-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[1], lamb[1]))
-##plt.plot(x, f(x, h0[2], lamb[1]), 'r-', label="$h_0 = {:.2f},\lambda = {:.2f}$".format(h0[2], lamb[1]))
+#plt.subplot(2, 2, 1)
+#plt.plot(lamb, g1(lamb), 'r-', label='$g_1(\lambda)$')
 #plt.grid()
-##plt.legend()
-#plt.savefig("funktion.pdf")
+#plt.legend()
+#plt.subplot(2,2,2)
+#plt.plot(lamb, g2(lamb), 'b-', label='$g_2(\lambda)$')
+#plt.grid()
+#plt.legend()
+#plt.subplot(2,2,3)
+#plt.plot(lamb, dg1(lamb), 'r-', label="$g_1'(\lambda)$")
+#plt.grid()
+#plt.legend()
+#plt.subplot(2, 2, 4)
+#plt.plot(lamb, dg2(lamb), 'b-', label="$g_2'(\lambda)$")
+#plt.grid()
+#plt.legend()
+#plt.savefig("diff.pdf")
 #plt.show()
 

@@ -46,7 +46,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Decomposition", fontsize=16)
         else:
             plt.title("High-pass Decomposition", fontsize=16)
-        plt.axis([-0.05, len(filt[i]) + 0.05, min(filt[i]), max(filt[i])])
+        plt.axis([-0.1, len(filt[i]) + 0.1, -max(filt[i]), max(filt[i])])
     for i in range(2):
         plt.subplot(2, 2, i+3)
         plt.stem(inv_filt[i], 'c-')
@@ -54,7 +54,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Reconstruction", fontsize=16)
         else:
             plt.title("High-pass Reconstruction", fontsize=16)
-        plt.axis([-0.05, len(inv_filt[i]) + 0.05, min(inv_filt[i]), max(inv_filt[i])])    
+        plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(inv_filt[i]), max(inv_filt[i])])    
     plt.show()
 
 # =============================================================================
@@ -131,14 +131,14 @@ def multiresolution(signal, filt, path = [0]):
     plt.figure(figsize=(14, 10)).suptitle("Multiresolution Analysis with {:d} levels".format(len(path)), fontsize=18, y=0.93)
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b-')
-    plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
+    #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
         plt.plot(multires[i+1][0], 'r-')
-        plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
+        #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
         plt.plot(multires[i+1][1], 'm-')
-        plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
+        #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
     
     return multires, path
@@ -161,7 +161,7 @@ def inv_multiresolution(inv_filt, multires, path):
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k-')
-        plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
+        #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
     return inv_multires[-1]
 
@@ -183,9 +183,9 @@ def cross_corr(signal1, signal2):
 #import Wave_high_frequencies as file
 import Synthetic_signal as file
 
-path = np.ones(8)
-filt, inv_filt = filters("db4")
-plot_filter("db4")
+path = np.zeros(12)
+filt, inv_filt = filters("haar")
+plot_filter("haar")
 
 shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,

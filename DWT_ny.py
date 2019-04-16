@@ -41,20 +41,20 @@ def plot_filter(filtername):
     plt.figure(figsize=(14, 10)).suptitle("Filter Coefficients for {:s}".format(filtername), fontsize=18, y=0.95)
     for i in range(2):
         plt.subplot(2, 2, i+1)
-        plt.plot(filt[i], 'c-')
+        plt.stem(filt[i], 'c-')
         if i == 0:
             plt.title("Low-pass Decomposition", fontsize=16)
         else:
             plt.title("High-pass Decomposition", fontsize=16)
-        plt.axis([0, len(filt[i]), min(filt[i]), max(filt[i])])
+        plt.axis([-0.05, len(filt[i]) + 0.05, min(filt[i]), max(filt[i])])
     for i in range(2):
         plt.subplot(2, 2, i+3)
-        plt.plot(inv_filt[i], 'c-')
+        plt.stem(inv_filt[i], 'c-')
         if i == 0:
             plt.title("Low-pass Reconstruction", fontsize=16)
         else:
             plt.title("High-pass Reconstruction", fontsize=16)
-        plt.axis([0, len(inv_filt[i]), min(inv_filt[i]), max(inv_filt[i])])    
+        plt.axis([-0.05, len(inv_filt[i]) + 0.05, min(inv_filt[i]), max(inv_filt[i])])    
     plt.show()
 
 # =============================================================================
@@ -203,8 +203,6 @@ multires, path = multiresolution(shifted_signal, filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
 cross_corr(inv_multires, inv_multires2)
-
-
 
 end = time.time()
 print('The code is executed in', end - start, "seconds")

@@ -40,6 +40,7 @@ x_fft1 = fft(data_generator(18, 10000, 20000, 16000))
 x_fft2 = fft(data_generator(18, 10000, 20000, 16000))
 
 x_fft3 = x_fft2 - x_fft1
+plt.figure(figsize=(12, 3.5))
 plt.plot(x_fft3, 'b-')
 plt.show()
 

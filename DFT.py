@@ -39,7 +39,7 @@ def fft(x_sum, n_frequencies):
     for i in range(n_frequencies):
         frequencies.append(np.where(x_fft == np.amax(x_fft)))
         x_fft[x_fft == np.amax(x_fft)] = 0
-        print(frequencies[i])
+        print(frequencies[i][0])
     return x_fft, frequencies
 
 def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):

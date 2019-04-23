@@ -63,7 +63,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Decomposition", fontsize=16)
         else:
             plt.title("High-pass Decomposition", fontsize=16)
-        plt.axis([-0.1, len(filt[i]) + 0.1, -max(filt[i]), max(filt[i])])
+        plt.axis([-0.1, len(filt[i]) + 0.1, -max(filt[i]) - 0.1, max(filt[i]) + 0.1])
     for i in range(2):
         plt.subplot(2, 2, i+3)
         plt.stem(inv_filt[i], 'c-')
@@ -71,7 +71,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Reconstruction", fontsize=16)
         else:
             plt.title("High-pass Reconstruction", fontsize=16)
-        plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(inv_filt[i]), max(inv_filt[i])])    
+        plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(inv_filt[i]) - 0.1, max(inv_filt[i])+ 0.1])    
     plt.show()
 
 # =============================================================================
@@ -151,10 +151,10 @@ def multiresolution(signal, filt, path = [0]):
     #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
-        plt.plot(multires[i+1][0], 'r-')
+        plt.plot(multires[i+1][0], 'r,')
         #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
-        plt.plot(multires[i+1][1], 'm-')
+        plt.plot(multires[i+1][1], 'm,')
         #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
     
@@ -200,11 +200,11 @@ def cross_corr(signal1, signal2):
 #import Wave_high_frequencies as file
 import Synthetic_signal as file
 
-path = np.zeros(12)
+path = np.ones(10)
 filt, inv_filt = filters("sym5")
 plot_filter("sym5")
 
-shifted_signal = np.hstack([np.zeros(file.shift), data_generator(file.J, file.freq1,
+shifted_signal = np.append([wave_generator(np.log2(file.shift))], [data_generator(file.J, file.freq1,
                             file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
                             file.phase3, file.phase4, file.imp_freq, file.scaling1)
                             [0:2**file.J-file.shift]])

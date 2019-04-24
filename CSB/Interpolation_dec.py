@@ -2,7 +2,7 @@
 
 import decimal
 context = decimal.getcontext()  # Get the current default context
-digits = 40                     # Significant digits
+digits = 40                      # Significant digits
 context.prec = digits           
 D = decimal.Decimal             # Construct a new Decimal object
 
@@ -93,7 +93,7 @@ print('          Precision = ',digits) # print precision
 print('-'*34)
 print('  N     Error bound       Error')
 print('-'*34)
-for N in range(10,61,10):
+for N in range(10,81,10):
     
     # Parameters for Lagrange interpolation
     h = abs(b-a)/D(N)

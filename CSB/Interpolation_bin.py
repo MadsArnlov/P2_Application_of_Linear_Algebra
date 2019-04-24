@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from math import sin
+from math import sin, cos, pi
+import matplotlib.pyplot as plt
 
 # Interpolating polynomial
 def lagrange(x, x_values, y_values): 
@@ -33,34 +34,88 @@ def equi_bound(h, N):
     M = 10**(N+1)
     return 0.25*h**(N+1)*M
 
-# Print the results
-print('-'*34)
-print('      Lagrange interpolation ')
-print('-'*34)
-print('  N     Error bound       Error')
-print('-'*34)
-for N in range(10,61,10):
-    
-    # Parameters for Lagrange interpolation
-    h = abs(b-a)/N
-    x_values = [a+k*h for k in range(N+1)] 
-    y_values = [f(x_values[k]) for k in range(N+1)]
-   
-    # New points for calculating the error max|f(x)-p_N(x)|
-    N_test = 797 
+## Print the results
+#print('-'*34)
+#print('      Lagrange interpolation ')
+#print('-'*34)
+#print('  N     Error bound       Error')
+#print('-'*34)
+#for N in range(10,101,10):
+#    
+#    # Parameters for Lagrange interpolation
+#    h = abs(b-a)/N
+#    x_values = [a+k*h for k in range(N+1)] 
+#    y_values = [f(x_values[k]) for k in range(N+1)]
+#   
+#    # New points for calculating the error max|f(x)-p_N(x)|
+#    N_test =  797
+#    h_test = abs(b-a)/N_test
+#    x_test = [3*(1 - cos(k*pi/N))/2 for k in range(N_test+1)]
+#     
+#    # Calculate the approximation and the solution
+#    approx = lagrange(x_test, x_values, y_values)
+#    y_test = [f(x_test[k]) for k in range(N_test+1)]
+#    
+#    # Calculate the error
+#    from operator import sub
+#    temp1 = list(map(sub, y_test, approx))
+#    temp2 = list(map(abs, temp1))
+#    error = max(temp2)
+#    
+#    # Print a table
+#    print('{:3d}  {:14.5E}  {:13.5E}'.format(N, \
+#          equi_bound(h,N), error))
+# =============================================================================
+# Opgave 3
+# =============================================================================
+N = [5, 15, 100]
+plt.figure(figsize=(13, 11))
+for i in range(len(N)):
+    h = abs(b-a)/N[i]
+    x_values = [a+k*h for k in range(N[i]+1)] 
+    y_values = [f(x_values[k]) for k in range(N[i]+1)]
+    N_test =  797
     h_test = abs(b-a)/N_test
     x_test = [a+k*h_test for k in range(N_test+1)]
-     
-    # Calculate the approximation and the solution
     approx = lagrange(x_test, x_values, y_values)
-    y_test = [f(x_test[k]) for k in range(N_test+1)]
-    
-    # Calculate the error
-    from operator import sub
-    temp1 = list(map(sub, y_test, approx))
-    temp2 = list(map(abs, temp1))
-    error = max(temp2)
-    
-    # Print a table
-    print('{:3d}  {:14.5E}  {:13.5E}'.format(N, \
-          equi_bound(h,N), error))
+    f_values = [f(x_test[k]) for k in range(N_test+1)]
+        
+    plt.subplot(3,1,1+i)
+    plt.plot(x_values, y_values, 'kd', label="Knudepunkter")
+    plt.plot(x_test, approx, 'b--', label="$p_N(x)$")
+    plt.plot(x_test, f_values, 'r-', label="$f(x)$")
+    plt.legend()
+    plt.grid()
+    plt.title("Plot af funktionen og lagrange polynomiumet med N = {:d}".format(N[i]))
+plt.savefig("lagrange_plot.pdf")
+plt.show()
+
+# =============================================================================
+# Opgave 6
+# =============================================================================
+#for N in range(34,42,1):
+#    
+#    # Parameters for Lagrange interpolation
+#    h = abs(b-a)/N
+#    x_values = [a+k*h for k in range(N+1)] 
+#    y_values = [f(x_values[k]) for k in range(N+1)]
+#   
+#    # New points for calculating the error max|f(x)-p_N(x)|
+#    N_test =  797
+#    h_test = abs(b-a)/N_test
+#    x_test = [a+k*h_test for k in range(N_test+1)]
+#     
+#    # Calculate the approximation and the solution
+#    approx = lagrange(x_test, x_values, y_values)
+#    y_test = [f(x_test[k]) for k in range(N_test+1)]
+#    
+#    # Calculate the error
+#    from operator import sub
+#    temp1 = list(map(sub, y_test, approx))
+#    temp2 = list(map(abs, temp1))
+#    error = max(temp2)
+#    
+#    # Print a table
+#    print('{:3d}  {:14.5E}  {:13.5E}'.format(N, \
+#          equi_bound(h,N), error))
+

@@ -11,7 +11,12 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 start = time.time()
 
-w=wave.open("\\Users\\bergl\\OneDrive\\Documents\\Test_recording\\Exported","r")
+w=wave.open("Test_recording microphone1.wav", "rb")
+sampling_frequency = w.getframerate()
+nchannels = w.getnchannels()
+nframes = w.getnframes()
+frames = w.readframes(nframes)
+w.close()
 # =============================================================================
 # Filters
 # =============================================================================
@@ -206,22 +211,22 @@ path = np.ones(10)
 filt, inv_filt = filters("sym5")
 plot_filter("sym5")
 
-shifted_signal = np.append([wave_generator(np.log2(file.shift))], [data_generator(file.J, file.freq1,
-                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
-                            file.phase3, file.phase4, file.imp_freq, file.scaling1)
-                            [0:2**file.J-file.shift]])
-
-multires, path = multiresolution(data_generator(file.J, file.freq1, file.freq2,
-                                                file.freq3, file.freq4, file.phase1,
-                                                file.phase2, file.phase3, file.phase4,
-                                                file.imp_freq, file.scaling1),
-                                                filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution(shifted_signal, filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross_corr(inv_multires, inv_multires2)
+#shifted_signal = np.append([wave_generator(np.log2(file.shift))], [data_generator(file.J, file.freq1,
+#                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
+#                            file.phase3, file.phase4, file.imp_freq, file.scaling1)
+#                            [0:2**file.J-file.shift]])
+#
+#multires, path = multiresolution(data_generator(file.J, file.freq1, file.freq2,
+#                                                file.freq3, file.freq4, file.phase1,
+#                                                file.phase2, file.phase3, file.phase4,
+#                                                file.imp_freq, file.scaling1),
+#                                                filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution(shifted_signal, filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross_corr(inv_multires, inv_multires2)
 
 end = time.time()
 print('The code is executed in', end - start, "seconds")

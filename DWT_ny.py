@@ -4,19 +4,33 @@ Created on Sat Mar 30 12:10:44 2019
 
 @author: Lasse
 """
-import wave
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
+from scipy.io import wavfile
 start = time.time()
 
-w=wave.open("Test_recording microphone1.wav", "rb")
-sampling_frequency = w.getframerate()
-nchannels = w.getnchannels()
-nframes = w.getnframes()
-frames = w.readframes(nframes)
-w.close()
+# =============================================================================
+# Data
+# =============================================================================
+
+sampling_frequency1, x1 = wavfile.read("Test_recording_microphone1.wav") 
+sampling_frequency2, x2 = wavfile.read("Test_recording_microphone2.wav") 
+sampling_frequency3, x3 = wavfile.read("Test_recording_microphone3.wav")
+
+x = [x1, x2, x3]
+
+t = np.linspace(0, 30, len(x1))
+
+plt.figure(figsize=(14,10))
+for i in range(3):
+    plt.subplot(3,1,1+i)
+    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
+    plt.plot(t, x[i], 'r,')
+    plt.grid()
+plt.show()
+
 # =============================================================================
 # Filters
 # =============================================================================
@@ -205,12 +219,14 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 #import Simple_sine_with_impulses as file
 #import Wave_high_frequencies as file
-import Synthetic_signal as file
+#import Synthetic_signal as file
 
-path = np.ones(10)
+path = np.zeros(12)
 filt, inv_filt = filters("sym5")
-plot_filter("sym5")
+#plot_filter("haar")
 
+#multires, path = multiresolution(x1, filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
 #shifted_signal = np.append([wave_generator(np.log2(file.shift))], [data_generator(file.J, file.freq1,
 #                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
 #                            file.phase3, file.phase4, file.imp_freq, file.scaling1)

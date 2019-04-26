@@ -4,12 +4,14 @@ Created on Sat Mar 30 12:10:44 2019
 
 @author: Lasse
 """
+import wave
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 start = time.time()
 
+w=wave.open("\\Users\\bergl\\OneDrive\\Documents\\Test_recording\\Exported","r")
 # =============================================================================
 # Filters
 # =============================================================================

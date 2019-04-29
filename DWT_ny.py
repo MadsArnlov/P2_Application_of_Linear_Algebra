@@ -28,6 +28,9 @@ data_e = data_s + 2**19                 # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 
+# =============================================================================
+# Plot of Data
+# =============================================================================
 #t = np.linspace(10, 10+len(x[0])/sampling_frequency1, len(x[0]))
 #
 #plt.figure(figsize=(14,10))

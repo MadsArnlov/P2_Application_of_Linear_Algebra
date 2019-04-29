@@ -9,27 +9,31 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 from scipy.io import wavfile
+from pathlib import Path
 start = time.time()
 
 # =============================================================================
 # Data
 # =============================================================================
 
-sampling_frequency1, x1 = wavfile.read("Test_recording_microphone1_speaker 4.wav") 
-sampling_frequency2, x2 = wavfile.read("Test_recording_microphone2_speaker 4.wav") 
-sampling_frequency3, x3 = wavfile.read("Test_recording_microphone3_speaker 4.wav")
+data_folder = Path("Test_recordings/Test_1/")
+file_to_open = [data_folder / "Test_recording microphone{:d}_240-480Hz_speaker4.wav".format(i) for i in range(1,4)]
+
+sampling_frequency1, x1 = wavfile.read(file_to_open[0])
+sampling_frequency2, x2 = wavfile.read(file_to_open[1])
+sampling_frequency3, x3 = wavfile.read(file_to_open[2])
 
 x = [x1, x2, x3]
 
-t = np.linspace(0, 30, len(x1))
-
-plt.figure(figsize=(14,10))
-for i in range(3):
-    plt.subplot(3,1,1+i)
-    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
-    plt.plot(t, x[i], 'r,')
-    plt.grid()
-plt.show()
+#t = np.linspace(0, 30, len(x1))
+#
+#plt.figure(figsize=(14,10))
+#for i in range(3):
+#    plt.subplot(3,1,1+i)
+#    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
+#    plt.plot(t, x[i], 'r,')
+#    plt.grid()
+#plt.show()
 
 # =============================================================================
 # Filters
@@ -221,12 +225,15 @@ def cross_corr(signal1, signal2):
 #import Wave_high_frequencies as file
 #import Synthetic_signal as file
 
-path = np.zeros(12)
-filt, inv_filt = filters("sym5")
+path = np.zeros(16)
+filt, inv_filt = filters("db4")
 #plot_filter("haar")
 
-#multires, path = multiresolution(x1, filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
+multires, path = multiresolution(zero_padding(x1), filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires2, path = multiresolution(zero_padding(x2), filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires2, path)
 #shifted_signal = np.append([wave_generator(np.log2(file.shift))], [data_generator(file.J, file.freq1,
 #                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
 #                            file.phase3, file.phase4, file.imp_freq, file.scaling1)
@@ -242,7 +249,7 @@ filt, inv_filt = filters("sym5")
 #multires, path = multiresolution(shifted_signal, filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
-#cross_corr(inv_multires, inv_multires2)
+cross_corr(inv_multires, inv_multires2)
 
 end = time.time()
 print('The code is executed in', end - start, "seconds")

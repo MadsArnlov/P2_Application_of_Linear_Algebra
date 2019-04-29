@@ -182,7 +182,7 @@ def multiresolution(signal, filt, path = [0]):
     #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
-        plt.plot(multires[i+1][0], 'r,')
+        plt.plot(multires[i+1][0], 'r-')
         #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
         plt.plot(multires[i+1][1], 'm,')
@@ -241,8 +241,8 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Execution
 # =============================================================================
-path = [1,1,1,1,0,0,0]
-filt, inv_filt = filters("sym5")
+path = [1,1,1,1,1,1,1]
+filt, inv_filt = filters("haar")
 
 
 multires, path = multiresolution((x[0]), filt, path)
@@ -251,8 +251,8 @@ inv_multires = inv_multiresolution(inv_filt, multires, path)
 multires, path = multiresolution((x[1]), filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
-#cross1 = cross_corr(inv_multires, inv_multires2)
-#time_shift1 = sampling_frequency/cross1
+cross1 = cross_corr(inv_multires, inv_multires2)
+time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

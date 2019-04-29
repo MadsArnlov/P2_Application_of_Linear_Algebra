@@ -15,9 +15,9 @@ start = time.time()
 # Data
 # =============================================================================
 
-sampling_frequency1, x1 = wavfile.read("Test_recording_microphone1.wav") 
-sampling_frequency2, x2 = wavfile.read("Test_recording_microphone2.wav") 
-sampling_frequency3, x3 = wavfile.read("Test_recording_microphone3.wav")
+sampling_frequency1, x1 = wavfile.read("Test_recording_microphone1_speaker 4.wav") 
+sampling_frequency2, x2 = wavfile.read("Test_recording_microphone2_speaker 4.wav") 
+sampling_frequency3, x3 = wavfile.read("Test_recording_microphone3_speaker 4.wav")
 
 x = [x1, x2, x3]
 

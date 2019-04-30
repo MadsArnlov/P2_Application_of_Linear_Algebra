@@ -12,34 +12,6 @@ from scipy.io import wavfile
 from pathlib import Path
 start = time.time()
 
-# =============================================================================
-# Data
-# =============================================================================
-data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
-
-sampling_frequency, data1 = wavfile.read(file_to_open[0])
-sampling_frequency, data2 = wavfile.read(file_to_open[1])
-sampling_frequency, data3 = wavfile.read(file_to_open[2])
-
-data_s = sampling_frequency * 10         # start value for data interval
-data_e = data_s + 2**19                  # end value for data interval
-
-x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
-
-# =============================================================================
-# Plot of Data
-# =============================================================================
-#t = np.linspace(10, 10+len(x[0])/sampling_frequency, len(x_zero_padded[0]))
-#
-#plt.figure(figsize=(14,10))
-#for i in range(3):
-#    plt.subplot(3,1,1+i)
-#    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
-#    plt.plot(t, x_zero_padded[i], 'r,')
-#    plt.grid()
-#plt.show()
-
 
 # =============================================================================
 # Filters
@@ -244,14 +216,15 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Window Functions
 # =============================================================================
-def hann_window(n, N):
-    return 1/2 *(1 - np.cos(2*np.pi*n/N))
+def hann_window(signal):
+    signal = [signal[i] * 1/2 *(1 - np.cos(2*np.pi*i/len(signal))) for i in range(len(signal))]
+    return signal
 
 
-def rectangular_window(multires, path, size = 15):
-    multires[-1][int(path[-1])][:size] = 0
-    multires[-1][int(path[-1])][-size:] = 0
-    return multires
+def rectangular_window(signal, size = 15):
+    signal[:size] = 0
+    signal[-size:] = 0
+    return signal
 
 
 # =============================================================================
@@ -260,6 +233,35 @@ def rectangular_window(multires, path, size = 15):
 def threshold_denoising(multires, path):
     multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
     return multires
+
+
+# =============================================================================
+# Data
+# =============================================================================
+data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
+
+sampling_frequency, data1 = wavfile.read(file_to_open[0])
+sampling_frequency, data2 = wavfile.read(file_to_open[1])
+sampling_frequency, data3 = wavfile.read(file_to_open[2])
+
+data_s = sampling_frequency * 10         # start value for data interval
+data_e = data_s + 2**19                  # end value for data interval
+
+x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
+
+# =============================================================================
+# Plot of Data
+# =============================================================================
+#t = np.linspace(10, 10+len(x[0])/sampling_frequency, len(x_zero_padded[0]))
+#
+#plt.figure(figsize=(14,10))
+#for i in range(3):
+#    plt.subplot(3,1,1+i)
+#    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
+#    plt.plot(t, x_zero_padded[i], 'r,')
+#    plt.grid()
+#plt.show()
 
 
 # =============================================================================

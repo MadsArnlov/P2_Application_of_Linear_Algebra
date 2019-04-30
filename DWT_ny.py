@@ -246,6 +246,13 @@ def cross_corr(signal1, signal2):
 
 
 # =============================================================================
+# Hann Window
+# =============================================================================
+def Hann(n, N):
+    return 1/2 *(1 - np.cos(2*np.pi/N))
+
+
+# =============================================================================
 # Execution
 # =============================================================================
 path = np.array([1,1,1])
@@ -261,14 +268,14 @@ filt, inv_filt = filters("db4")
 #cross1 = cross_corr(inv_multires, inv_multires2)
 #time_shift1 = sampling_frequency/cross1
 
-multires, path = multiresolution((x[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross2 = cross_corr(inv_multires, inv_multires2)
-time_shift2 = sampling_frequency/cross2
+#multires, path = multiresolution((x[0]), filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x[2]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross2 = cross_corr(inv_multires, inv_multires2)
+#time_shift2 = sampling_frequency/cross2
 
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

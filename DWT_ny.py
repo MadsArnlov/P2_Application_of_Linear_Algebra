@@ -199,10 +199,6 @@ def multiresolution(signal, filt, path = [0]):
 
 
 def inv_multiresolution(inv_filt, multires, path):
-    multires[-1][int(path[-1])][:15] = 0
-    multires[-1][int(path[-1])][-15:] = 0
-    #multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0 #Threshold denoising
-
     inv_multires = []
     for i in range(len(path)):
         if i == 0:
@@ -246,10 +242,24 @@ def cross_corr(signal1, signal2):
 
 
 # =============================================================================
-# Hann Window
+# Window Functions
 # =============================================================================
-def Hann(n, N):
+def hann_window(n, N):
     return 1/2 *(1 - np.cos(2*np.pi/N))
+
+
+def rectangular_window(multires, path, size = 15):
+    multires[-1][int(path[-1])][:size] = 0
+    multires[-1][int(path[-1])][-size:] = 0
+    return multires
+
+
+# =============================================================================
+# Threshold Denoisning
+# =============================================================================
+def threshold_denoising(multires, path):
+    multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
+    return multires
 
 
 # =============================================================================

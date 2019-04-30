@@ -118,6 +118,25 @@ def zero_padding(signal):
 
 
 # =============================================================================
+# Window Functions
+# =============================================================================
+def hann_window(signal):
+    signal = [signal[i] * 1/2 *(1 - np.cos(2*np.pi*i/len(signal))) for i in range(len(signal))]
+    return signal
+
+
+def hamming_window(signal):
+    signal = [signal[i] * 25/46 *(1 - np.cos(2*np.pi*i/len(signal))) for i in range(len(signal))]
+    return signal
+
+
+def rectangular_window(signal, size = 15):
+    signal[:size] = 0
+    signal[-size:] = 0
+    return signal
+
+
+# =============================================================================
 # Convolution and Multiresolution
 # =============================================================================
 def cir_conv_downs(signal, filt):
@@ -160,7 +179,7 @@ def multiresolution(signal, filt, path = [0]):
     #plt.axis([0, len(multires[0]), min(multires[0]), max(multires[0])])
     for i in range(len(path)):
         plt.subplot(len(multires), 2, 3+(i*2))
-        plt.plot(multires[i+1][0], 'r-')
+        plt.plot(multires[i+1][0], 'r,')
         #plt.axis([0, len(multires[0]), min(multires[i+1][0]), max(multires[i+1][0])])
         plt.subplot(len(multires), 2, 4+(i*2))
         plt.plot(multires[i+1][1], 'm,')
@@ -187,10 +206,18 @@ def inv_multiresolution(inv_filt, multires, path):
     plt.figure(figsize=(14, 10)).suptitle("Multiresolution Synthesis with {:d} levels".format(len(path)), fontsize=18, y=0.93)
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
-        plt.plot(inv_multires[i], 'k-')
+        plt.plot(inv_multires[i], 'k,')
         #plt.axis([0, len(inv_multires[-1]), min(inv_multires[i]), max(inv_multires[i])])
     plt.show()
     return inv_multires[-1]
+
+
+# =============================================================================
+# Threshold Denoisning
+# =============================================================================
+def threshold_denoising(multires, path):
+    multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
+    return multires
 
 
 # =============================================================================
@@ -214,28 +241,6 @@ def cross_corr(signal1, signal2):
 
 
 # =============================================================================
-# Window Functions
-# =============================================================================
-def hann_window(signal):
-    signal = [signal[i] * 1/2 *(1 - np.cos(2*np.pi*i/len(signal))) for i in range(len(signal))]
-    return signal
-
-
-def rectangular_window(signal, size = 15):
-    signal[:size] = 0
-    signal[-size:] = 0
-    return signal
-
-
-# =============================================================================
-# Threshold Denoisning
-# =============================================================================
-def threshold_denoising(multires, path):
-    multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
-    return multires
-
-
-# =============================================================================
 # Data
 # =============================================================================
 data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
@@ -253,23 +258,27 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # =============================================================================
 # Plot of Data
 # =============================================================================
-#t = np.linspace(10, 10+len(x[0])/sampling_frequency, len(x_zero_padded[0]))
+#t = np.linspace(10, 10+len(x[0])/sampling_frequency, len(x[0]))
 #
 #plt.figure(figsize=(14,10))
 #for i in range(3):
-#    plt.subplot(3,1,1+i)
+#    plt.subplot(3, 1, 1+i)
 #    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
-#    plt.plot(t, x_zero_padded[i], 'r,')
+#    plt.plot(t, x[i], 'r,')
 #    plt.grid()
+#    plt.subplot(3, 1, 1+i)
+#    plt.plot(t, hamming_window(x[i]), 'b,')
+#    plt.grid
 #plt.show()
 
 
 # =============================================================================
 # Execution
 # =============================================================================
-path = np.array([1,1,1])
+path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
+x = [hamming_window(x[i]) for i in range(len(x))]
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
@@ -280,14 +289,14 @@ filt, inv_filt = filters("db4")
 #cross1 = cross_corr(inv_multires, inv_multires2)
 #time_shift1 = sampling_frequency/cross1
 
-#multires, path = multiresolution((x[0]), filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
-#
-#multires, path = multiresolution((x[2]), filt, path)
-#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-#
-#cross2 = cross_corr(inv_multires, inv_multires2)
-#time_shift2 = sampling_frequency/cross2
+multires, path = multiresolution((x[0]), filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution((x[2]), filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross2 = cross_corr(inv_multires, inv_multires2)
+time_shift2 = sampling_frequency/cross2
 
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
@@ -297,6 +306,7 @@ filt, inv_filt = filters("db4")
 #
 #cross3 = cross_corr(inv_multires, inv_multires2)
 #time_shift3 = sampling_frequency/cross3
+
 
 # =============================================================================
 # Synthetic Analysis
@@ -325,6 +335,7 @@ filt, inv_filt = filters("db4")
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
 #cross_corr(inv_multires, inv_multires2)
+
 
 # =============================================================================
 # Print of execution time

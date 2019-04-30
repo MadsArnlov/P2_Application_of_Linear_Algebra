@@ -15,9 +15,8 @@ start = time.time()
 # =============================================================================
 # Data
 # =============================================================================
-
-data_folder = Path("Test_recordings/impuls300pr.min_speaker4/")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker4.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -40,6 +39,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #    plt.plot(t, x_zero_padded[i], 'r,')
 #    plt.grid()
 #plt.show()
+
 
 # =============================================================================
 # Filters
@@ -84,6 +84,7 @@ def filters(name = "db4"):
                      -0.019538882735286728]]
     return filt, inv_filt
 
+
 def plot_filter(filtername):
     filt, inv_filt = filters(filtername)
     plt.figure(figsize=(14, 10)).suptitle("Filter Coefficients for {:s}".format(filtername), fontsize=18, y=0.95)
@@ -105,13 +106,14 @@ def plot_filter(filtername):
         plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(inv_filt[i]) - 0.1, max(inv_filt[i])+ 0.1])    
     plt.show()
 
+
 # =============================================================================
 # Data Generation
 # =============================================================================
 def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, freq4 = 1000, phase1 = 0, 
                    phase2 = 0, phase3 = 0, phase4 = 0, imp_freq = 0, scaling1 = 1):
     N = 2**J
-    t = np.arange(1 , N+1)
+    t = np.arange(1, N+1)
     A = 2 * np.pi * t / N
     x1 = np.sin(A * freq1 + phase1)*scaling1
     x2 = np.sin(A * freq2 + phase2)
@@ -125,12 +127,14 @@ def data_generator(J = 18, freq1 = 13, freq2 = 20, freq3 = 40, freq4 = 1000, pha
     x_sum = x1 + x2 + x3 + x4 + x_imp
     return x_sum
 
+
 def wave_generator(J = 18, freq = 10, phase = 0):
     N = 2**J
     t = np.arange(1 , N+1)
     A = 2 * np.pi * t / N
     wave = np.sin(A * freq + phase)
     return wave
+
 
 # =============================================================================
 # Data Manipulation
@@ -151,6 +155,7 @@ def cir_conv_downs(signal, filt):
     g = g[0:len(g):2]
     return h, g
 
+
 def cir_conv_ups(sub_signal, inv_filt, path):
     zeros = np.zeros(len(sub_signal)*2)
     for i in range(len(sub_signal)):
@@ -158,9 +163,10 @@ def cir_conv_ups(sub_signal, inv_filt, path):
     sub_signal_ups = zeros
     if path == 0:
         inv = ndimage.convolve1d(sub_signal_ups, inv_filt[0], output = 'float', mode = 'wrap', origin = -1)
-    elif path == 1: 
+    elif path == 1:
         inv = ndimage.convolve1d(sub_signal_ups, inv_filt[1], output = 'float', mode = 'wrap', origin = -1)
     return inv
+
 
 def multiresolution(signal, filt, path = [0]):
     multires = []
@@ -175,7 +181,7 @@ def multiresolution(signal, filt, path = [0]):
         elif path[i] == 1:
             signal = cir_conv_downs(signal[1], filt)
             multires.append(signal)
-    
+
     plt.figure(figsize=(14, 10)).suptitle("Multiresolution Analysis with {:d} levels".format(len(path)), fontsize=18, y=0.93)
     plt.subplot(len(multires), 1, 1)
     plt.plot(multires[0], 'b-')
@@ -188,14 +194,15 @@ def multiresolution(signal, filt, path = [0]):
         plt.plot(multires[i+1][1], 'm,')
         #plt.axis([0, len(multires[0]), min(multires[i+1][1]), max(multires[i+1][1])])
     plt.show()
-    
+
     return multires, path
-    
+
+
 def inv_multiresolution(inv_filt, multires, path):
-    #multires[-1][int(path[-1])][:15] = 0
-    #multires[-1][int(path[-1])][-15:] = 0
+    multires[-1][int(path[-1])][:15] = 0
+    multires[-1][int(path[-1])][-15:] = 0
     #multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0 #Threshold denoising
-    
+
     inv_multires = []
     for i in range(len(path)):
         if i == 0:
@@ -208,8 +215,8 @@ def inv_multiresolution(inv_filt, multires, path):
                 inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
             elif path[-1-i] == 1:
                 inv_multires.append(cir_conv_ups(inv_multires[-1], inv_filt, path[-1-i]))
-    
-    plt.figure(figsize=(14, 10)).suptitle("Multiresolution Synthesis with {} levels".format(len(path)), fontsize=18, y=0.93)
+
+    plt.figure(figsize=(14, 10)).suptitle("Multiresolution Synthesis with {:d} levels".format(len(path)), fontsize=18, y=0.93)
     for i in range(len(inv_multires)):
         plt.subplot(len(inv_multires), 1, i+1)
         plt.plot(inv_multires[i], 'k-')
@@ -221,16 +228,16 @@ def inv_multiresolution(inv_filt, multires, path):
 # =============================================================================
 # Cross Correlation
 # =============================================================================
-def cross_corr(signal1, signal2):    
-    plt.figure(figsize=(7,5))
+def cross_corr(signal1, signal2):
+    plt.figure(figsize=(7, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'r,')
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'b,')
     plt.show()
-    
+
     correlation = np.correlate(signal1, signal2, 'full')
-    plt.figure(figsize=(14,4))
+    plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
     plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
     plt.show()
@@ -241,28 +248,28 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Execution
 # =============================================================================
-path = [1,1,1,1,1,1,1]
-filt, inv_filt = filters("haar")
+path = np.array([1,1,1])
+filt, inv_filt = filters("db4")
 
-
-multires, path = multiresolution((x[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x[1]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross1 = cross_corr(inv_multires, inv_multires2)
-time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
-#multires, path = multiresolution((x[2]), filt, path)
+#multires, path = multiresolution((x[1]), filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
-#cross2 = cross_corr(inv_multires, inv_multires2)
-#time_shift2 = sampling_frequency/cross2
-#
+#cross1 = cross_corr(inv_multires, inv_multires2)
+#time_shift1 = sampling_frequency/cross1
+
+multires, path = multiresolution((x[0]), filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution((x[2]), filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross2 = cross_corr(inv_multires, inv_multires2)
+time_shift2 = sampling_frequency/cross2
+
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
 #

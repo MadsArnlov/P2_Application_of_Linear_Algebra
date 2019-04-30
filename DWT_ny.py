@@ -245,7 +245,7 @@ def cross_corr(signal1, signal2):
 # Window Functions
 # =============================================================================
 def hann_window(n, N):
-    return 1/2 *(1 - np.cos(2*np.pi/N))
+    return 1/2 *(1 - np.cos(2*np.pi*n/N))
 
 
 def rectangular_window(multires, path, size = 15):

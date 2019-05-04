@@ -262,7 +262,7 @@ def threshold_denoising(multires, path):
 # =============================================================================
 # Cross Correlation
 # =============================================================================
-def cross_corr(signal1, signal2,):
+def cross_corr(signal1, signal2, size = 1):
     plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'r,')

@@ -321,7 +321,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets, path = packet_decomposition(x[0], filt, 12)
+packets, path = packet_decomposition(x[0], filt, 19)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 
@@ -331,7 +331,7 @@ inv_multires = inv_multiresolution(inv_filt, multires, path)
 multires, path = multiresolution((x[1]), filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
-cross1 = cross_corr(inv_multires, inv_multires2, 10000)
+cross1 = cross_corr(inv_multires, inv_multires2, 100000)
 time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)

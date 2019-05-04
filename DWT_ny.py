@@ -231,6 +231,15 @@ def packet_decomposition(signal, filt, levels):
 #        plt.show()
     index_max_value = np.where(packets[levels-1] == np.amax(packets[levels-1]))
     print('{}'.format(index_max_value))
+    a = index_max_value
+    path = []
+    for i in range(levels):
+        if a % 2 == 0:
+            a = int((a/len(packets[18-i])*len(packets[17-i]))+1)
+            path.append(0)
+        elif a % 2 == 1:
+            a = int((a/len(packets[18-i])*len(packets[17-i]))+1)
+            path.append(1)
     return packets
 
 

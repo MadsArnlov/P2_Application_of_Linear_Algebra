@@ -274,7 +274,7 @@ data_s = sampling_frequency * 10         # start value for data interval
 data_e = data_s + 2**19                  # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
-x1 = [data1[data_s:data_e]
+x1 = [data1[data_s:data_e]]
 
 
 # =============================================================================
@@ -300,7 +300,7 @@ x1 = [data1[data_s:data_e]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets = packet_decomposition(x[1], filt, 10)
+packets = packet_decomposition(data1, filt, 2)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

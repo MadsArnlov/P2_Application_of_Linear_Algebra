@@ -262,7 +262,7 @@ def threshold_denoising(multires, path):
 # =============================================================================
 # Cross Correlation
 # =============================================================================
-def cross_corr(signal1, signal2, size = 1):
+def cross_corr(signal1, signal2, samples = 0):
     plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'r,')
@@ -270,8 +270,9 @@ def cross_corr(signal1, signal2, size = 1):
     plt.plot(signal2, 'b,')
     plt.show()
     
-    signal1 = signal1[int(len(signal1)/2 - len(signal1) * size):int(len(signal1) / 2 + len(signal1) * size)]
-    signal2 = signal2[int(len(signal2)/2 - len(signal1) * size):int(len(signal2) / 2 + len(signal1) * size)]
+    if samples != 0:
+        signal1 = signal1[int(len(signal1) / 2 - samples / 2):int(len(signal1) / 2 + samples / 2)]
+        signal2 = signal2[int(len(signal2) / 2 - samples / 2):int(len(signal2) / 2 + samples / 2)]
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
@@ -330,7 +331,7 @@ inv_multires = inv_multiresolution(inv_filt, multires, path)
 multires, path = multiresolution((x[1]), filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
-cross1 = cross_corr(inv_multires, inv_multires2)
+cross1 = cross_corr(inv_multires, inv_multires2, 10000)
 time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)

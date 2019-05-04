@@ -248,7 +248,7 @@ def packet_decomposition(signal, filt, levels, plot = 0):
             a = (a + 1) / 2
     path_max_energy = path_max_energy[::-1]
     print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path_max_energy))
-    return packets, path
+    return packets, path_max_energy
 
 
 # =============================================================================
@@ -263,13 +263,15 @@ def threshold_denoising(multires, path):
 # Cross Correlation
 # =============================================================================
 def cross_corr(signal1, signal2):
-    plt.figure(figsize=(7, 5))
+    plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'r,')
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'b,')
     plt.show()
-
+    
+    signal1 = signal1[252144:272144]
+    signal2 = signal2[252144:272144]
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
@@ -315,21 +317,21 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-path = np.array([1,1,1,1,1])
-filt, inv_filt = filters("db4")
+#path = np.array([1,1,1,1,1])
+filt, inv_filt = filters("bo13")
 
-packets, path = packet_decomposition(x[0], filt, 6)
+packets, path = packet_decomposition(x[0], filt, 7)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 
-#multires, path = multiresolution((x[0]), filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
-#
-#multires, path = multiresolution((x[1]), filt, path)
-#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-#
-#cross1 = cross_corr(inv_multires, inv_multires2)
-#time_shift1 = sampling_frequency/cross1
+multires, path = multiresolution((x[0]), filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution((x[1]), filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross1 = cross_corr(inv_multires, inv_multires2)
+time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

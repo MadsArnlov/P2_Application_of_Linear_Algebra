@@ -234,15 +234,17 @@ def packet_decomposition(signal, filt, levels):
     for i in range(len(packets_energy)):
         packets_energy_sum.append(sum(packets_energy[i]))
     index_max_energy = np.argmax(packets_energy_sum)
-    a = index_max_energy
+    a = index_max_energy + 1
     path_max_energy = []
     for i in range(levels):
         if a % 2 == 0:
-            path_max_energy.append(0)
-        elif a % 2 == 1:
             path_max_energy.append(1)
-        b = int(((a + 1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
-        a = b - 1
+            if a != 0:
+                a = a / 2
+        elif a % 2 == 1:
+            path_max_energy.append(0)
+            a = (a + 1) / 2
+
     path_max_energy = path_max_energy[::-1]
     print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path_max_energy))
     return packets

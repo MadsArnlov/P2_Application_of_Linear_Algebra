@@ -229,21 +229,22 @@ def packet_decomposition(signal, filt, levels):
 #        plt.subplot(1, len(packets[i]), i+1)
 #        plt.plot(packets[i], 'k,')
 #        plt.show()
-    index_max_value = np.where(packets[levels-1] == np.amax(packets[levels-1]))
-    print('{}'.format(index_max_value[1][0]))
-    a = index_max_value[1][0]
-    path = []
-    for i in range(levels):
-        if a % 2 == 0:
-            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
-            a = b - 1
-            path.append(0)
-        elif a % 2 == 1:
-            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
-            a = b - 1
-            path.append(1)
-    path = path[::-1]
-    print(path)
+#    index_max_energy =
+#    
+#    print('{}'.format(index_max_energy))
+#    a = index_max_energy
+#    path = []
+#    for i in range(levels):
+#        if a % 2 == 0:
+#            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+#            a = b - 1
+#            path.append(0)
+#        elif a % 2 == 1:
+#            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+#            a = b - 1
+#            path.append(1)
+#    path = path[::-1]
+#    print(path)
     return packets
 
 

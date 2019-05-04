@@ -245,7 +245,7 @@ def packet_decomposition(signal, filt, levels):
             index_max_energy = b - 1
             path_max_energy.append(1)
     path_max_energy = path_max_energy[::-1]
-    print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path))
+    print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path_max_energy))
     return packets
 
 

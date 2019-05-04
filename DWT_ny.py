@@ -224,11 +224,12 @@ def packet_decomposition(signal, filt, levels):
             signal.append(tuple_signal[0])
             signal.append(tuple_signal[1])
         packets.append(signal)
-#    for i in range(len(packets)):
-#        plt.figure(figsize=(14,5))
-#        plt.subplot(1, len(packets[i]), i+1)
-#        plt.plot(packets[i], 'k,')
-#        plt.show()
+    for i in range(len(packets)):
+        plt.figure(figsize=(14,5))
+        for j in range(2**(i+1)):
+            plt.subplot(1, 2**(i+1), j+1)
+            plt.plot(packets[i][j], 'k,')
+            plt.show()
     packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
     packets_energy_sum = []
     for i in range(len(packets_energy)):
@@ -246,7 +247,7 @@ def packet_decomposition(signal, filt, levels):
             a = (a + 1) / 2
     path_max_energy = path_max_energy[::-1]
     print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path_max_energy))
-    return packets
+    return packets, path
 
 
 # =============================================================================
@@ -316,7 +317,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets = packet_decomposition(x[0], filt, 5)
+packets, path = packet_decomposition(x[0], filt, 2)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

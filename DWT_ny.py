@@ -229,6 +229,8 @@ def packet_decomposition(signal, filt, levels):
 #        plt.subplot(1, len(packets[i]), i+1)
 #        plt.plot(packets[i], 'k,')
 #        plt.show()
+    index_max_value = np.where(packets[levels-1] == np.amax(packets[levels-1]))
+    print('{}'.format(index_max_value))
     return packets
 
 
@@ -274,7 +276,6 @@ data_s = sampling_frequency * 10         # start value for data interval
 data_e = data_s + 2**19                  # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
-x1 = [data1[data_s:data_e]]
 
 
 # =============================================================================
@@ -300,7 +301,7 @@ x1 = [data1[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets = packet_decomposition(data1, filt, 2)
+packets = packet_decomposition(x[0], filt, 19)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

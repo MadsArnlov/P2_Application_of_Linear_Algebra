@@ -211,18 +211,26 @@ def inv_multiresolution(inv_filt, multires, path):
     plt.show()
     return inv_multires[-1]
 
+
 def packet_decomposition(signal, filt, levels):
     packets = []
     signal = cir_conv_downs(signal, filt)
     packets.append(signal)
-    for i in range(levels):
+    for i in range(levels-1):
         signal = []
         tuple_signal = ()
         for j in range(2**(len(packets))):
             tuple_signal = cir_conv_downs(packets[len(packets)-1][j], filt)
-            signal.append(tuple_signal)
+            signal.append(tuple_signal[0])
+            signal.append(tuple_signal[1])
         packets.append(signal)
+#    for i in range(len(packets)):
+#        plt.figure(figsize=(14,5))
+#        plt.subplot(1, len(packets[i]), i+1)
+#        plt.plot(packets[i], 'k,')
+#        plt.show()
     return packets
+
 
 # =============================================================================
 # Threshold Denoisning
@@ -266,6 +274,8 @@ data_s = sampling_frequency * 10         # start value for data interval
 data_e = data_s + 2**19                  # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
+x1 = [data1[data_s:data_e]
+
 
 # =============================================================================
 # Plot of Data
@@ -290,7 +300,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets = packet_decomposition([1,2,3,4,5,6,7,8], filt, 2)
+packets = packet_decomposition(x[1], filt, 10)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

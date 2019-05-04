@@ -228,7 +228,7 @@ def packet_decomposition(signal, filt, levels):
         plt.figure(figsize=(14,5))
         for j in range(2**(i+1)):
             plt.subplot(1, 2**(i+1), j+1)
-            plt.plot(packets[i][j], 'k,')
+            plt.plot(packets[i][j], range(len(packets[i][j])), 'k,')
         plt.show()
     packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
     packets_energy_sum = []

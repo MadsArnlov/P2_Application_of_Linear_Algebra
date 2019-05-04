@@ -235,10 +235,12 @@ def packet_decomposition(signal, filt, levels):
     path = []
     for i in range(levels):
         if a % 2 == 0:
-            a = int(((a+1)/len(packets[levels-i-1])*len(packets[levels-i-2]))+1)
+            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+            a = b - 1
             path.append(0)
         elif a % 2 == 1:
-            a = int(((a+1)/len(packets[levels-i-1])*len(packets[levels-i-2]))+1)
+            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+            a = b - 1
             path.append(1)
     path = path[::-1]
     print(path)

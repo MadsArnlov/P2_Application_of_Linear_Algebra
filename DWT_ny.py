@@ -270,8 +270,8 @@ def cross_corr(signal1, signal2, size = 1):
     plt.plot(signal2, 'b,')
     plt.show()
     
-    signal1 = signal1[int(len(signal1)/2 - len(signal1) * size):int(len(signal1) / 2 + len(signal1) * size))]
-    signal2 = signal2[int(len(signal2)/2 - len(signal1) * size):int(len(signal2) / 2 + len(signal1) * size))]
+    signal1 = signal1[int(len(signal1)/2 - len(signal1) * size):int(len(signal1) / 2 + len(signal1) * size)]
+    signal2 = signal2[int(len(signal2)/2 - len(signal1) * size):int(len(signal2) / 2 + len(signal1) * size)]
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)

@@ -312,7 +312,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets = packet_decomposition(x[0], filt, 5)
+packets = packet_decomposition(x[0], filt, 3)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

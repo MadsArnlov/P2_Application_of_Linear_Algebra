@@ -318,9 +318,9 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # Execution
 # =============================================================================
 #path = np.array([1,1,1,1,1])
-filt, inv_filt = filters("bo13")
+filt, inv_filt = filters("db4")
 
-packets, path = packet_decomposition(x[0], filt, 7)
+packets, path = packet_decomposition(x[0], filt, 11)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

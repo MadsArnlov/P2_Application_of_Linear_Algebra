@@ -229,7 +229,7 @@ def packet_decomposition(signal, filt, levels):
         for j in range(2**(i+1)):
             plt.subplot(1, 2**(i+1), j+1)
             plt.plot(packets[i][j], 'k,')
-            plt.show()
+        plt.show()
     packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
     packets_energy_sum = []
     for i in range(len(packets_energy)):
@@ -317,7 +317,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets, path = packet_decomposition(x[0], filt, 2)
+packets, path = packet_decomposition(x[0], filt, 6)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

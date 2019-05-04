@@ -229,22 +229,24 @@ def packet_decomposition(signal, filt, levels):
 #        plt.subplot(1, len(packets[i]), i+1)
 #        plt.plot(packets[i], 'k,')
 #        plt.show()
-#    index_max_energy =
-#    
-#    print('{}'.format(index_max_energy))
-#    a = index_max_energy
-#    path = []
-#    for i in range(levels):
-#        if a % 2 == 0:
-#            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
-#            a = b - 1
-#            path.append(0)
-#        elif a % 2 == 1:
-#            b = int(((a+1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
-#            a = b - 1
-#            path.append(1)
-#    path = path[::-1]
-#    print(path)
+    packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
+    packets_energy_sum = []
+    for i in range(len(packets_energy)):
+        packets_energy_sum.append(sum(packets_energy[i]))
+    index_max_energy = np.argmax(packets_energy_sum)
+    path_max_energy = []
+    for i in range(levels):
+        if index_max_energy % 2 == 0:
+            b = int(((index_max_energy + 1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+            index_max_energy = b - 1
+            path_max_energy.append(0)
+        elif index_max_energy % 2 == 1:
+            b = int(((index_max_energy + 1) / len(packets[levels-i-1]) * len(packets[levels-i-2])) + 1)
+            index_max_energy = b - 1
+            path_max_energy.append(1)
+    path_max_energy = path_max_energy[::-1]
+    print('{}'.format(index_max_energy))
+    print(path)
     return packets
 
 

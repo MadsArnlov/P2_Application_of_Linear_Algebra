@@ -211,6 +211,18 @@ def inv_multiresolution(inv_filt, multires, path):
     plt.show()
     return inv_multires[-1]
 
+def packet_decomposition(signal, filt, levels):
+    packets = []
+    signal = cir_conv_downs(signal, filt)
+    packets.append(signal)
+    for i in range(levels):
+        signal = []
+        tuple_signal = ()
+        for j in range(2**(len(packets))):
+            tuple_signal = cir_conv_downs(packets[len(packets)-1][j], filt)
+            signal.append(tuple_signal)
+        packets.append(signal)
+    return packets
 
 # =============================================================================
 # Threshold Denoisning
@@ -278,7 +290,9 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-x = [hamming_window(x[i]) for i in range(len(x))]
+packets = packet_decomposition([1,2,3,4,5,6,7,8], filt, 2)
+
+#x = [hamming_window(x[i]) for i in range(len(x))]
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
@@ -289,14 +303,14 @@ x = [hamming_window(x[i]) for i in range(len(x))]
 #cross1 = cross_corr(inv_multires, inv_multires2)
 #time_shift1 = sampling_frequency/cross1
 
-multires, path = multiresolution((x[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross2 = cross_corr(inv_multires, inv_multires2)
-time_shift2 = sampling_frequency/cross2
+#multires, path = multiresolution((x[0]), filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x[2]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross2 = cross_corr(inv_multires, inv_multires2)
+#time_shift2 = sampling_frequency/cross2
 
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

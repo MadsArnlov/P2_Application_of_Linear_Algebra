@@ -270,8 +270,8 @@ def cross_corr(signal1, signal2):
     plt.plot(signal2, 'b,')
     plt.show()
     
-    signal1 = signal1[252144:272144]
-    signal2 = signal2[252144:272144]
+    signal1 = signal1[signal1/2-10000:signal1/2+10000]
+    signal2 = signal2[signal2/2-10000:signal2/2+10000]
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
@@ -320,7 +320,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets, path = packet_decomposition(x[0], filt, 11)
+packets, path = packet_decomposition(x[0], filt, 12)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 

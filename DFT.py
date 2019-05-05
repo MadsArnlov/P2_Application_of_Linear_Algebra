@@ -66,8 +66,8 @@ def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\Without_noise\1000-500Hz_speaker2_uden_støj\")
+file_to_open = [data_folder / "Test_recording microphone{:d}_1000-500Hz_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])

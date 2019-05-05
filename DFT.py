@@ -7,8 +7,14 @@ Created on Mon Apr 15 10:37:12 2019
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.io import wavfile
+from pathlib import Path
 start = time.time()
 
+
+# =============================================================================
+# Data Generation
+# =============================================================================
 def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 0, 
                    phase2 = 0, phase3 = 0, phase4 = 0, imp_freq = 0):
     N = 2**J
@@ -26,6 +32,10 @@ def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 
     x_sum = x1 + x2 + x3 + x4 + x_imp
     return x_sum
 
+
+# =============================================================================
+# Fourier
+# =============================================================================
 def fft(x_sum, n_frequencies):
     x_fft = np.fft.rfft(x_sum, norm = 'ortho')
     plt.figure(figsize=(12, 7))
@@ -42,6 +52,8 @@ def fft(x_sum, n_frequencies):
         print(frequencies[i][0])
     return x_fft, frequencies
 
+
+
 def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
     x_fft3 = x_fft2 - x_fft1
     plt.figure(figsize=(12, 3.5))
@@ -51,9 +63,27 @@ def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
         if abs(frequencies1[i][0] - frequencies2[i][0]) >= threshold:
             print(frequencies1[i][0], '->', frequencies2[i][0])
 
-x_fft1, frequencies1 = fft(data_generator(18, 10, 200, 1000, 51321), 4)
-x_fft2, frequencies2 = fft(data_generator(18, 10, 200, 1005, 51326), 4)
+# =============================================================================
+# Data
+# =============================================================================
+data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
 
-new(x_fft1, x_fft2, frequencies1, frequencies2, 3)
+sampling_frequency, data1 = wavfile.read(file_to_open[0])
+sampling_frequency, data2 = wavfile.read(file_to_open[1])
+sampling_frequency, data3 = wavfile.read(file_to_open[2])
+
+data_s = sampling_frequency * 10         # start value for data interval
+data_e = data_s + 2**19                  # end value for data interval
+
+x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
+
+
+# =============================================================================
+# Execution
+# =============================================================================
+fft(x[0], 7)
+fft(x[1], 7)
+fft(x[2], 7)
 
 end = time.time()

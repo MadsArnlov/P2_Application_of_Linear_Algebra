@@ -321,18 +321,40 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #path = np.array([1,1,1,1,1])
 filt, inv_filt = filters("db4")
 
-packets, path = packet_decomposition(x[0], filt, 19)
+signal = wave_generator(14)+np.random.normal(0, 1, 2**14)
 
 #x = [hamming_window(x[i]) for i in range(len(x))]
 
-multires, path = multiresolution((x[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
+plots = []
+plots.append(signal)
+for i in range(4,9):
+    packets, path = packet_decomposition(signal, filt, i)
+    multires, path = multiresolution(signal, filt, path)
+    inv_multires = inv_multiresolution(inv_filt, multires, path)
+    plots.append(inv_multires)
 
-multires, path = multiresolution((x[1]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+plt.figure(figsize=(14, 5))
+plt.plot(plots[0], 'r--')
+plt.title("Single sine wave with noise", fontsize=18)
+plt.grid()
+plt.savefig("Signal_with_noise.pdf")
+plt.show()
 
-cross1 = cross_corr(inv_multires, inv_multires2, 100000)
-time_shift1 = sampling_frequency/cross1
+plt.figure(figsize=(14, 10)).suptitle("Denoise of signal at level 4 to level 8", fontsize=18, y=0.93)
+for i in range(len(plots)-1):
+    plt.subplot(len(plots)-1, 1, i+1)
+    plt.plot(plots[i+1], 'k,')
+#    plt.title("Multiresolution Synthesis with {:d} levels".format(len(path)))
+    plt.grid()
+plt.savefig("Denoise_signal.pdf")
+plt.show()
+
+#
+#multires, path = multiresolution((x[1]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross1 = cross_corr(inv_multires, inv_multires2, 100000)
+#time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

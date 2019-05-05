@@ -36,21 +36,20 @@ def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(x_sum, energy):
-    x_fft = np.fft.rfft(x_sum, norm = 'ortho')
-    x_fft = x_fft[0:24000]
+def fft(x_sum):
+    x_fft = np.fft.fft(x_sum, norm = 'ortho')
+#    x_fft = x_fft[0:24000]
+    n = x_fft.size
+    timestep = 1/48000
+    x_fft = np.fft.fftfreq(n, d=timestep)
+    
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
-    plt.plot(x_sum, 'r-')
+    plt.plot(x_sum, 'r,')
     plt.subplot(2, 1, 2)
-    plt.plot(range(24000), x_fft, 'b-')
+    plt.plot(x_fft, 'b-')
     plt.show()
-    
-    frequencies = []
-    frequencies.append(np.where(abs(x_fft) >= energy))
-    print(frequencies[0][0])
-    return x_fft, frequencies
-
+    return x_fft
 
 
 def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
@@ -84,17 +83,17 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-x_fft0_prior, frequencies0_p = fft(x_prior[0], 10000)
-x_fft0_fault, frequencies0_f = fft(x_fault[0], 10000)
+x_fft0_prior = fft(x_prior[0], 10000)
+x_fft0_fault  = fft(x_fault[0], 10000)
 x_fft0_new = x_fft0_prior - x_fft0_fault
 plt.figure(figsize=(14, 7))
 plt.plot(x_fft0_new, 'k-')
 plt.show()
 
-#x_fft1_prior, frequencies1_p = fft(x_prior[1], 10000)
-#x_fft1_fault, frequencies1_f = fft(x_fault[1], 10000)
-#x_fft2_prior, frequencies2_p = fft(x_prior[2], 10000)
-#x_fft2_fault, frequencies2_f = fft(x_fault[2], 10000)
+#x_fft1_prior = fft(x_prior[1], 10000)
+#x_fft1_fault = fft(x_fault[1], 10000)
+#x_fft2_prior = fft(x_prior[2], 10000)
+#x_fft2_fault = fft(x_fault[2], 10000)
 
 
 end = time.time()

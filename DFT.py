@@ -47,7 +47,7 @@ def fft(x_sum, energy):
     plt.show()
     
     frequencies = []
-    frequencies.append(np.where(x_fft >= energy))
+    frequencies.append(np.where(abs(x_fft) >= energy))
     print(frequencies[0][0])
     return x_fft, frequencies
 
@@ -84,8 +84,8 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-x_fft0_prior, frequencies0_p = fft(x_prior[0], 500)
-x_fft0_fault, frequencies0_f = fft(x_fault[0], 500)
+x_fft0_prior, frequencies0_p = fft(x_prior[0], 10000)
+x_fft0_fault, frequencies0_f = fft(x_fault[0], 10000)
 x_fft0_new = x_fft0_prior - x_fft0_fault
 plt.figure(figsize=(14, 7))
 plt.plot(x_fft0_new, 'k-')

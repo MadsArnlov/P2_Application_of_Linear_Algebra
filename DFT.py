@@ -91,10 +91,10 @@ plt.figure(figsize=(14, 7))
 plt.plot(x_fft0_new, 'k-')
 plt.show()
 
-#x_fft1_prior, frequencies1_p = fft(x_prior[1], 300)
-#x_fft1_fault, frequencies1_f = fft(x_fault[1], 300)
-#x_fft2_prior, frequencies2_p = fft(x_prior[2], 5000)
-#x_fft2_fault, frequencies2_f = fft(x_fault[2], 5000)
+#x_fft1_prior, frequencies1_p = fft(x_prior[1], 10000)
+#x_fft1_fault, frequencies1_f = fft(x_fault[1], 10000)
+#x_fft2_prior, frequencies2_p = fft(x_prior[2], 10000)
+#x_fft2_fault, frequencies2_f = fft(x_fault[2], 10000)
 
 
 end = time.time()

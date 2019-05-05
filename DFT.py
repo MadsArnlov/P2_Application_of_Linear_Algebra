@@ -36,20 +36,19 @@ def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(x_sum, n_frequencies):
+def fft(x_sum, energy):
     x_fft = np.fft.rfft(x_sum, norm = 'ortho')
+    x_fft = x_fft[0:24000]
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(x_sum, 'r-')
     plt.subplot(2, 1, 2)
-    plt.plot(x_fft, 'b-')
+    plt.plot(range(24000), x_fft, 'b-')
     plt.show()
     
     frequencies = []
-    for i in range(n_frequencies):
-        frequencies.append(np.where(x_fft == np.amax(x_fft)))
-        x_fft[x_fft == np.amax(x_fft)] = 0
-        print(frequencies[i][0])
+    frequencies.append(np.where(x_fft >= energy))
+    print(frequencies[0][0])
     return x_fft, frequencies
 
 
@@ -66,7 +65,7 @@ def new(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings\Without_noise\1000-500Hz_speaker2_uden_støj\")
+data_folder = Path("Test_recordings/Without_noise/1000-500Hz_speaker2_uden_støj/")
 file_to_open = [data_folder / "Test_recording microphone{:d}_1000-500Hz_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
@@ -74,16 +73,23 @@ sampling_frequency, data2 = wavfile.read(file_to_open[1])
 sampling_frequency, data3 = wavfile.read(file_to_open[2])
 
 data_s = sampling_frequency * 10         # start value for data interval
+data_m1 = data_s + 200000
+data_m2 = data_s + 2**19-200000
 data_e = data_s + 2**19                  # end value for data interval
 
-x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
+x_prior = [data1[data_s:data_m1], data2[data_s:data_m1], data3[data_s:data_m1]]
+x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 
 
 # =============================================================================
 # Execution
 # =============================================================================
-fft(x[0], 7)
-fft(x[1], 7)
-fft(x[2], 7)
+x_fft0_prior, frequencies1_p = fft(x_prior[0], 3000)
+x_fft0_fault, frequencies1_f = fft(x_fault[0], 3000)
+#x_fft1_prior, frequencies2_p = fft(x_prior[1], 5000)
+#x_fft1_fault, frequencies2_f = fft(x_fault[1], 5000)
+#x_fft2_prior, frequencies3_p = fft(x_prior[2], 5000)
+#x_fft2_fault, frequencies3_f = fft(x_fault[2], 5000)
+
 
 end = time.time()

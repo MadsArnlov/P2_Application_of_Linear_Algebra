@@ -229,8 +229,8 @@ def cross_corr(signal1, signal2, samples = 0):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker3_uden_støj/")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/Without_noise/737-368.5Hz_speaker3_uden_støj/")
+file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -290,14 +290,13 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-#filt, inv_filt = filters("db4")
-#x = [hamming_window(x[i]) for i in range(len(x))]
-#
-#packets, path = packet_decomposition(x[0], filt, 19)
-#
-#multires, path = multiresolution(x[0], filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
-#plots.append(inv_multires)
+filt, inv_filt = filters("db4")
+x = [hamming(x[i]) for i in range(len(x))]
+
+packets, path = packet_decomposition(x[0], filt, 19)
+
+multires, path = multiresolution(x[0], filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)

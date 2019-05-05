@@ -84,12 +84,17 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-x_fft0_prior, frequencies1_p = fft(x_prior[0], 3000)
-x_fft0_fault, frequencies1_f = fft(x_fault[0], 3000)
-#x_fft1_prior, frequencies2_p = fft(x_prior[1], 5000)
-#x_fft1_fault, frequencies2_f = fft(x_fault[1], 5000)
-#x_fft2_prior, frequencies3_p = fft(x_prior[2], 5000)
-#x_fft2_fault, frequencies3_f = fft(x_fault[2], 5000)
+x_fft0_prior, frequencies0_p = fft(x_prior[0], 500)
+x_fft0_fault, frequencies0_f = fft(x_fault[0], 500)
+x_fft0_new = x_fft0_prior - x_fft0_fault
+plt.figure(figsize=(14, 7))
+plt.plot(x_fft0_new, 'k-')
+plt.show()
+
+#x_fft1_prior, frequencies1_p = fft(x_prior[1], 300)
+#x_fft1_fault, frequencies1_f = fft(x_fault[1], 300)
+#x_fft2_prior, frequencies2_p = fft(x_prior[2], 5000)
+#x_fft2_fault, frequencies2_f = fft(x_fault[2], 5000)
 
 
 end = time.time()

@@ -156,7 +156,7 @@ def inv_multiresolution(inv_filt, multires, path):
     return inv_multires[-1]
 
 
-def packet_decomposition(signal, filt, levels, plot = 0):
+def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
     packets = []
     signal = cir_conv_downs(signal, filt)
     packets.append(signal)
@@ -168,6 +168,7 @@ def packet_decomposition(signal, filt, levels, plot = 0):
             signal.append(tuple_signal[0])
             signal.append(tuple_signal[1])
         packets.append(signal)
+    
     if plot == 1:
         for i in range(len(packets)):
             plt.figure(figsize=(14,5))
@@ -175,24 +176,48 @@ def packet_decomposition(signal, filt, levels, plot = 0):
                 plt.subplot(1, 2**(i+1), j+1)
                 plt.plot(packets[i][j], range(len(packets[i][j])), 'k,')
                 plt.show()
+    
     packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
     packets_energy_sum = []
     for i in range(len(packets_energy)):
         packets_energy_sum.append(sum(packets_energy[i]))
-    index_max_energy = np.argmax(packets_energy_sum)
-    a = index_max_energy + 1
-    path_max_energy = []
-    for i in range(levels):
-        if a % 2 == 0:
-            path_max_energy.append(1)
-            if a != 0:
-                a = a / 2
-        elif a % 2 == 1:
-            path_max_energy.append(0)
-            a = (a + 1) / 2
-    path_max_energy = path_max_energy[::-1]
-    print('Highest energy at index: {}. Path: {}'.format(index_max_energy, path_max_energy))
-    return packets, path_max_energy
+    
+    index_max_energy = []
+    for i in range(energylevels):
+        index_max_energy.append(np.argmax(packets_energy_sum))
+        packets_energy_sum[np.argmax(packets_energy_sum)] = 0
+    
+    list_path_max_energy = []
+    for k in range(energylevels):
+        path_max_energy = []
+        a = index_max_energy[k] + 1
+        for i in range(levels):
+            if a % 2 == 0:
+                path_max_energy.append(1)
+                if a != 0:
+                    a = a / 2
+            elif a % 2 == 1:
+                path_max_energy.append(0)
+                a = (a + 1) / 2
+        path_max_energy = path_max_energy[::-1]
+        list_path_max_energy.append(path_max_energy)
+    
+    list_freq_spec = []
+    for i in range(len(list_path_max_energy)):
+        freq_spec = [0, 48000/2]
+        for j in range(len(list_path_max_energy[i])):
+            if  list_path_max_energy[i][j] == 1:
+                freq_spec_temp = freq_spec[0]
+                freq_spec[0] = freq_spec[1]   
+                freq_spec[1] = freq_spec_temp + (freq_spec[0] - freq_spec_temp)/2
+            elif  list_path_max_energy[i][j] == 0:
+                freq_spec[1] = freq_spec[1] + (freq_spec[0] - freq_spec[1])/2
+        list_freq_spec.append(freq_spec)
+
+    for l in range(energylevels):
+        print('        Index   Path    Spectrum')
+        print(l,'        {}   {}   {}'.format(index_max_energy[l], list_path_max_energy[l], list_freq_spec[l]))
+    return packets, list_path_max_energy
 
 
 # =============================================================================
@@ -293,13 +318,13 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 filt, inv_filt = filters("db4")
 x = [hamming(x[i]) for i in range(len(x))]
 
-packets, path = packet_decomposition(x[0], filt, 19)
+packets, list_path = packet_decomposition(x[0], filt, 19, 10)
 
-multires, path = multiresolution(x[0], filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
+#multires, path = multiresolution(x[0], filt, list_path[8])
+#inv_multires = inv_multiresolution(inv_filt, multires, list_path[8])
 #
-#multires, path = multiresolution((x[1]), filt, path)
-#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#multires, path = multiresolution(x[1], filt, list_path[8])
+#inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[8])
 #
 #cross1 = cross_corr(inv_multires, inv_multires2, 100000)
 #time_shift1 = sampling_frequency/cross1

@@ -288,7 +288,9 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # Denoise
 # =============================================================================
 #filt, inv_filt = filters("db4")
-#signal = wave_generator(14)+np.random.normal(0, 1, 2**14)
+#wave = sinew(J = 14)
+#noise = np.random.normal(0, 1, 2**14)
+#signal = wave + noise
 #
 #plots = []
 #plots.append(signal)
@@ -298,8 +300,12 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #    inv_multires = inv_multiresolution(inv_filt, multires, path)
 #    plots.append(inv_multires)
 #
-#plt.figure(figsize=(14, 5))
-#plt.plot(plots[0], 'r--')
+#plt.figure(figsize=(14, 8))
+#plt.subplot(2, 1, 1)
+#plt.plot(wave, 'b-')
+#plt.grid()
+#plt.subplot(2, 1, 2)
+#plt.plot(signal, 'r--')
 #plt.grid()
 #plt.savefig("Signal_with_noise.pdf")
 #plt.show()
@@ -307,7 +313,7 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 #plt.figure(figsize=(14, 10))
 #for i in range(len(plots)-1):
 #    plt.subplot(len(plots)-1, 1, i+1)
-#    plt.plot(plots[i+1], 'k,')
+#    plt.plot(plots[i+1], 'k-')
 #    plt.grid()
 #plt.savefig("Denoise_signal.pdf")
 #plt.show()

@@ -262,47 +262,47 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 # =============================================================================
 # Denoise
 # =============================================================================
-filt, inv_filt = filters("db4")
-wave = sinew(J = 14)
-noise = np.random.normal(0, 1, 2**14)
-signal = wave + noise
-
-plots = []
-plots.append(signal)
-for i in range(4,9):
-    packets, path = packet_decomposition(signal, filt, i)
-    multires, path = multiresolution(signal, filt, path)
-    inv_multires = inv_multiresolution(inv_filt, multires, path)
-    plots.append(inv_multires)
-
-plt.figure(figsize=(14, 8))
-plt.subplot(2, 1, 1)
-plt.plot(wave, 'b-')
-plt.grid()
-plt.subplot(2, 1, 2)
-plt.plot(signal, 'r--')
-plt.grid()
-plt.savefig("Signal_with_noise.pdf")
-plt.show()
-
-plt.figure(figsize=(14, 10))
-for i in range(len(plots)-1):
-    plt.subplot(len(plots)-1, 1, i+1)
-    plt.plot(plots[i+1], 'k-')
-    plt.grid()
-plt.savefig("Denoise_signal.pdf")
-plt.show()
+#filt, inv_filt = filters("db4")
+#wave = sinew(J = 14)
+#noise = np.random.normal(0, 1, 2**14)
+#signal = wave + noise
+#
+#plots = []
+#plots.append(signal)
+#for i in range(4,9):
+#    packets, path = packet_decomposition(signal, filt, i)
+#    multires, path = multiresolution(signal, filt, path)
+#    inv_multires = inv_multiresolution(inv_filt, multires, path)
+#    plots.append(inv_multires)
+#
+#plt.figure(figsize=(14, 8))
+#plt.subplot(2, 1, 1)
+#plt.plot(wave, 'b-')
+#plt.grid()
+#plt.subplot(2, 1, 2)
+#plt.plot(signal, 'r--')
+#plt.grid()
+#plt.savefig("Signal_with_noise.pdf")
+#plt.show()
+#
+#plt.figure(figsize=(14, 10))
+#for i in range(len(plots)-1):
+#    plt.subplot(len(plots)-1, 1, i+1)
+#    plt.plot(plots[i+1], 'k-')
+#    plt.grid()
+#plt.savefig("Denoise_signal.pdf")
+#plt.show()
 
 # =============================================================================
 # Execution
 # =============================================================================
-#filt, inv_filt = filters("db4")
-#x = [hamming(x[i]) for i in range(len(x))]
-#
-#packets, path = packet_decomposition(x[0], filt, 19)
-#
-#multires, path = multiresolution(x[0], filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
+filt, inv_filt = filters("db4")
+x = [hamming(x[i]) for i in range(len(x))]
+
+packets, path = packet_decomposition(x[0], filt, 19)
+
+multires, path = multiresolution(x[0], filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
 #multires, path = multiresolution((x[1]), filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)

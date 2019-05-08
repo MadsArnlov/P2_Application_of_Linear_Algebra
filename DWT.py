@@ -170,12 +170,12 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
         packets.append(signal)
     
     if plot == 1:
-        for i in range(len(packets)):
+        for n in range(len(packets)):
             plt.figure(figsize=(14,5))
-            for j in range(2**(i+1)):
-                plt.subplot(1, 2**(i+1), j+1)
-                plt.plot(packets[i][j], range(len(packets[i][j])), 'k,')
-                plt.show()
+            for m in range(2**(n+1)):
+                plt.subplot(1, 2**(n+1), m+1)
+                plt.plot(packets[n][m], range(len(packets[n][m])), 'k,')
+            plt.show()
     
     packets_energy = [packets[-1][i]**2 for i in range(len(packets[-1]))]
     packets_energy_sum = []
@@ -326,10 +326,10 @@ x = [hamming(x[i]) for i in range(len(x))]
 
 x_synthetic = fsinew(19, 125, 240, 737, 1000)
 
-packets, list_path = packet_decomposition(x_synthetic, filt, 8, 10)
+packets, list_path = packet_decomposition(x_synthetic, filt, 5, 10, plot = 1)
 
-multires, path = multiresolution(x_synthetic, filt, list_path[3])
-inv_multires = inv_multiresolution(inv_filt, multires, list_path[3])
+#multires, path = multiresolution(x_synthetic, filt, list_path[9])
+#inv_multires = inv_multiresolution(inv_filt, multires, list_path[9])
 
 #multires, path = multiresolution(x[1], filt, list_path[0])
 #inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[0])

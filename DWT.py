@@ -215,7 +215,7 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
         list_freq_spec.append(freq_spec)
 
     for l in range(energylevels):
-        print('        Index   Path    Spectrum')
+        print('        Index   Path           Spectrum')
         print(l,'        {}   {}   {}'.format(index_max_energy[l], list_path_max_energy[l], list_freq_spec[l]))
     return packets, list_path_max_energy
 
@@ -327,11 +327,11 @@ x = [hamming(x[i]) for i in range(len(x))]
 x_synthetic = fsinew(19, 125, 240, 737, 1000)
 x
 
-packets, list_path = packet_decomposition(x_synthetic, filt, 6, 10, plot = 1)
+packets, list_path = packet_decomposition(x_synthetic, filt, 8, 10, plot = 1)
 
-multires, path = multiresolution(x_synthetic, filt, list_path[0])
-inv_multires = inv_multiresolution(inv_filt, multires, list_path[0])
-
+#multires, path = multiresolution(x_synthetic, filt, list_path[0])
+#inv_multires = inv_multiresolution(inv_filt, multires, list_path[0])
+#
 #multires, path = multiresolution(x[1], filt, list_path[0])
 #inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[0])
 #

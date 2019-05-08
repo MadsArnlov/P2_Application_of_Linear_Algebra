@@ -9,44 +9,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from pathlib import Path
+from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
 start = time.time()
-
-
-# =============================================================================
-# Data Generation
-# =============================================================================
-def data_generator(J = 18, freq1 = 0, freq2 = 0, freq3 = 0, freq4 = 0, phase1 = 0, 
-                   phase2 = 0, phase3 = 0, phase4 = 0, imp_freq = 0):
-    N = 2**J
-    t = np.arange(1 , N+1)
-    A = 2 * np.pi * t / N
-    x1 = np.sin(A * freq1 + phase1)
-    x2 = np.sin(A * freq2 + phase2)
-    x3 = np.sin(A * freq3 + phase3)
-    x4 = np.sin(A * freq4 + phase4)
-    x_imp = np.zeros(N)
-    if imp_freq != 0:
-        for i in range(int(N/imp_freq), len(x_imp), int(N/(imp_freq+1))):
-            x_imp[i] = 1
-            x_imp[i+1] = -1
-    x_sum = x1 + x2 + x3 + x4 + x_imp
-    return x_sum
 
 
 # =============================================================================
 # Fourier
 # =============================================================================
 def fft(signal):
-    T = 1/48000
+    fs = 48000
+    T = 1/fs
     N = len(signal)
-    frequencies = np.linspace(0, 1/T, N)
-    x_fft = np.fft.fft(signal, norm = 'ortho')
-    
+    frequencies = np.linspace(0, fs//2, N//2 + 1)
+    x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N//2 + 1]
+    x_fft = x_fft[:3100]
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(signal, 'r,')
     plt.subplot(2, 1, 2)
-    plt.plot(frequencies, x_fft, 'b-')
+    plt.plot(x_fft, 'b-')
     plt.show()
     return x_fft
 
@@ -82,13 +63,18 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-fft(data_generator(18, 10000))
+dft1 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 500))
+dft2 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 760))
+dft_new = dft1-dft2
+for i in range(len(dft_new)):
+    if dft_new[i] > 0:
+        dft_new[i] = 0
 
-x_fft0_prior = fft(x_prior[0])
-x_fft0_fault = fft(x_fault[0])
-x_fft0_new = x_fft0_prior - x_fft0_fault
+#x_fft0_prior = fft(x_prior[0])
+#x_fft0_fault = fft(x_fault[0])
+#x_fft0_new = x_fft0_prior - x_fft0_fault
 plt.figure(figsize=(12, 3.5))
-plt.plot(x_fft0_new, 'k-')
+plt.plot(dft_new, 'k-')
 plt.show()
 
 #x_fft1_prior = fft(x_prior[1])

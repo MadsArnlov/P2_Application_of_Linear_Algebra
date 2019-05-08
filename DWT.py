@@ -171,7 +171,7 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
     
     if plot == 1:
         for n in range(len(packets)):
-            plt.figure(figsize=(14,5))
+            plt.figure(figsize=(14,10))
             for m in range(2**(n+1)):
                 plt.subplot(1, 2**(n+1), m+1)
                 plt.plot(packets[n][m], range(len(packets[n][m])), 'k,')
@@ -325,11 +325,12 @@ filt, inv_filt = filters("db4")
 x = [hamming(x[i]) for i in range(len(x))]
 
 x_synthetic = fsinew(19, 125, 240, 737, 1000)
+x
 
-packets, list_path = packet_decomposition(x_synthetic, filt, 5, 10, plot = 1)
+packets, list_path = packet_decomposition(x_synthetic, filt, 6, 10, plot = 1)
 
-#multires, path = multiresolution(x_synthetic, filt, list_path[9])
-#inv_multires = inv_multiresolution(inv_filt, multires, list_path[9])
+multires, path = multiresolution(x_synthetic, filt, list_path[0])
+inv_multires = inv_multiresolution(inv_filt, multires, list_path[0])
 
 #multires, path = multiresolution(x[1], filt, list_path[0])
 #inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[0])

@@ -76,6 +76,21 @@ def cross_corr(signal1, signal2, samples = 0):
 
 
 # =============================================================================
+# Time Delay Estimation
+# =============================================================================
+def sample_delay(time1, time2, time3):
+    delay = []
+    delay.append(time1 - time2)
+    delay.append(time3 - time2)
+    delay.append(time3 - time1)
+    for i in range(len(delay)):
+        delay[i] = delay[i] % 96
+        if delay[i] >= 56:
+            delay[i] = delay[i] - 96
+    print(delay)
+
+
+# =============================================================================
 # Data
 # =============================================================================
 data_folder = Path("Test_recordings/Without_noise/1000-500Hz_speaker2_uden_støj/")
@@ -102,14 +117,12 @@ x_fft0_fault, frequencies, spectrum = fft(x_fault[0], sampling_frequency)
 new_signal, x_fft_new = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum)
 fft(new_signal, sampling_frequency)
 
-new_signal = new_signal[:24000]
+new_signal = new_signal[:12000]
 
-time1 = cross_corr(new_signal, data1, samples = 48000)
-time2 = cross_corr(new_signal, data2, samples = 48000)
-time3 = cross_corr(new_signal, data3, samples = 48000)
+time1 = cross_corr(new_signal, data1[1000000:], samples = 48000)
+time2 = cross_corr(new_signal, data2[1000000:], samples = 48000)
+time3 = cross_corr(new_signal, data3[1000000:], samples = 48000)
 
-print(time2 - time1)
-print(time3 - time1)
-print(time3 - time2)
+sample_delay(time1, time2, time3)
 
 end = time.time()

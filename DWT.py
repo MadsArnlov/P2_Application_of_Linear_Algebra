@@ -324,14 +324,11 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 filt, inv_filt = filters("db4")
 x = [hamming(x[i]) for i in range(len(x))]
 
-x_synthetic = fsinew(19, 125, 240, 737, 1000)
-x
+packets, list_path = packet_decomposition(x[0], filt, 12, 30)
 
-packets, list_path = packet_decomposition(x_synthetic, filt, 8, 10, plot = 1)
+#multires, path = multiresolution(x_synthetic, filt, list_path[24])
+#inv_multires = inv_multiresolution(inv_filt, multires, list_path[24])
 
-#multires, path = multiresolution(x_synthetic, filt, list_path[0])
-#inv_multires = inv_multiresolution(inv_filt, multires, list_path[0])
-#
 #multires, path = multiresolution(x[1], filt, list_path[0])
 #inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[0])
 #

@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Thu May  9 13:43:46 2019
+
+@author: lasse
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Apr 15 10:37:12 2019
 
 @author: lasse

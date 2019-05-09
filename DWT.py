@@ -238,8 +238,8 @@ def cross_corr(signal1, signal2):
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'b,')
     plt.show()
-    signal1[:300] = 0
-    signal1[2**19-300:] = 0
+#    signal1[:300] = 0
+#    signal1[2**19-300:] = 0
     
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
@@ -324,32 +324,32 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 filt, inv_filt = filters("db4")
 x = [hamming(x[i]) for i in range(len(x))]
 
-#packets, list_path = packet_decomposition(x_fault[1], filt, 16, 100)
+packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
 
-path = np.zeros(12)
-
-multires, path = multiresolution(x_fault[0], filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution(x_fault[2], filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross1 = cross_corr(inv_multires, inv_multires2)
-time_shift1 = sampling_frequency/cross1
-
-#multires, path = multiresolution((x[0]), filt, path)
+#path = list_path[24]
+#
+#multires, path = multiresolution(x_fault[0], filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
-#multires, path = multiresolution((x[2]), filt, path)
+#multires, path = multiresolution(x_fault[1], filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross1 = cross_corr(inv_multires, inv_multires2)
+#time_shift1 = sampling_frequency/cross1
+#
+#multires, path = multiresolution((x_fault[0]), filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x_fault[2]), filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
 #cross2 = cross_corr(inv_multires, inv_multires2)
 #time_shift2 = sampling_frequency/cross2
-
-#multires, path = multiresolution((x[1]), filt, path)
+#
+#multires, path = multiresolution((x_fault[1]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
-#multires, path = multiresolution((x[2]), filt, path)
+#multires, path = multiresolution((x_fault[2]), filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
 #cross3 = cross_corr(inv_multires, inv_multires2)

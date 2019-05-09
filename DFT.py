@@ -16,9 +16,10 @@ start = time.time()
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(signal, fs = 1):
+def fft(signal, fs = 1, highest_frequency = 1250):
     N = len(signal)
     duration = N / fs
+    spectrum = int(highest_frequency*duration)
     frequencies = np.arange(0, N // 2) / duration
     x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N // 2]
     plt.figure(figsize=(12, 7))
@@ -26,24 +27,24 @@ def fft(signal, fs = 1):
     plt.plot(signal, 'r,')
     plt.grid()
     plt.subplot(2, 1, 2)
-    plt.plot(frequencies, x_fft, 'b-')
+    plt.plot(frequencies[:spectrum], x_fft[:spectrum], 'b-')
     plt.grid()
     plt.show()
-    return x_fft, frequencies
+    return x_fft, frequencies, spectrum
 
 
-def new_freq(x_fft1, x_fft2, frequencies):
+def new_freq(x_fft1, x_fft2, frequencies, spectrum):
     x_fft3 = x_fft2 - x_fft1
     plt.figure(figsize=(12, 3.5))
     plt.grid()
-    plt.plot(frequencies, x_fft3, 'b-')
+    plt.plot(frequencies[:spectrum], x_fft3[:spectrum], 'b-')
     plt.show()
 
-    new_signal = np.sin((2 * np.pi * np.arange(0, len(x_fft3)) / len(x_fft3)) * max(x_fft3))
-    plt.figure(figsize=(12, 7))
-    plt.plot(new_signal, 'r,')
+    new_signal = np.sin((2 * np.pi * np.arange(0, 48000) / 48000) * np.argmax(x_fft3)/5.46)
+    plt.figure(figsize=(12, 3.5))
+    plt.plot(range(0, spectrum), new_signal[:spectrum], 'k.')
     plt.show()
-    return new_signal
+    return new_signal, x_fft3
 
 
 # =============================================================================
@@ -75,10 +76,10 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 #    if dft_new[i] > 0:
 #        dft_new[i] = 0
 
-x_fft0_prior, frequencies = fft(x_prior[0], sampling_frequency)
-x_fft0_fault, frequencies = fft(x_fault[0], sampling_frequency)
-new_signal = new_freq(x_fft0_prior, x_fft0_fault, frequencies)
-fft(new_signal, sampling_frequency / 2)
+x_fft0_prior, frequencies, spectrum = fft(x_prior[0], sampling_frequency)
+x_fft0_fault, frequencies, spectrum = fft(x_fault[0], sampling_frequency)
+new_signal, x_fft_new = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum)
+fft(new_signal, sampling_frequency)
 
 #x_fft1_prior = fft(x_prior[1])
 #x_fft1_fault = fft(x_fault[1])

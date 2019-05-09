@@ -231,17 +231,16 @@ def threshold_denoising(multires, path):
 # =============================================================================
 # Cross Correlation
 # =============================================================================
-def cross_corr(signal1, signal2, samples = 0):
+def cross_corr(signal1, signal2):
     plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'r,')
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'b,')
     plt.show()
+    signal1[:300] = 0
+    signal1[2**19-300:] = 0
     
-    if samples != 0:
-        signal1 = signal1[int(len(signal1) / 2 - samples / 2):int(len(signal1) / 2 + samples / 2)]
-        signal2 = signal2[int(len(signal2) / 2 - samples / 2):int(len(signal2) / 2 + samples / 2)]
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
@@ -254,8 +253,8 @@ def cross_corr(signal1, signal2, samples = 0):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/Without_noise/737-368.5Hz_speaker3_uden_støj/")
-file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker2_uden_støj")
+file_to_open = [data_folder / "Test_recording microphone{}_impuls_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -266,6 +265,7 @@ data_e = data_s + 2**19                  # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 
+x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:800000+2**19]]
 
 # =============================================================================
 # Plot of Data
@@ -324,16 +324,18 @@ x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
 filt, inv_filt = filters("db4")
 x = [hamming(x[i]) for i in range(len(x))]
 
-packets, list_path = packet_decomposition(x[0], filt, 12, 30)
+#packets, list_path = packet_decomposition(x_fault[1], filt, 16, 100)
 
-#multires, path = multiresolution(x_synthetic, filt, list_path[24])
-#inv_multires = inv_multiresolution(inv_filt, multires, list_path[24])
+path = np.zeros(12)
 
-#multires, path = multiresolution(x[1], filt, list_path[0])
-#inv_multires2 = inv_multiresolution(inv_filt, multires, list_path[0])
-#
-#cross1 = cross_corr(inv_multires, inv_multires2, 100000)
-#time_shift1 = sampling_frequency/cross1
+multires, path = multiresolution(x_fault[0], filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution(x_fault[2], filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross1 = cross_corr(inv_multires, inv_multires2)
+time_shift1 = sampling_frequency/cross1
 
 #multires, path = multiresolution((x[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)

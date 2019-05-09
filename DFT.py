@@ -16,30 +16,37 @@ start = time.time()
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(signal):
-    fs = 48000
-    T = 1/fs
+def fft(signal, fs = 1, spectrum = 2*5000):
+    signal = zpad(signal)
     N = len(signal)
-    frequencies = np.linspace(0, fs//2, N//2 + 1)
+    duration = N/fs
+    frequencies = np.arange(0, N//2+1)
+    for i in range(len(frequencies)):
+        frequencies[i] = frequencies[i]/duration
     x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N//2 + 1]
-    x_fft = x_fft[:3100]
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(signal, 'r,')
     plt.subplot(2, 1, 2)
-    plt.plot(x_fft, 'b-')
+    plt.plot(frequencies[:spectrum], x_fft[:spectrum], 'b-')
     plt.show()
-    return x_fft
+    return x_fft, frequencies
 
 
-def new_freq(x_fft1, x_fft2, frequencies1, frequencies2, threshold):
+def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5000):
     x_fft3 = x_fft2 - x_fft1
     plt.figure(figsize=(12, 3.5))
-    plt.plot(x_fft3, 'b-')
-    plt.show()
-    for i in range(len(frequencies1)):
-        if abs(frequencies1[i][0] - frequencies2[i][0]) >= threshold:
-            print(frequencies1[i][0], '->', frequencies2[i][0])
+    plt.grid()
+    plt.plot(frequencies[:spectrum], x_fft3[:spectrum], 'b-')
+#    zeros = np.zeros(len(x_fft3))
+#    zeros[np.argmax(x_fft3)] = max(x_fft3)
+#    new_signal = np.fft.ifft(zeros)
+#    plt.plot(frequencies, new_signal)
+#    plt.show()
+#    plt.show()
+#    for i in range(len(frequencies1)):
+#        if abs(frequencies1[i][0] - frequencies2[i][0]) >= threshold:
+#            print(frequencies1[i][0], '->', frequencies2[i][0])
 
 # =============================================================================
 # Data
@@ -63,19 +70,16 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-dft1 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 500))
-dft2 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 760))
-dft_new = dft1-dft2
-for i in range(len(dft_new)):
-    if dft_new[i] > 0:
-        dft_new[i] = 0
+#dft1 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 500))
+#dft2 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 760))
+#dft_new = dft1-dft2
+#for i in range(len(dft_new)):
+#    if dft_new[i] > 0:
+#        dft_new[i] = 0
 
-#x_fft0_prior = fft(x_prior[0])
-#x_fft0_fault = fft(x_fault[0])
-#x_fft0_new = x_fft0_prior - x_fft0_fault
-plt.figure(figsize=(12, 3.5))
-plt.plot(dft_new, 'k-')
-plt.show()
+x_fft0_prior, frequencies = fft(x_prior[0], sampling_frequency)
+x_fft0_fault, frequencies = fft(x_fault[0], sampling_frequency)
+new_freq(x_fft0_prior, x_fft0_fault, frequencies)
 
 #x_fft1_prior = fft(x_prior[1])
 #x_fft1_fault = fft(x_fault[1])

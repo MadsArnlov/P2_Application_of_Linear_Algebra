@@ -16,9 +16,10 @@ start = time.time()
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(signal, fs = 1, spectrum = 5500):
+def fft(signal, fs = 1, highest_frequency = 1250):
     N = len(signal)
     duration = N / fs
+    spectrum = int(highest_frequency * duration)
     frequencies = np.arange(0, N // 2 + 1) / duration
     x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N // 2 + 1]
     plt.figure(figsize=(12, 7))
@@ -29,10 +30,10 @@ def fft(signal, fs = 1, spectrum = 5500):
     plt.plot(frequencies[:spectrum], x_fft[:spectrum], 'b-')
     plt.grid()
     plt.show()
-    return x_fft, frequencies
+    return x_fft, frequencies, spectrum
 
 
-def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5500):
+def new_freq(x_fft1, x_fft2, frequencies, spectrum):
     x_fft3 = x_fft2 - x_fft1
     plt.figure(figsize=(12, 3.5))
     plt.grid()
@@ -75,9 +76,9 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 #    if dft_new[i] > 0:
 #        dft_new[i] = 0
 
-x_fft0_prior, frequencies = fft(x_prior[0], sampling_frequency)
-x_fft0_fault, frequencies = fft(x_fault[0], sampling_frequency)
-new_freq(x_fft0_prior, x_fft0_fault, frequencies)
+x_fft0_prior, frequencies, spectrum = fft(x_prior[0], sampling_frequency)
+x_fft0_fault, frequencies, spectrum = fft(x_fault[0], sampling_frequency)
+new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum)
 
 #x_fft1_prior = fft(x_prior[1])
 #x_fft1_fault = fft(x_fault[1])

@@ -16,7 +16,7 @@ start = time.time()
 # =============================================================================
 # Fourier
 # =============================================================================
-def fft(signal, fs = 1, spectrum = 2*5000):
+def fft(signal, fs = 1, spectrum = 5500):
     signal = zpad(signal)
     N = len(signal)
     duration = N/fs
@@ -35,7 +35,7 @@ def fft(signal, fs = 1, spectrum = 2*5000):
     return x_fft, frequencies
 
 
-def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5000):
+def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5500):
     x_fft3 = x_fft2 - x_fft1
     plt.figure(figsize=(12, 3.5))
     plt.grid()
@@ -44,7 +44,7 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5000):
     zeros = np.zeros(len(x_fft3))
     zeros[np.argmax(x_fft3)] = max(x_fft3)
     new_signal = np.fft.ifft(zeros)
-    plt.plot(frequencies, new_signal)
+    plt.plot(frequencies, new_signal, 'r,')
     plt.show()
 #    for i in range(len(frequencies1)):
 #        if abs(frequencies1[i][0] - frequencies2[i][0]) >= threshold:

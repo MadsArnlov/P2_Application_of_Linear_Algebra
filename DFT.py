@@ -27,8 +27,10 @@ def fft(signal, fs = 1, spectrum = 2*5000):
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(signal, 'r,')
+    plt.grid()
     plt.subplot(2, 1, 2)
     plt.plot(frequencies[:spectrum], x_fft[:spectrum], 'b-')
+    plt.grid()
     plt.show()
     return x_fft, frequencies
 
@@ -38,12 +40,12 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum = 5000):
     plt.figure(figsize=(12, 3.5))
     plt.grid()
     plt.plot(frequencies[:spectrum], x_fft3[:spectrum], 'b-')
-#    zeros = np.zeros(len(x_fft3))
-#    zeros[np.argmax(x_fft3)] = max(x_fft3)
-#    new_signal = np.fft.ifft(zeros)
-#    plt.plot(frequencies, new_signal)
-#    plt.show()
-#    plt.show()
+    plt.show()
+    zeros = np.zeros(len(x_fft3))
+    zeros[np.argmax(x_fft3)] = max(x_fft3)
+    new_signal = np.fft.ifft(zeros)
+    plt.plot(frequencies, new_signal)
+    plt.show()
 #    for i in range(len(frequencies1)):
 #        if abs(frequencies1[i][0] - frequencies2[i][0]) >= threshold:
 #            print(frequencies1[i][0], '->', frequencies2[i][0])

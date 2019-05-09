@@ -60,10 +60,10 @@ sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
 sampling_frequency, data3 = wavfile.read(file_to_open[2])
 
-data_s = sampling_frequency * 10         # start value for data interval
-data_m1 = data_s + 200000
-data_m2 = data_s + 2**19-200000
-data_e = data_s + 2**19                  # end value for data interval
+data_s = sampling_frequency * 7
+data_m1 = data_s + 2**18
+data_e = len(data1) - sampling_frequency * 7
+data_m2 = data_e - 2**18
 
 x_prior = [data1[data_s:data_m1], data2[data_s:data_m1], data3[data_s:data_m1]]
 x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]

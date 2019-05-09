@@ -18,11 +18,9 @@ start = time.time()
 # =============================================================================
 def fft(signal, fs = 1, spectrum = 5500):
     N = len(signal)
-    duration = N/fs
-    frequencies = np.arange(0, N//2+1)
-    for i in range(len(frequencies)):
-        frequencies[i] = frequencies[i]/duration
-    x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N//2 + 1]
+    duration = N / fs
+    frequencies = np.arange(0, N // 2 + 1) / duration
+    x_fft = np.abs(np.fft.fft(signal, norm = 'ortho'))[0:N // 2 + 1]
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(signal, 'r,')

@@ -40,11 +40,32 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum):
     plt.plot(frequencies[:spectrum], x_fft3[:spectrum], 'b-')
     plt.show()
 
-    new_signal = np.sin((2 * np.pi * np.arange(0, 48000) / 48000) * np.argmax(x_fft3)/5.46)
+    new_signal = 5000 * np.sin((2 * np.pi * np.arange(0, 48000) / 48000) * np.argmax(x_fft3)/5.46)
     plt.figure(figsize=(12, 3.5))
     plt.plot(range(0, spectrum), new_signal[:spectrum], 'k.')
     plt.show()
     return new_signal, x_fft3
+
+
+# =============================================================================
+# Cross Correlation
+# =============================================================================
+def cross_corr(signal1, signal2, samples = 0):
+    if samples != 0:
+        signal2 = signal2[len(signal2) // 2 - samples:len(signal2) // 2 + samples]
+    plt.figure(figsize=(14, 5))
+    plt.subplot(2, 2, 1)
+    plt.plot(signal1, 'r,')
+    plt.subplot(2, 2, 2)
+    plt.plot(signal2, 'b,')
+    plt.show()
+    correlation = np.correlate(signal1, signal2, 'full')
+    plt.figure(figsize=(14, 4))
+    plt.title("Cross Correlation", fontsize=18)
+    plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
+    plt.show()
+    print("Signal 2 is shifted in time with", len(signal1) - (np.argmax(correlation) + 1), "samples")
+    return len(signal1) - (np.argmax(correlation) + 1)
 
 
 # =============================================================================
@@ -69,22 +90,19 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-#dft1 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 500))
-#dft2 = fft(fsinew(18, freq1 = 2000, freq2 = 1500, freq3 = 760))
-#dft_new = dft1-dft2
-#for i in range(len(dft_new)):
-#    if dft_new[i] > 0:
-#        dft_new[i] = 0
-
 x_fft0_prior, frequencies, spectrum = fft(x_prior[0], sampling_frequency)
 x_fft0_fault, frequencies, spectrum = fft(x_fault[0], sampling_frequency)
 new_signal, x_fft_new = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum)
 fft(new_signal, sampling_frequency)
 
-#x_fft1_prior = fft(x_prior[1])
-#x_fft1_fault = fft(x_fault[1])
-#x_fft2_prior = fft(x_prior[2])
-#x_fft2_fault = fft(x_fault[2])
+new_signal = new_signal[:24000]
 
+time1 = cross_corr(new_signal, data1, samples = 48000)
+time2 = cross_corr(new_signal, data2, samples = 48000)
+time3 = cross_corr(new_signal, data3, samples = 48000)
+
+print(time2 - time1)
+print(time3 - time1)
+print(time3 - time2)
 
 end = time.time()

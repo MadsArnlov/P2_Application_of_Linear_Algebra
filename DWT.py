@@ -359,7 +359,7 @@ filt, inv_filt = filters("db4")
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]
+x_synthetic = [10*sinew(19, 10), 10*sinew(19, 10, np.pi/1000)]
 
 packets, list_path = packet_decomposition(x_synthetic[0], filt, 5, 10)
 

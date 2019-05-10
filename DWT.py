@@ -84,8 +84,8 @@ def plot_filter(filtername):
 # Convolution and Multiresolution
 # =============================================================================
 def cir_conv_downs(signal, filt):
-    h = ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = -1)
-    g = ndimage.convolve1d(signal, filt[1], output = 'float', mode = 'wrap', origin = -1)
+    h = ndimage.convolve1d(signal, filt[0], output = 'float', mode = 'wrap', origin = 0)
+    g = ndimage.convolve1d(signal, filt[1], output = 'float', mode = 'wrap', origin = 0)
     h = h[0:len(h):2]
     g = g[0:len(g):2]
     return h, g
@@ -97,9 +97,9 @@ def cir_conv_ups(sub_signal, inv_filt, path):
         zeros[i*2] = sub_signal[i]
     sub_signal_ups = zeros
     if path == 0:
-        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[0], output = 'float', mode = 'wrap', origin = -1)
+        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[0], output = 'float', mode = 'wrap', origin = 0)
     elif path == 1:
-        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[1], output = 'float', mode = 'wrap', origin = -1)
+        inv = ndimage.convolve1d(sub_signal_ups, inv_filt[1], output = 'float', mode = 'wrap', origin = 0)
     return inv
 
 
@@ -238,8 +238,8 @@ def cross_corr(signal1, signal2):
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'b,')
     plt.show()
-#    signal1[:300] = 0
-#    signal1[2**19-300:] = 0
+    signal1[:5000] = 0
+    signal1[2**19-5000:] = 0
     
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
@@ -322,11 +322,11 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 # Execution
 # =============================================================================
 filt, inv_filt = filters("db4")
-x = [hamming(x[i]) for i in range(len(x))]
+#x = [hamming(x[i]) for i in range(len(x))]
 
-packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
-
-#path = list_path[24]
+#packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
+#
+#path = list_path[10]
 #
 #multires, path = multiresolution(x_fault[0], filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
@@ -359,30 +359,23 @@ packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-#path = np.ones(7)
-#filt, inv_filt = filters("db4")
-#plot_filter("haar")
-#
-#import Simple_sine_with_impulses as file
-#import Wave_high_frequencies as file
-#import Synthetic_signal as file
+x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]
 
-#shifted_signal = np.append([sinew(np.log2(file.shift))], [fsinew(file.J, file.freq1,
-#                            file.freq2, file.freq3, file.freq4, file.phase1, file.phase2,
-#                            file.phase3, file.phase4, file.imp_freq, file.scaling1)
-#                            [0:2**file.J-file.shift]])
-#
-#multires, path = multiresolution(fsinew(file.J, file.freq1, file.freq2,
-#                                                file.freq3, file.freq4, file.phase1,
-#                                                file.phase2, file.phase3, file.phase4,
-#                                                file.imp_freq, file.scaling1),
-#                                                filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
-#
-#multires, path = multiresolution(shifted_signal, filt, path)
-#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-#
-#cross_corr(inv_multires, inv_multires2)
+packets, list_path = packet_decomposition(x_synthetic[0], filt, 5, 10)
+
+path = list_path[0]
+
+multires, path = multiresolution(x_synthetic[0], filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution(x_synthetic[1], filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross1 = cross_corr(inv_multires, inv_multires2)
+time_shift1 = sampling_frequency/cross1
+
+#cross1 = cross_corr(x_synthetic[0], x_synthetic[1])
+#time_shift1 = sampling_frequency/cross1
 
 
 # =============================================================================

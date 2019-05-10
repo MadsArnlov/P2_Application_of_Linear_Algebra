@@ -220,6 +220,17 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
     return packets, list_path_max_energy
 
 
+def perfect_reconstruction(packets, inv_filt):
+    rec_packets = []
+    for i in range(len(packets)):
+        if i != 0:
+            rec_packets = packets[-i]
+        for j in range(len(packets[-i])//2):
+                h = cir_conv_ups(packets[-i][j*2], inv_filt, 0)
+                g = cir_conv_ups(packets[-i][j*2+1], inv_filt, 1)
+                rec_packets.append(np.hstack((h, g)))
+    return rec_packets
+
 # =============================================================================
 # Threshold Denoisning
 # =============================================================================
@@ -321,7 +332,7 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 # =============================================================================
 # Execution
 # =============================================================================
-filt, inv_filt = filters("db4")
+filt, inv_filt = filters("haar")
 #x = [hamming(x[i]) for i in range(len(x))]
 
 #packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
@@ -359,20 +370,24 @@ filt, inv_filt = filters("db4")
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-x_synthetic = [10*sinew(19, 10), 10*sinew(19, 10, np.pi/1000)]
+x_synthetic = [1,2,5,8,5,3,6,8,5,3,3,6,6,4,9,10]
+packets, list_path = packet_decomposition(x_synthetic, filt, 4, 0)
+perfect_reconstruction(packets, inv_filt)
 
-packets, list_path = packet_decomposition(x_synthetic[0], filt, 5, 10)
-
-path = list_path[0]
-
-multires, path = multiresolution(x_synthetic[0], filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution(x_synthetic[1], filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross1 = cross_corr(inv_multires, inv_multires2)
-time_shift1 = sampling_frequency/cross1
+#x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]
+#
+#packets, list_path = packet_decomposition(x_synthetic[0], filt, 5, 10)
+#
+#path = list_path[0]
+#
+#multires, path = multiresolution(x_synthetic[0], filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution(x_synthetic[1], filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross1 = cross_corr(inv_multires, inv_multires2)
+#time_shift1 = sampling_frequency/cross1
 
 #cross1 = cross_corr(x_synthetic[0], x_synthetic[1])
 #time_shift1 = sampling_frequency/cross1

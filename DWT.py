@@ -221,16 +221,17 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
 
 
 def perfect_reconstruction(packets, inv_filt):
-    new_packets = np.copy(packets)
+    new_packets = packets.copy()
     recon_packets = []
     for i in range(len(new_packets)):
         if i != 0:
-            recon_packets = new_packets[-i]
+            new_packets[-i] = recon_packets
         for j in range(len(new_packets[-i])//2):
                 h = cir_conv_ups(new_packets[-i][j*2], inv_filt, 0)
                 g = cir_conv_ups(new_packets[-i][j*2+1], inv_filt, 1)
                 recon_packets.append(np.hstack((h, g)))
     return recon_packets
+
 
 # =============================================================================
 # Threshold Denoisning
@@ -371,8 +372,8 @@ filt, inv_filt = filters("haar")
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-x_synthetic = [1,2,5,8,5,3,6,8,5,3,3,6,6,4,9,10]
-packets, list_path = packet_decomposition(x_synthetic, filt, 4, 0)
+x_synthetic = [1,2,5,8,5,3,6,8]
+packets, list_path = packet_decomposition(x_synthetic, filt, 1, 0)
 recon_packets = perfect_reconstruction(packets, inv_filt)
 
 #x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]

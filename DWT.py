@@ -373,7 +373,7 @@ filt, inv_filt = filters("haar")
 # Synthetic Analysis
 # =============================================================================
 x_synthetic = [1,2,5,8,5,3,6,8]
-packets, list_path = packet_decomposition(x_synthetic, filt, 1, 0)
+packets, list_path = packet_decomposition(x_synthetic, filt, 3, 0)
 recon_packets = perfect_reconstruction(packets, inv_filt)
 
 #x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]

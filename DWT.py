@@ -264,10 +264,10 @@ def cross_corr(signal1, signal2):
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'k,')
     plt.show()
-#    signal1[:5000] = 0
-#    signal1[2**19-5000:] = 0
-#    signal2[:2000] = 0
-#    signal2[2**19-2000:] = 0
+    signal1[:10000] = 0
+    signal1[2**19-10000:] = 0
+    signal2[:7000] = 0
+    signal2[2**19-7000:] = 0
     plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
     plt.plot(signal1, 'b,')

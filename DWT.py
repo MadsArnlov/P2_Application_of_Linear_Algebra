@@ -58,6 +58,19 @@ def filters(name = "db4"):
     return filt, inv_filt
 
 
+def matrix_filters(filt, size):
+    filt = filters(filt)
+    zero_matrix = np.zeros((size, size))
+    for k in range(size//len(filt[0][0])):
+        for l in range(len(filt[0][0])):
+            zero_matrix[k][l + k * len(filt[0])] = filt[0][0][-1 + l]
+    for m in range(size//len(filt[0][1])):
+        for j in range(len(filt[0][1])):
+            zero_matrix[m + size//2][j + m * len(filt[0])] = filt[0][1][-1 + j]
+    inv_zero_matrix = np.matrix.transpose(zero_matrix)
+    return inv_zero_matrix
+
+
 def plot_filter(filtername):
     filt, inv_filt = filters(filtername)
     plt.figure(figsize=(14, 10)).suptitle("Filter Coefficients for {:s}".format(filtername), fontsize=18, y=0.95)
@@ -220,16 +233,15 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
     return packets, list_path_max_energy
 
 
-def perfect_reconstruction(packets, inv_filt):
+def perfect_reconstruction(packets, filt):
     new_packets = packets.copy()
     recon_packets = []
     for i in range(len(new_packets)):
         if i != 0:
             new_packets[-i] = recon_packets
         for j in range(len(new_packets[-i])//2):
-                h = cir_conv_ups(new_packets[-i][j*2], inv_filt, 0)
-                g = cir_conv_ups(new_packets[-i][j*2+1], inv_filt, 1)
-                recon_packets.append(np.hstack((h, g)))
+            hgstack = np.hstack((new_packets[-i][j*2], new_packets[-i][j*2+1]))
+            recon_packets.append(np.dot(matrix_filters(filt, len(hgstack)), hgstack))
     return recon_packets
 
 
@@ -337,8 +349,9 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 filt, inv_filt = filters("haar")
 #x = [hamming(x[i]) for i in range(len(x))]
 
-#packets, list_path = packet_decomposition(x_fault[0], filt, 13, 100)
-#
+packets, list_path = packet_decomposition(x_fault[0], filt, 2, 10)
+recon_packets = perfect_reconstruction(packets, 'haar')
+
 #path = list_path[10]
 #
 #multires, path = multiresolution(x_fault[0], filt, path)
@@ -372,9 +385,9 @@ filt, inv_filt = filters("haar")
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-x_synthetic = [1,2,5,8,5,3,6,8]
-packets, list_path = packet_decomposition(x_synthetic, filt, 3, 0)
-recon_packets = perfect_reconstruction(packets, inv_filt)
+#x_synthetic = [1,2,5,8,5,3,6,8]
+#packets, list_path = packet_decomposition(x_synthetic, filt, 2, 0)
+#recon_packets = perfect_reconstruction(packets, 'haar')
 
 #x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]
 #

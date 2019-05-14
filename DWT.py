@@ -361,34 +361,34 @@ filt, inv_filt = filters("db4")
 
 #packets, list_path = packet_decomposition(x_fault_norm[0], filt, 8, 30)
 
-path = np.ones(4)
-
-multires, path = multiresolution(x_fault_norm[0], filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution(x_fault_norm[1], filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross1 = cross_corr(inv_multires, inv_multires2)
-time_shift1 = sampling_frequency/cross1
-
-multires, path = multiresolution((x_fault_norm[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x_fault_norm[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross2 = cross_corr(inv_multires, inv_multires2)
-time_shift2 = sampling_frequency/cross2
-
-multires, path = multiresolution((x_fault_norm[1]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x_fault_norm[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross3 = cross_corr(inv_multires, inv_multires2)
-time_shift3 = sampling_frequency/cross3
+#path = np.ones(4)
+#
+#multires, path = multiresolution(x_fault_norm[0], filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution(x_fault_norm[1], filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross1 = cross_corr(inv_multires, inv_multires2)
+#time_shift1 = sampling_frequency/cross1
+#
+#multires, path = multiresolution((x_fault_norm[0]), filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x_fault_norm[2]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross2 = cross_corr(inv_multires, inv_multires2)
+#time_shift2 = sampling_frequency/cross2
+#
+#multires, path = multiresolution((x_fault_norm[1]), filt, path)
+#inv_multires = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x_fault_norm[2]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross3 = cross_corr(inv_multires, inv_multires2)
+#time_shift3 = sampling_frequency/cross3
 
 
 # =============================================================================

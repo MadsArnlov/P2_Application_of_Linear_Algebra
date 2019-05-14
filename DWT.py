@@ -34,6 +34,27 @@ def filters(name = "db4"):
                      -0.18703481171888114, 0.030841381835986965, 0.032883011666982945, -0.010597401784997278], 
                     [-0.010597401784997278, -0.032883011666982945, 0.030841381835986965, 0.18703481171888114,
                      -0.02798376941698385, -0.6308807679295904, 0.7148465705525415, -0.23037781330885523]]
+    elif name == "DB13":
+        filt = [[5.2200350984548e-07, -4.700416479360808e-06, 1.0441930571407941e-05, 3.067853757932436e-05, -0.0001651289885565057,
+                 4.9251525126285676e-05, 0.000932326130867249, -0.0013156739118922766, -0.002761911234656831, 0.007255589401617119, 
+                 0.003923941448795577, -0.02383142071032781, 0.002379972254052227, 0.056139477100276156, -0.026488406475345658, 
+                 -0.10580761818792761, 0.07294893365678874, 0.17947607942935084, -0.12457673075080665, -0.31497290771138414, 
+                 0.086985726179645, 0.5888895704312119, 0.6110558511587811, 0.3119963221604349, 0.08286124387290195, 0.009202133538962279],
+                [-0.009202133538962279, 0.08286124387290195, -0.3119963221604349, 0.6110558511587811, -0.5888895704312119, 0.086985726179645, 
+                 0.31497290771138414, -0.12457673075080665, -0.17947607942935084, 0.07294893365678874, 0.10580761818792761, -0.026488406475345658, 
+                 -0.056139477100276156, 0.002379972254052227, 0.02383142071032781, 0.003923941448795577, -0.007255589401617119, -0.002761911234656831, 
+                 0.0013156739118922766, 0.000932326130867249, -4.9251525126285676e-05, -0.0001651289885565057, -3.067853757932436e-05, 1.0441930571407941e-05, 
+                 4.700416479360808e-06, 5.2200350984548e-07]]
+        inv_filt = [[0.009202133538962279, 0.08286124387290195, 0.3119963221604349, 0.6110558511587811, 0.5888895704312119, 0.086985726179645, 
+                     -0.31497290771138414, -0.12457673075080665, 0.17947607942935084, 0.07294893365678874, -0.10580761818792761, -0.026488406475345658, 
+                     0.056139477100276156, 0.002379972254052227, -0.02383142071032781, 0.003923941448795577, 0.007255589401617119, -0.002761911234656831, 
+                     -0.0013156739118922766, 0.000932326130867249, 4.9251525126285676e-05, -0.0001651289885565057, 3.067853757932436e-05,
+                     1.0441930571407941e-05, -4.700416479360808e-06, 5.2200350984548e-07], 
+                    [5.2200350984548e-07, 4.700416479360808e-06, 1.0441930571407941e-05, -3.067853757932436e-05, -0.0001651289885565057, 
+                     -4.9251525126285676e-05, 0.000932326130867249, 0.0013156739118922766, -0.002761911234656831, -0.007255589401617119, 
+                     0.003923941448795577, 0.02383142071032781, 0.002379972254052227, -0.056139477100276156, -0.026488406475345658, 
+                     0.10580761818792761, 0.07294893365678874, -0.17947607942935084, -0.12457673075080665, 0.31497290771138414, 0.086985726179645, 
+                     -0.5888895704312119, 0.6110558511587811, -0.3119963221604349, 0.08286124387290195, -0.009202133538962279]]
     elif name == "BO13":
         filt = [[-0.0883883476, 0.0883883476, 0.7071067812, 0.7071067812, 0.0883883476, -0.0883883476],
                 [0, 0, -0.7071067812, 0.7071067812, 0, 0]]
@@ -249,10 +270,13 @@ def perfect_reconstruction(packets, filt):
 # =============================================================================
 # Threshold Denoisning
 # =============================================================================
-def threshold_denoising(multires, path):
-    multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
-    return multires
+#def threshold_denoising(multires, path):
+#    multires[-1][int(path[-1])][abs(multires[-1][int(path[-1])]) < (max(multires[-1][int(path[-1])]) * 0)] = 0
+#    return multires
 
+def threshold_denoising(signal, threshold):
+    signal = np.where(signal < threshold * np.amax(signal), signal, 0)
+    return signal
 
 # =============================================================================
 # Cross Correlation
@@ -260,20 +284,14 @@ def threshold_denoising(multires, path):
 def cross_corr(signal1, signal2):
     plt.figure(figsize=(14, 5))
     plt.subplot(2, 2, 1)
-    plt.plot(signal1, 'k,')
+    plt.plot(signal1, 'c,')
     plt.subplot(2, 2, 2)
-    plt.plot(signal2, 'k,')
+    plt.plot(signal2, 'c,')
     plt.show()
 #    signal1[:1000] = 0
 #    signal1[2**19-1000:] = 0
 #    signal2[:7000] = 0
 #    signal2[2**19-7000:] = 0
-    plt.figure(figsize=(14, 5))
-    plt.subplot(2, 2, 1)
-    plt.plot(signal1, 'b,')
-    plt.subplot(2, 2, 2)
-    plt.plot(signal2, 'b,')
-    plt.show()
     
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
@@ -364,30 +382,21 @@ filt, inv_filt = filters("db4")
 path = np.ones(4)
 
 multires, path = multiresolution(x_fault_norm[0], filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
+inv_multires0 = inv_multiresolution(inv_filt, multires, path)
 
 multires, path = multiresolution(x_fault_norm[1], filt, path)
+inv_multires1 = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution((x_fault_norm[2]), filt, path)
 inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 
-cross1 = cross_corr(inv_multires, inv_multires2)
+cross1 = cross_corr(inv_multires0, inv_multires1)
 time_shift1 = sampling_frequency/cross1
 
-multires, path = multiresolution((x_fault_norm[0]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x_fault_norm[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross2 = cross_corr(inv_multires, inv_multires2)
+cross2 = cross_corr(inv_multires0, inv_multires2)
 time_shift2 = sampling_frequency/cross2
 
-multires, path = multiresolution((x_fault_norm[1]), filt, path)
-inv_multires = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x_fault_norm[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross3 = cross_corr(inv_multires, inv_multires2)
+cross3 = cross_corr(inv_multires1, inv_multires2)
 time_shift3 = sampling_frequency/cross3
 
 

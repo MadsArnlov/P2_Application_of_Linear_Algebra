@@ -7,6 +7,7 @@ Created on Sat Mar 30 12:10:44 2019
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy
 from scipy import ndimage
 from scipy.io import wavfile
 from pathlib import Path
@@ -230,7 +231,7 @@ def packet_decomposition(signal, filt, levels, energylevels, plot = 0):
     for l in range(energylevels):
         print('        Index   Path           Spectrum')
         print(l,'        {}   {}   {}'.format(index_max_energy[l], list_path_max_energy[l], list_freq_spec[l]))
-    return packets, list_path_max_energy
+    return packets, list_path_max_energy, packets_energy_sum
 
 
 def perfect_reconstruction(packets, filt):
@@ -242,7 +243,7 @@ def perfect_reconstruction(packets, filt):
         for j in range(len(new_packets[-i])//2):
             hgstack = np.hstack((new_packets[-i][j*2], new_packets[-i][j*2+1]))
             recon_packets.append(np.dot(matrix_filters(filt, len(hgstack)), hgstack))
-    return recon_packets
+    return print(recon_packets)
 
 
 # =============================================================================
@@ -289,8 +290,14 @@ data_s = sampling_frequency * 10         # start value for data interval
 data_e = data_s + 2**19                  # end value for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
+#x = [hamming(x[i]) for i in range(len(x))]
 
 x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:800000+2**19]]
+x_fault_norm = [x_fault[0]/scipy.std(x_fault[0]), x_fault[1]/scipy.std(x_fault[1]), x_fault[2]/scipy.std(x_fault[2])]
+#x_fault_norm = x_fault[0]/scipy.std(x_fault[0])
+#data_norm_by_std1 = x_fault[1]/scipy.std(x_fault[1])
+#data_norm_by_std2 = x_fault[2]/scipy.std(x_fault[2])
+
 
 # =============================================================================
 # Plot of Data
@@ -346,22 +353,20 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 # =============================================================================
 # Execution
 # =============================================================================
-filt, inv_filt = filters("haar")
-#x = [hamming(x[i]) for i in range(len(x))]
+filt, inv_filt = filters("db4")
 
-packets, list_path = packet_decomposition(x_fault[0], filt, 2, 10)
-recon_packets = perfect_reconstruction(packets, 'haar')
+packets, list_path, packets_energy_sum = packet_decomposition(x_fault_norm[0], filt, 8, 30)
 
-#path = list_path[10]
-#
-#multires, path = multiresolution(x_fault[0], filt, path)
-#inv_multires = inv_multiresolution(inv_filt, multires, path)
-#
-#multires, path = multiresolution(x_fault[1], filt, path)
-#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-#
-#cross1 = cross_corr(inv_multires, inv_multires2)
-#time_shift1 = sampling_frequency/cross1
+path = list_path[22]
+
+multires, path = multiresolution(x_fault_norm[0], filt, path)
+inv_multires = inv_multiresolution(inv_filt, multires, path)
+
+multires, path = multiresolution(x_fault_norm[1], filt, path)
+inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+
+cross1 = cross_corr(inv_multires, inv_multires2)
+time_shift1 = sampling_frequency/cross1
 #
 #multires, path = multiresolution((x_fault[0]), filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
@@ -385,13 +390,13 @@ recon_packets = perfect_reconstruction(packets, 'haar')
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-#x_synthetic = [1,2,5,8,5,3,6,8]
-#packets, list_path = packet_decomposition(x_synthetic, filt, 2, 0)
+#x_synthetic = [1,2,5,8,5,3,6,8,1,2,5,8,5,3,6,8]
+#packets, list_path = packet_decomposition(x_synthetic, filt, 4, 0)
 #recon_packets = perfect_reconstruction(packets, 'haar')
-
-#x_synthetic = [sinew(19, 10), sinew(19, 10, np.pi/1000)]
 #
-#packets, list_path = packet_decomposition(x_synthetic[0], filt, 5, 10)
+#x_synthetic = [sinew(10, 10), sinew(10, 10, np.pi/4)]
+#
+#packets, list_path = packet_decomposition(x_synthetic[0], filt, 4, 10)
 #
 #path = list_path[0]
 #
@@ -403,7 +408,7 @@ recon_packets = perfect_reconstruction(packets, 'haar')
 #
 #cross1 = cross_corr(inv_multires, inv_multires2)
 #time_shift1 = sampling_frequency/cross1
-
+#
 #cross1 = cross_corr(x_synthetic[0], x_synthetic[1])
 #time_shift1 = sampling_frequency/cross1
 

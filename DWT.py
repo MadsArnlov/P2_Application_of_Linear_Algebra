@@ -292,7 +292,7 @@ def cross_corr(signal1, signal2):
 #    signal1[2**19-1000:] = 0
 #    signal2[:7000] = 0
 #    signal2[2**19-7000:] = 0
-    
+
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
     plt.title("Cross Correlation", fontsize=18)
@@ -375,51 +375,48 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 # =============================================================================
 # Execution
 # =============================================================================
-filt, inv_filt = filters("db4")
+filt, inv_filt = filters("haar")
 
-#packets, list_path = packet_decomposition(x_fault_norm[0], filt, 8, 30)
-
-path = np.ones(4)
-
-multires, path = multiresolution(x_fault_norm[0], filt, path)
-inv_multires0 = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution(x_fault_norm[1], filt, path)
-inv_multires1 = inv_multiresolution(inv_filt, multires, path)
-
-multires, path = multiresolution((x_fault_norm[2]), filt, path)
-inv_multires2 = inv_multiresolution(inv_filt, multires, path)
-
-cross1 = cross_corr(inv_multires0, inv_multires1)
-time_shift1 = sampling_frequency/cross1
-
-cross2 = cross_corr(inv_multires0, inv_multires2)
-time_shift2 = sampling_frequency/cross2
-
-cross3 = cross_corr(inv_multires1, inv_multires2)
-time_shift3 = sampling_frequency/cross3
+#packets, list_path = packet_decomposition(x_fault_norm[0], filt, 7, 128)
+#
+#path = np.ones(4)
+#
+#multires, path = multiresolution(x_fault_norm[0], filt, path)
+#inv_multires0 = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution(x_fault_norm[1], filt, path)
+#inv_multires1 = inv_multiresolution(inv_filt, multires, path)
+#
+#multires, path = multiresolution((x_fault_norm[2]), filt, path)
+#inv_multires2 = inv_multiresolution(inv_filt, multires, path)
+#
+#cross1 = cross_corr(inv_multires0, inv_multires1)
+#time_shift1 = sampling_frequency/cross1
+#
+#cross2 = cross_corr(inv_multires0, inv_multires2)
+#time_shift2 = sampling_frequency/cross2
+#
+#cross3 = cross_corr(inv_multires1, inv_multires2)
+#time_shift3 = sampling_frequency/cross3
 
 
 # =============================================================================
 # Synthetic Analysis
 # =============================================================================
-#x_synthetic = [1,2,5,8,5,3,6,8,1,2,5,8,5,3,6,8]
+#x_synthetic = sinew(10, 10)
+#
 #packets, list_path = packet_decomposition(x_synthetic, filt, 4, 0)
 #recon_packets = perfect_reconstruction(packets, 'haar')
-
-#x_synthetic = [sinew(10, 10), sinew(10, 10, np.pi/4)]
 #
-#packets, list_path = packet_decomposition(x_synthetic[0], filt, 3, 10)
+#path = np.zeros(3)
 #
-#path = list_path[0]
-#
-#multires, path = multiresolution(x_synthetic[0], filt, path)
+#multires, path = multiresolution(x_synthetic, filt, path)
 #inv_multires = inv_multiresolution(inv_filt, multires, path)
 #
 #multires, path = multiresolution(x_synthetic[1], filt, path)
 #inv_multires2 = inv_multiresolution(inv_filt, multires, path)
 #
-#cross1 = cross_corr(inv_multires, inv_multires2)
+#cross1 = cross_corr(inv_multires, recon_packets[0])
 #time_shift1 = sampling_frequency/cross1
 #
 #cross1 = cross_corr(x_synthetic[0], x_synthetic[1])

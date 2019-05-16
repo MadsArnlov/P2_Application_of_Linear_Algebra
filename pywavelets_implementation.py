@@ -26,8 +26,8 @@ def format_array(a):
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("Test_recordings\\Without_noise\\impuls300pr.min_speaker2_uden_støj")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\\Without_noise\\impuls300pr.min_speaker4_uden_støj")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker4_uden_støj.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
 #file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
@@ -212,9 +212,9 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
-synthesis1, usefull_path_list = packets_selection(x[1], 10)
-synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
-synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
+synthesis1, usefull_path_list = packets_selection(x[1], 8)
+synthesis2 = reconstruct_from_packet(x[0], 8, usefull_path_list)
+synthesis3 = reconstruct_from_packet(x[2], 8, usefull_path_list)
 
 #synthesis4 = reconstruct_from_packet(x[0], 6, ["dddddd"])
 #synthesis5 = reconstruct_from_packet(x[1], 6, ["dddddd"])

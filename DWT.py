@@ -362,6 +362,7 @@ x_fault = [data1[800000:800000+2**19], data2[800000:800000+2**19], data3[800000:
 x_fault_norm = [x_fault[0]/scipy.std(x_fault[0]), x_fault[1]/scipy.std(x_fault[1]), x_fault[2]/scipy.std(x_fault[2])]
 x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 
+
 # =============================================================================
 # Plot of Data
 # =============================================================================

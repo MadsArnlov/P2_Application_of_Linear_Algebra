@@ -324,18 +324,13 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 # =============================================================================
 # Plot of Data
 # =============================================================================
-#t = np.linspace(10, 10+len(x[0])/sampling_frequency, len(x[0]))
-#
-#plt.figure(figsize=(14,10))
-#for i in range(3):
-#    plt.subplot(3, 1, 1+i)
-#    plt.title("Lydsignal for mikrofon {}".format(1+i), fontsize=16)
-#    plt.plot(t, x[i], 'r,')
-#    plt.grid()
-#    plt.subplot(3, 1, 1+i)
-#    plt.plot(t, hamming_window(x[i]), 'b,')
-#    plt.grid
-#plt.show()
+plt.figure(figsize=(14,4))
+plt.title("Soundsignal of microphone \u03B1",fontsize=16)
+plt.xlabel("Samples")
+plt.plot(data1, 'r,')
+plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
+plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+plt.show()
 
 
 # =============================================================================

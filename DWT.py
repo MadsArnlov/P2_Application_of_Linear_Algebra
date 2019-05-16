@@ -143,7 +143,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Decomposition", fontsize=16)
         else:
             plt.title("High-pass Decomposition", fontsize=16)
-        plt.axis([-0.1, len(filt[i]) + 0.1, -max(np.abs(filt[i])) - 0.1, max(filt[i]) + 0.1])
+        plt.axis([-0.1, len(filt[i]) + 0.1, -max(np.abs(filt[i])) - 0.1, max(np.abs(filt[i])) + 0.1])
     for i in range(2):
         plt.subplot(2, 2, i+3)
         plt.stem(inv_filt[i], 'c-')
@@ -151,7 +151,7 @@ def plot_filter(filtername):
             plt.title("Low-pass Reconstruction", fontsize=16)
         else:
             plt.title("High-pass Reconstruction", fontsize=16)
-        plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(np.abs(inv_filt[i])) - 0.1, max(inv_filt[i])+ 0.1])    
+        plt.axis([-0.1, len(inv_filt[i]) + 0.1, -max(np.abs(inv_filt[i])) - 0.1, max(np.abs(inv_filt[i]))+ 0.1])    
     plt.savefig("db16.pdf")
     plt.show()
 

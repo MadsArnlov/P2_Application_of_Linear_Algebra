@@ -212,9 +212,9 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
-synthesis1, usefull_path_list = packets_selection(x[1], 13)
-synthesis2 = reconstruct_from_packet(x[0], 13, usefull_path_list)
-synthesis3 = reconstruct_from_packet(x[2], 13, usefull_path_list)
+synthesis1, usefull_path_list = packets_selection(x[1], 10)
+synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
+synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
 
 #synthesis4 = reconstruct_from_packet(x[0], 6, ["dddddd"])
 #synthesis5 = reconstruct_from_packet(x[1], 6, ["dddddd"])

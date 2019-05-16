@@ -14,7 +14,7 @@ from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
 import pywt
 import scipy
 import sympy.solvers
-
+import csv
 # =============================================================================
 # Fomalia til pywt packet decomposition
 # =============================================================================
@@ -26,8 +26,8 @@ def format_array(a):
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\impuls300pr.min_speaker3_uden_støj")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\\Without_noise\\impuls300pr.min_speaker2_uden_støj")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
 #file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
@@ -200,25 +200,7 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
     synthesis = wp.reconstruct()
     return synthesis
 
-def position_from_cc(time_delay_1_2 = sample_delay_1_2,time_delay_1_3 = sample_delay_1_3,time_delay_2_3 = sample_delay_2_3, v = 343):
-    coordinate_1 = np.array([2.383,1.44])
-    coordinate_2 = np.array([2.782,1.44])
-    coordinate_3 = np.array([2.582,1.786])
-    
-    distance_1_2 = (time_delay_1_2/48000)*v
-    distance_1_3 = (time_delay_1_3/48000)*v
-    distance_2_3 = (time_delay_2_3/48000)*v
-  
-    
-    sympy.init_printing()
-    x,y = sympy.symbols("x,y")
-#    f = sympy.Eq(sympy.sqrt(x+y),2)
-#    g = sympy.Eq(2*x+5*y,3)
-    f = sympy.Eq(sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_2)
-    g = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_3)
-    h = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2), distance_2_3)
-    position = sympy.solve([f,g],(x,y))
-    return position
+
 
 # =============================================================================
 # possibility of hamming window
@@ -230,9 +212,9 @@ def position_from_cc(time_delay_1_2 = sample_delay_1_2,time_delay_1_3 = sample_d
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
-synthesis1, usefull_path_list = packets_selection(x[1], 13)
-synthesis2 = reconstruct_from_packet(x[0], 13, usefull_path_list)
-synthesis3 = reconstruct_from_packet(x[2], 13, usefull_path_list)
+synthesis1, usefull_path_list = packets_selection(x[1], 10)
+synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
+synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
 
 #synthesis4 = reconstruct_from_packet(x[0], 6, ["dddddd"])
 #synthesis5 = reconstruct_from_packet(x[1], 6, ["dddddd"])
@@ -240,9 +222,9 @@ synthesis3 = reconstruct_from_packet(x[2], 13, usefull_path_list)
 # =============================================================================
 # calling Cross_corr
 # =============================================================================
-sample_delay_1_2=cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))
-sample_delay_1_3=cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
-sample_delay_2_3=cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
+sample_delay_1_2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))
+sample_delay_1_3 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
+sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
 
 
 #position_1_2=cross_corr(synthesis4[300000:400000]/scipy.std(synthesis4), synthesis5[300000:400000]/scipy.std(synthesis5))
@@ -261,13 +243,35 @@ plt.plot(synthesis2[100000:400000]/scipy.std(synthesis2))
 plt.subplot(4,1,4)
 plt.plot(synthesis3[100000:400000]/scipy.std(synthesis3))
 
-position = position_from_cc()
-print(position)
+sample_delay_list=[sample_delay_1_2,sample_delay_1_3,sample_delay_2_3]
 #a=np.array([0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,0,0,0,0,0,0,0])
 #b=np.array([1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
 #cross_corr(b/scipy.std(b),a/scipy.std(a))
-
-
-
-
+outfile = open("Coordinates.csv","w")
+out = csv.writer(outfile)    
+out.writerow(map(lambda x: x, sample_delay_list))
+outfile.close()
+#def position_from_cc(time_delay_1_2 = sample_delay_1_2,time_delay_1_3 = sample_delay_1_3,time_delay_2_3 = sample_delay_2_3, v = 343):
+#    coordinate_1 = np.array([2.383,1.44])
+#    coordinate_2 = np.array([2.782,1.44])
+#    coordinate_3 = np.array([2.582,1.786])
+#    
+#    distance_1_2 = (time_delay_1_2/48000)*v
+#    distance_1_3 = (time_delay_1_3/48000)*v
+#    distance_2_3 = (time_delay_2_3/48000)*v
+#  
+#    
+#    sympy.init_printing()
+#    x,y = sympy.symbols("x,y")
+##    f = sympy.Eq(sympy.sqrt(x+y),2)
+##    g = sympy.Eq(2*x+5*y,3)
+#    f = sympy.Eq(sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_2)
+#    g = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_3)
+#    h = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2), distance_2_3)
+#    position = sympy.solve([f,g],(x,y))
+#    return position
+#
+#sympy.init_printing()
+#position = position_from_cc()
+#print(position)
 

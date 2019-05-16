@@ -26,7 +26,7 @@ def format_array(a):
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\impuls300pr.min_speaker2_uden_støj")
+data_folder = Path("Test_recordings\\Without_noise\\impuls300pr.min_speaker2_uden_støj")
 file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
@@ -249,7 +249,7 @@ sample_delay_list=[sample_delay_1_2,sample_delay_1_3,sample_delay_2_3]
 #cross_corr(b/scipy.std(b),a/scipy.std(a))
 outfile = open("Coordinates.csv","w")
 out = csv.writer(outfile)    
-out.writerow(map(lambda x: [x], sample_delay_list))
+out.writerow(map(lambda x: x, sample_delay_list))
 outfile.close()
 #def position_from_cc(time_delay_1_2 = sample_delay_1_2,time_delay_1_3 = sample_delay_1_3,time_delay_2_3 = sample_delay_2_3, v = 343):
 #    coordinate_1 = np.array([2.383,1.44])

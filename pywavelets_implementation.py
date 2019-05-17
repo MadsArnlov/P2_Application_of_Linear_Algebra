@@ -238,7 +238,7 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 plt.figure(figsize=(14, 10))
 plt.subplot(311)
 plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
-plt.legend()
+plt.legend(loc="upper right")
 plt.ylabel('Voltage [mV]')
 
 plt.subplot(312)
@@ -248,11 +248,11 @@ plt.ylabel('Voltage [mV]')
 
 plt.subplot(313)
 plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
-plt.legend()
+plt.legend(loc="upper right")
 plt.xlabel("Samples")
 plt.ylabel('Voltage [mV]')
 
-plt.savefig('reconstruction_experiment_7.pdf')
+plt.savefig('reconstruction_experiment_7.png')
 plt.show()
 
 

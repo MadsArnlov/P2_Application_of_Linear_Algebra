@@ -26,8 +26,8 @@ def format_array(a):
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("Test_recordings\\Without_noise\\impuls300pr.min_speaker4_uden_støj")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker4_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker2")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
 #file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
@@ -201,28 +201,7 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
     return synthesis
 
 
-# =============================================================================
-# Plot of Data
-# =============================================================================
-plt.figure(figsize=(14, 10))
-plt.subplot(311)
-plt.plot(, 'k,', label = "Microphone \u03B1")
-plt.legend()
-plt.ylabel('Voltage [mV]')
 
-plt.subplot(312)
-plt.plot(, 'k,', label = "Microphone \u03B2")
-plt.legend(loc='upper right')
-plt.ylabel('Voltage [mV]')
-
-plt.subplot(313)
-plt.plot(, 'k,', label = "Microphone \u03B3")
-plt.legend()
-plt.xlabel("Samples")
-plt.ylabel('Voltage [mV]')
-
-plt.savefig('reconstruction_experiment_7.png')
-plt.show()
 
 
 # =============================================================================
@@ -253,6 +232,30 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 #position_1_2=cross_corr(synthesis4[300000:400000]/scipy.std(synthesis4), synthesis5[300000:400000]/scipy.std(synthesis5))
 #position_1_3=cross_corr(synthesis4[300000:400000]/scipy.std(synthesis4), synthesis6[300000:400000]/scipy.std(synthesis6))
 #position_2_3=cross_corr(synthesis5[300000:400000]/scipy.std(synthesis5), synthesis6[300000:400000]/scipy.std(synthesis6))
+# =============================================================================
+# Plot of Data
+# =============================================================================
+plt.figure(figsize=(14, 10))
+plt.subplot(311)
+plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
+plt.legend()
+plt.ylabel('Voltage [mV]')
+
+plt.subplot(312)
+plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "Microphone \u03B2")
+plt.legend(loc='upper right')
+plt.ylabel('Voltage [mV]')
+
+plt.subplot(313)
+plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
+plt.legend()
+plt.xlabel("Samples")
+plt.ylabel('Voltage [mV]')
+
+plt.savefig('reconstruction_experiment_7.pdf')
+plt.show()
+
+
 # =============================================================================
 # plot 
 # =============================================================================

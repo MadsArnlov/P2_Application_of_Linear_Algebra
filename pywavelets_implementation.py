@@ -57,16 +57,6 @@ def cross_corr(signal1, signal2):
     plt.subplot(2, 2, 2)
     plt.plot(signal2, 'k,')
     plt.show()
-#    signal1[:1000] = 0
-#    signal1[2**19-1000:] = 0
-#    signal2[:7000] = 0
-#    signal2[2**19-7000:] = 0
-#    plt.figure(figsize=(14, 5))
-#    plt.subplot(2, 2, 1)
-#    plt.plot(signal1, 'b,')
-#    plt.subplot(2, 2, 2)
-#    plt.plot(signal2, 'b,')
-    plt.show()
     
     correlation = np.correlate(signal1, signal2, 'full')
     plt.figure(figsize=(14, 4))
@@ -75,53 +65,9 @@ def cross_corr(signal1, signal2):
     plt.show()
     print("Signal 2 is shifted in time with", len(signal1) - (np.argmax(correlation) + 1), "samples")
     return len(signal1) - (np.argmax(correlation) + 1)
-# =============================================================================
-# 
 
 
 
-#levels=2
-# 
-# max_level = pywt.dwt_max_level(len(x_1),"haar")
-# 
-#wp = pywt.WaveletPacket(x[0],"haar")
-#
-#level_decomposition = wp.get_level(13)
-##
-#for i in wp.get_leaf_nodes(False):
-#    print(i.path,format_array(i.data))
-# 
-# delete_list=[]
-# 
-# for i in wp.get_leaf_nodes(False):
-#     if (np.sum((wp[i.path].data)**2)) < 10:
-#        delete_list.append(i.path)
-# 
-# #wp["aa"]=[0,0]
-# #for j in delete_list: 
-# #    del wp[j]        
-#     
-# for i in wp.get_leaf_nodes():
-#     print(i.path, format_array(i.data))
-#   
-# print(wp.reconstruct())
-
-#wp = pywt.WaveletPacket(x_1, "haar")
-#level_decomposition = wp.get_level(3)
-
-#wp = pywt.WaveletPacket(x[0], "db16")
-#level_decomposition = wp.get_level(8)
-#decomposition_list=[]
-#usefull_path_list=["aaaaaaaa"]
-#for i in level_decomposition:
-#    decomposition_list.append(i.path)
-#    if i.path in usefull_path_list: 
-#        "Do Nothing"
-#    else:
-#        wp[i.path].data = np.zeros(len(wp[i.path].data))
-#print(wp["aaaaaaaa"].data)
-
-# =============================================================================
 def packets_selection(signal, level, safe_zone = 1000, threshold=0, freq1=737, freq2=240, freq3=1000, freq4=125, filters="db16"):
     
 #    max_level = pywt.dwt_max_level(len(signal), filters)
@@ -176,7 +122,6 @@ def packets_selection(signal, level, safe_zone = 1000, threshold=0, freq1=737, f
     usefull_path_list=[]
     for i in level_decomposition:
         if i.data.any() != 0:
-#            print(i.path, type(i.path))
             usefull_path_list.append(i.path)
             
     print(wp.reconstruct())
@@ -205,13 +150,6 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
 
 
 # =============================================================================
-# possibility of hamming window
-# =============================================================================
-#x_h0 = np.array(hamming(x[0]))
-#x_h1 = np.array(hamming(x[1]))
-#x_h2 = np.array(hamming(x[2]))
-
-# =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
 synthesis1, usefull_path_list = packets_selection(x[1], 10)
@@ -229,75 +167,82 @@ sample_delay_1_3 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), s
 sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
 
 
-#position_1_2=cross_corr(synthesis4[300000:400000]/scipy.std(synthesis4), synthesis5[300000:400000]/scipy.std(synthesis5))
-#position_1_3=cross_corr(synthesis4[300000:400000]/scipy.std(synthesis4), synthesis6[300000:400000]/scipy.std(synthesis6))
-#position_2_3=cross_corr(synthesis5[300000:400000]/scipy.std(synthesis5), synthesis6[300000:400000]/scipy.std(synthesis6))
+
 # =============================================================================
 # Plot of Data
 # =============================================================================
-plt.figure(figsize=(14, 10))
-plt.subplot(311)
-plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
-plt.legend(loc="upper right")
-
-
-plt.subplot(312)
-plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "Microphone \u03B2")
-plt.legend(loc='upper right')
-
-
-plt.subplot(313)
-plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
-plt.legend(loc="upper right")
-plt.xlabel("Samples")
-
-
-plt.savefig('reconstruction_experiment_7.png')
-plt.show()
+#plt.figure(figsize=(14, 10))
+#plt.subplot(311)
+#plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
+#plt.legend(loc="upper right")
+#
+#
+#plt.subplot(312)
+#plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "Microphone \u03B2")
+#plt.legend(loc='upper right')
+#
+#
+#plt.subplot(313)
+#plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
+#plt.legend(loc="upper right")
+#plt.xlabel("Samples")
+#
+#
+#plt.savefig('reconstruction_experiment_7.png')
+#plt.show()
 
 
 # =============================================================================
 # plot 
 # =============================================================================
-plt.figure(figsize=(14,7))
-plt.subplot(4,1,1)
-plt.plot(x[0])
-plt.subplot(4,1,2)
-plt.plot(synthesis1[100000:400000]/scipy.std(synthesis1))
-plt.subplot(4,1,3)
-plt.plot(synthesis2[100000:400000]/scipy.std(synthesis2))
-plt.subplot(4,1,4)
-plt.plot(synthesis3[100000:400000]/scipy.std(synthesis3))
+#plt.figure(figsize=(14,7))
+#plt.subplot(4,1,1)
+#plt.plot(x[0])
+#plt.subplot(4,1,2)
+#plt.plot(synthesis1[100000:400000]/scipy.std(synthesis1))
+#plt.subplot(4,1,3)
+#plt.plot(synthesis2[100000:400000]/scipy.std(synthesis2))
+#plt.subplot(4,1,4)
+#plt.plot(synthesis3[100000:400000]/scipy.std(synthesis3))
 
-sample_delay_list=[sample_delay_1_2,sample_delay_1_3,sample_delay_2_3]
+#sample_delay_list=[sample_delay_1_2,sample_delay_1_3,sample_delay_2_3]
 #a=np.array([0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,0,0,0,0,0,0,0])
 #b=np.array([1,2,3,4,5,6,7,8,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
 #cross_corr(b/scipy.std(b),a/scipy.std(a))
-outfile = open("Coordinates.csv","w")
-out = csv.writer(outfile)    
-out.writerow(map(lambda x: x, sample_delay_list))
-outfile.close()
-#def position_from_cc(time_delay_1_2 = sample_delay_1_2,time_delay_1_3 = sample_delay_1_3,time_delay_2_3 = sample_delay_2_3, v = 343):
-#    coordinate_1 = np.array([2.383,1.44])
-#    coordinate_2 = np.array([2.782,1.44])
-#    coordinate_3 = np.array([2.582,1.786])
-#    
-#    distance_1_2 = (time_delay_1_2/48000)*v
-#    distance_1_3 = (time_delay_1_3/48000)*v
-#    distance_2_3 = (time_delay_2_3/48000)*v
-#  
-#    
-#    sympy.init_printing()
-#    x,y = sympy.symbols("x,y")
-##    f = sympy.Eq(sympy.sqrt(x+y),2)
-##    g = sympy.Eq(2*x+5*y,3)
-#    f = sympy.Eq(sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_2)
-#    g = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_1[0]-x)**2 + (coordinate_1[1]-y)**2), distance_1_3)
-#    h = sympy.Eq(sympy.sqrt((coordinate_3[0]-x)**2 + (coordinate_3[1]-y)**2)-sympy.sqrt((coordinate_2[0]-x)**2 + (coordinate_2[1]-y)**2), distance_2_3)
-#    position = sympy.solve([f,g],(x,y))
-#    return position
-#
-#sympy.init_printing()
-#position = position_from_cc()
-#print(position)
+#outfile = open("Coordinates.csv","w")
+#out = csv.writer(outfile)    
+#out.writerow(map(lambda x: x, sample_delay_list))
+#outfile.close()
 
+# =============================================================================
+# Filtering synthetic signal
+# =============================================================================
+#wave = fsinew(J=18, freq1 = 10, freq2 = 100, freq3 = 147, freq4 = 0, freq5 =0)
+#noise = np.random.normal(0,0.5, 2**18)
+#signal = wave + noise
+#
+##synthesis4=reconstruct_from_packet(signal,10,["aaaaaaaaaa"])
+#
+#plots = []
+#plots.append(signal)
+#for i in range(9,12):
+#    synth_signal = reconstruct_from_packet(signal, i, [i*"a"])
+#    plots.append(synth_signal)
+#
+#plt.figure(figsize=(14, 8))
+#plt.subplot(2,1,1)
+#plt.plot(wave, 'b-')
+#plt.grid()
+#plt.subplot(2,1,2)
+#plt.plot(signal, 'r--')
+#plt.grid()
+#plt.savefig("signal_f.pdf")
+#plt.show()
+#
+#plt.figure(figsize=(14, 10))
+#for i in range(len(plots)-1):
+#    plt.subplot(len(plots)-1,1,i+1)
+#    plt.plot(plots[i+1], 'k-')
+#    plt.grid()
+#plt.savefig("filtered_signal.pdf")
+#plt.show()

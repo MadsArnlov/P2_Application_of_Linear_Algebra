@@ -61,11 +61,11 @@ def cross_corr(signal1, signal2):
 #    signal1[2**19-1000:] = 0
 #    signal2[:7000] = 0
 #    signal2[2**19-7000:] = 0
-    plt.figure(figsize=(14, 5))
-    plt.subplot(2, 2, 1)
-    plt.plot(signal1, 'b,')
-    plt.subplot(2, 2, 2)
-    plt.plot(signal2, 'b,')
+#    plt.figure(figsize=(14, 5))
+#    plt.subplot(2, 2, 1)
+#    plt.plot(signal1, 'b,')
+#    plt.subplot(2, 2, 2)
+#    plt.plot(signal2, 'b,')
     plt.show()
     
     correlation = np.correlate(signal1, signal2, 'full')
@@ -239,18 +239,18 @@ plt.figure(figsize=(14, 10))
 plt.subplot(311)
 plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
 plt.legend(loc="upper right")
-plt.ylabel('Voltage [mV]')
+
 
 plt.subplot(312)
 plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "Microphone \u03B2")
 plt.legend(loc='upper right')
-plt.ylabel('Voltage [mV]')
+
 
 plt.subplot(313)
 plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
 plt.legend(loc="upper right")
 plt.xlabel("Samples")
-plt.ylabel('Voltage [mV]')
+
 
 plt.savefig('reconstruction_experiment_7.png')
 plt.show()

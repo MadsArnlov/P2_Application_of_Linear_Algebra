@@ -368,17 +368,16 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 # =============================================================================
 plt.figure(figsize=(14, 10))
 plt.subplot(311)
-plt.title("Soundsignals of Microphones from Experiment 7", fontsize = 16)
 plt.plot(data1, 'r,', label = "Microphone \u03B1")
 plt.legend()
-plt.xlabel("Samples")
+plt.ylabel('[mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(312)
 plt.plot(data2, 'r,', label = "Microphone \u03B2")
 plt.legend(loc='upper right')
-plt.xlabel("Samples")
+plt.ylabel('[mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
@@ -386,8 +385,10 @@ plt.subplot(313)
 plt.plot(data3, 'r,', label = "Microphone \u03B3")
 plt.legend()
 plt.xlabel("Samples")
+plt.ylabel('[mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+plt.savefig('soundsignals_of_microphones_experiment_7')
 plt.show()
 
 

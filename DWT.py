@@ -346,8 +346,8 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/Without_noise/impuls300pr.min_speaker2_uden_støj")
-file_to_open = [data_folder / "Test_recording microphone{}_impuls_speaker2_uden_støj.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/With_noise/impuls300pr.min_speaker2")
+file_to_open = [data_folder / "Test_recording microphone{}_impuls_speaker2.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -370,14 +370,14 @@ plt.figure(figsize=(14, 10))
 plt.subplot(311)
 plt.plot(data1, 'r,', label = "Microphone \u03B1")
 plt.legend()
-plt.ylabel('[mV]')
+plt.ylabel('Voltage [mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(312)
 plt.plot(data2, 'r,', label = "Microphone \u03B2")
 plt.legend(loc='upper right')
-plt.ylabel('[mV]')
+plt.ylabel('Voltage [mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
@@ -385,10 +385,10 @@ plt.subplot(313)
 plt.plot(data3, 'r,', label = "Microphone \u03B3")
 plt.legend()
 plt.xlabel("Samples")
-plt.ylabel('[mV]')
+plt.ylabel('Voltage [mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
-plt.savefig('soundsignals_of_microphones_experiment_7')
+plt.savefig('soundsignals_of_microphones_experiment_7.pdf')
 plt.show()
 
 

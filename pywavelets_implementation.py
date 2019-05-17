@@ -201,6 +201,29 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
     return synthesis
 
 
+# =============================================================================
+# Plot of Data
+# =============================================================================
+plt.figure(figsize=(14, 10))
+plt.subplot(311)
+plt.plot(, 'k,', label = "Microphone \u03B1")
+plt.legend()
+plt.ylabel('Voltage [mV]')
+
+plt.subplot(312)
+plt.plot(, 'k,', label = "Microphone \u03B2")
+plt.legend(loc='upper right')
+plt.ylabel('Voltage [mV]')
+
+plt.subplot(313)
+plt.plot(, 'k,', label = "Microphone \u03B3")
+plt.legend()
+plt.xlabel("Samples")
+plt.ylabel('Voltage [mV]')
+
+plt.savefig('reconstruction_experiment_7.png')
+plt.show()
+
 
 # =============================================================================
 # possibility of hamming window

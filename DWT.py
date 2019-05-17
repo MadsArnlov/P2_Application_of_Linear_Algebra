@@ -388,7 +388,8 @@ plt.xlabel("Samples")
 plt.ylabel('Voltage [mV]')
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
-plt.savefig('soundsignals_of_microphones_experiment_7.pdf')
+
+plt.savefig('soundsignals_of_microphones_experiment_7.png')
 plt.show()
 
 

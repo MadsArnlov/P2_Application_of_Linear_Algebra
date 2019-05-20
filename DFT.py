@@ -46,7 +46,7 @@ def fft(signal, fs = 1, highest_frequency = 1250):
 def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
     x_fft_difference = np.abs(x_fft2) - np.abs(x_fft1)
     plt.figure(figsize=(12, 3.5))
-    plt.subplot(2,1,1)
+#    plt.subplot(2,1,1)
     plt.grid()
     plt.xlabel("Frequency [Hz]", fontsize=14)
     plt.plot(frequencies[:spectrum], x_fft_difference[:spectrum], 'k-')
@@ -66,7 +66,7 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
     plt.plot(t[:int(len(new_signal)/(duration*frequency))], new_signal.real[:int(len(new_signal)/(duration*frequency))], 'k-')
     plt.xlabel("Time [s]", fontsize=14)
     plt.grid()
-#    plt.savefig("frequency_spectrum.pdf")
+    plt.savefig("frequency_spectrum.pdf")
     plt.show()
     return new_signal, frequency
 
@@ -187,8 +187,8 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 #
 #samples = cross_corr(1j*new_signal1[:2*48000], 1j*new_signal2[:2*48000])
 
-#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise1, len(signal1), 70)
-#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise2, len(signal2), 70)
+#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise1/4, len(signal1), 70)
+#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise2/4, len(signal2), 70)
 #new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
 
 #t = (1 * np.arange(0, len(signal1)) / len(signal2))

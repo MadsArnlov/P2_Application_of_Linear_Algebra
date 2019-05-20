@@ -366,30 +366,75 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 # =============================================================================
 # Plot of Data
 # =============================================================================
-plt.figure(figsize=(14, 10))
+#plt.figure(figsize=(14, 10))
+#plt.subplot(311)
+#plt.plot(data1, 'r,', label = "Microphone \u03B1")
+#plt.legend()
+#plt.ylabel('Voltage [mV]')
+#plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
+#plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+#
+#plt.subplot(312)
+#plt.plot(data2, 'r,', label = "Microphone \u03B2")
+#plt.legend(loc='upper right')
+#plt.ylabel('Voltage [mV]')
+#plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
+#plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+#
+#plt.subplot(313)
+#plt.plot(data3, 'r,', label = "Microphone \u03B3")
+#plt.legend()
+#plt.xlabel("Samples")
+#plt.ylabel('Voltage [mV]')
+#plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
+#plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+#
+#plt.savefig('soundsignals_of_microphones_experiment_7.png')
+#plt.show()
+
+
+# =============================================================================
+# Time Delay Estimation and Triangulation
+# =============================================================================
+signal1 = fsinew(12, 30, 0, 0, 0)
+signal2 = np.hstack((np.zeros(50), fsinew(12, 30, 0, 0, 0)))
+signal3 = np.hstack((np.zeros(100), fsinew(12, 30, 0, 0, 0)))
+
+plt.figure(figsize=(14,9))
 plt.subplot(311)
-plt.plot(data1, 'r,', label = "Microphone \u03B1")
-plt.legend()
-plt.ylabel('Voltage [mV]')
-plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
-plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
-
-plt.subplot(312)
-plt.plot(data2, 'r,', label = "Microphone \u03B2")
+plt.plot(signal1, 'k-', label = 'Signal1')
 plt.legend(loc='upper right')
-plt.ylabel('Voltage [mV]')
-plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
-plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
-
+plt.subplot(312)
+plt.plot(signal2, 'k-', label = 'Signal2')
+plt.legend(loc='upper right')
 plt.subplot(313)
-plt.plot(data3, 'r,', label = "Microphone \u03B3")
-plt.legend()
+plt.plot(signal3, 'k-', label = 'Signal3')
+plt.legend(loc='upper right')
 plt.xlabel("Samples")
-plt.ylabel('Voltage [mV]')
-plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
-plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
+plt.savefig('time_delay_signals.pdf')
+plt.show()
 
-plt.savefig('soundsignals_of_microphones_experiment_7.png')
+plt.figure(figsize=(14,9))
+plt.subplot(311)
+correlation = np.correlate(signal1, signal2, 'full')
+plt.plot(np.linspace(-4046, 4196, 8241), correlation, 'g-', label = 'Signal1 with signal2')
+plt.plot(np.argmax(correlation)-4046, max(correlation), 'kx')
+plt.legend(loc='upper right')
+plt.axvline(x=50, linewidth = 2, color = 'k', linestyle = ":")
+plt.subplot(312)
+correlation = np.correlate(signal1, signal3, 'full')
+plt.plot(np.linspace(-3996, 4296, 8291), correlation, 'g-', label = 'Signal1 with signal3')
+plt.plot(np.argmax(correlation)-3996, max(correlation), 'kx')
+plt.legend(loc='upper right')
+plt.axvline(x=100, linewidth = 2, color = 'k', linestyle = ":")
+plt.subplot(313)
+correlation = np.correlate(signal2, signal3, 'full')
+plt.plot(np.linspace(-4096, 4246, 8341), correlation, 'g-', label ='Signal2 with signal3')
+plt.plot(np.argmax(correlation)-4096, max(correlation), 'kx')
+plt.legend(loc='upper right')
+plt.axvline(x=50, linewidth = 2, color = 'k', linestyle = ":")
+plt.xlabel("Samples")
+plt.savefig('time_delay_signals_cross-correlated.pdf')
 plt.show()
 
 
@@ -426,6 +471,7 @@ plt.show()
 #    plt.grid()
 #plt.savefig("Denoise_signal.pdf")
 #plt.show()
+
 
 # =============================================================================
 # Execution

@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from pathlib import Path
 from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
+#import acoustics
 #start = time.time()
 
 
@@ -28,9 +29,9 @@ def fft(signal, fs = 1, highest_frequency = 1250):
     duration = N / fs
     spectrum = int(highest_frequency*duration)
     frequencies = np.arange(0, N // 2) / duration
-    x_fft = np.fft.fft(signal, norm = 'ortho')[0:N // 2]
+    x_fft = np.fft.fft(signal)[0:N // 2]
 
-    t = np.arange(0, len(signal)) / fs
+    t = np.arange(0, len(signal)) / N
     plt.figure(figsize=(12, 7))
     plt.subplot(2, 1, 1)
     plt.plot(t, signal.real, 'r,')
@@ -92,10 +93,10 @@ def cross_corr(signal1, signal2):
 #    plt.show()
     
     correlation = np.correlate(signal1, signal2, 'full')
-#    plt.figure(figsize=(14, 4))
-#    plt.title("Cross Correlation", fontsize=18)
-#    plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
-#    plt.show()
+    plt.figure(figsize=(14, 4))
+    plt.title("Cross Correlation", fontsize=18)
+    plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
+    plt.show()
 #    print("Signal 2 is shifted in time with", len(signal1) - (np.argmax(correlation) + 1), "samples")
     return len(signal1) - (np.argmax(correlation) + 1)
 
@@ -119,8 +120,8 @@ def sample_delay(time1, time2, time3, frequency):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/With_noise/737-368.5Hz_speaker3/")
-file_to_open = [data_folder / "Test_recording microphone{}_737-368.5Hz_speaker3.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/With_noise/1000-500Hz_speaker2/")
+file_to_open = [data_folder / "Test_recording microphone{}_1000-500Hz_speaker2.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -138,31 +139,56 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-x_fft0_prior, duration, spectrum, frequencies = fft(x_prior[0], sampling_frequency)
-x_fft0_fault, duration, spectrum, frequencies = fft(x_fault[0], sampling_frequency)
-new_signal, new_frequency = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
-#fft(new_signal, sampling_frequency)
-
-time2 = cross_corr(new_signal[:len(new_signal)//2], data1[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-time1 = cross_corr(new_signal[:len(new_signal)//2], data2[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-time3 = cross_corr(new_signal[:len(new_signal)//2], data3[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-
-sample_delay(time1, time2, time3, new_frequency)
+#x_fft0_prior, duration, spectrum, frequencies = fft(x_prior[0], sampling_frequency)
+#x_fft0_fault, duration, spectrum, frequencies = fft(x_fault[0], sampling_frequency)
+#new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
+##fft(new_signal, sampling_frequency)
 #
+#x_fft1_prior, duration, spectrum, frequencies = fft(x_prior[1], sampling_frequency)
+#x_fft1_fault, duration, spectrum, frequencies = fft(x_fault[1], sampling_frequency)
+#new_signal1, new_frequency1 = new_freq(x_fft1_prior, x_fft1_fault, frequencies, spectrum, duration)
+#
+#x_fft2_prior, duration, spectrum, frequencies = fft(x_prior[2], sampling_frequency)
+#x_fft2_fault, duration, spectrum, frequencies = fft(x_fault[2], sampling_frequency)
+#new_signal2, new_frequency2 = new_freq(x_fft2_prior, x_fft2_fault, frequencies, spectrum, duration)
+#
+#sample1 = cross_corr(new_signal0.imag[:48000], new_signal1.imag[:48000])
+#sample2 = cross_corr(new_signal0.imag[:48000], new_signal2.imag[:48000])
+#sample3 = cross_corr(new_signal1.imag[:48000], new_signal2.imag[:48000])
+#
+#print(sample1, sample2, sample3)
+
+#time2 = cross_corr(new_signal0[:len(new_signal0)//3], data1[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
+#time1 = cross_corr(new_signal0[:len(new_signal0)//3], data2[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
+#time3 = cross_corr(new_signal0[:len(new_signal0)//3], data3[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
+#
+#sample_delay(time1, time2, time3, new_frequency0)
+
 #end = time.time()
 
 # =============================================================================
 # Synthetic: Identifying new frequency
 # =============================================================================
 #signal1 = fsinew(J=18,freq1 = 0, freq2 = 0, freq3 = 10, freq4 = 25, phase1 = 0, 
-#                   phase2 = 0, phase3 = np.pi/2, phase4 = np.pi/3)
+#                   phase2 = 0, phase3 = 0, phase4 = 0)
 #signal2 = fsinew(J=18,freq1 = 0, freq2 = 0, freq3 = 10, freq4 = 50, phase1 = 0, 
-#                   phase2 = 0, phase3 = 0, phase4 = np.pi/3)
-#noise = np.random.normal(0,0.5, 2**18)
-#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise, highest_frequency=75, fs=len(signal1))
-#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise, highest_frequency=75, fs=len(signal2))
-#new_signal, new_frequency = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
+#                   phase2 = 0, phase3 = 0, phase4 = np.pi)
+#noise = acoustics.generator.brown(2**18)
+#signal1_dft = np.fft.fft(signal1)[:len(signal1)//2]
+#X1 = np.zeros(len(signal1_dft)*2, dtype=complex)
+#X1[np.argmax(np.abs(signal1_dft))] = signal1_dft[np.argmax(np.abs(signal1_dft))]
+#new_signal1 = np.fft.ifft(X1)
+#
+#signal2_dft = np.fft.fft(signal2)[:len(signal2)//2]
+#X2 = np.zeros(len(signal2_dft)*2, dtype=complex)
+#X2[np.argmax(np.abs(signal2_dft))] = signal2_dft[np.argmax(np.abs(signal2_dft))]
+#new_signal2 = np.fft.ifft(X2)
+#
+#samples = cross_corr(1j*new_signal1[:2*48000], 1j*new_signal2[:2*48000])
 
+#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise, len(signal1), 70)
+#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise, len(signal2), 70)
+#new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
 
 #t = (1 * np.arange(0, len(signal1)) / len(signal2))
 #plt.figure(figsize=(12, 10))

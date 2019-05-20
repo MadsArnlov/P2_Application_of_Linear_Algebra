@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from pathlib import Path
 from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
-#import acoustics
+import acoustics
 #start = time.time()
 
 
@@ -46,7 +46,7 @@ def fft(signal, fs = 1, highest_frequency = 1250):
 def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
     x_fft_difference = np.abs(x_fft2) - np.abs(x_fft1)
     plt.figure(figsize=(12, 3.5))
-#    plt.subplot(2,1,1)
+    plt.subplot(2,1,1)
     plt.grid()
     plt.xlabel("Frequency [Hz]", fontsize=14)
     plt.plot(frequencies[:spectrum], x_fft_difference[:spectrum], 'k-')
@@ -173,12 +173,13 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 #                   phase2 = 0, phase3 = 0, phase4 = 0)
 #signal2 = fsinew(J=18,freq1 = 0, freq2 = 0, freq3 = 10, freq4 = 50, phase1 = 0, 
 #                   phase2 = 0, phase3 = 0, phase4 = np.pi)
-#noise = acoustics.generator.brown(2**18)
+#noise1 = acoustics.generator.brown(2**18)
+#noise2 = acoustics.generator.brown(2**18)
 #signal1_dft = np.fft.fft(signal1)[:len(signal1)//2]
 #X1 = np.zeros(len(signal1_dft)*2, dtype=complex)
 #X1[np.argmax(np.abs(signal1_dft))] = signal1_dft[np.argmax(np.abs(signal1_dft))]
 #new_signal1 = np.fft.ifft(X1)
-#
+
 #signal2_dft = np.fft.fft(signal2)[:len(signal2)//2]
 #X2 = np.zeros(len(signal2_dft)*2, dtype=complex)
 #X2[np.argmax(np.abs(signal2_dft))] = signal2_dft[np.argmax(np.abs(signal2_dft))]
@@ -186,18 +187,18 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 #
 #samples = cross_corr(1j*new_signal1[:2*48000], 1j*new_signal2[:2*48000])
 
-#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise, len(signal1), 70)
-#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise, len(signal2), 70)
+#x_fft0_prior, duration, spectrum, frequencies = fft(signal1+noise1, len(signal1), 70)
+#x_fft0_fault, duration, spectrum, frequencies = fft(signal2+noise2, len(signal2), 70)
 #new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
 
 #t = (1 * np.arange(0, len(signal1)) / len(signal2))
-#plt.figure(figsize=(12, 10))
+#plt.figure(figsize=(16, 9))
 #plt.subplot(2, 2, 1)
-#plt.plot(t, signal1+noise, 'r--')
+#plt.plot(t, signal1+noise1, 'r--')
 #plt.grid()
 #plt.xlabel("Time [s]", fontsize=14)
 #plt.subplot(2, 2, 2)
-#plt.plot(t, signal2+noise, 'b--')
+#plt.plot(t, signal2+noise2, 'b--')
 #plt.grid()
 #plt.xlabel("Time [s]", fontsize=14)
 #plt.subplot(2,2,3)

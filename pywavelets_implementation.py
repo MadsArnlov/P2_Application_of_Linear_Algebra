@@ -15,6 +15,7 @@ import pywt
 import scipy
 import sympy.solvers
 import csv
+import acoustics
 # =============================================================================
 # Fomalia til pywt packet decomposition
 # =============================================================================
@@ -217,15 +218,15 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 # =============================================================================
 # Filtering synthetic signal
 # =============================================================================
-#wave = fsinew(J=18, freq1 = 10, freq2 = 100, freq3 = 147, freq4 = 0, freq5 =0)
-#noise = np.random.normal(0,0.5, 2**18)
-#signal = wave + noise
-#
-##synthesis4=reconstruct_from_packet(signal,10,["aaaaaaaaaa"])
-#
+#wave = fsinew(J=18, freq1 = 10, freq2 = 0, freq3 = 0, freq4 = 0, freq5 =0)
+#noise = acoustics.generator.brown(2**18)
+#signal = wave + 0.25*noise
+
+#synthesis4=reconstruct_from_packet(signal,10,["aaaaaaaaaa"])
+
 #plots = []
 #plots.append(signal)
-#for i in range(9,12):
+#for i in [4,7,9,13]:
 #    synth_signal = reconstruct_from_packet(signal, i, [i*"a"])
 #    plots.append(synth_signal)
 #
@@ -236,13 +237,13 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 #plt.subplot(2,1,2)
 #plt.plot(signal, 'r--')
 #plt.grid()
-#plt.savefig("signal_f.pdf")
+#plt.savefig("signal_w.pdf")
 #plt.show()
 #
-#plt.figure(figsize=(14, 10))
+#plt.figure(figsize=(14, 13))
 #for i in range(len(plots)-1):
 #    plt.subplot(len(plots)-1,1,i+1)
 #    plt.plot(plots[i+1], 'k-')
 #    plt.grid()
-#plt.savefig("filtered_signal.pdf")
+#plt.savefig("filtered_signal_w.pdf")
 #plt.show()

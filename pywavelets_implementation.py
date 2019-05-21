@@ -153,9 +153,9 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
-synthesis1, usefull_path_list = packets_selection(x[1], 10)
-synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
-synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
+#synthesis1, usefull_path_list = packets_selection(x[1], 10)
+#synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
+#synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
 
 #synthesis4 = reconstruct_from_packet(x[0], 6, ["dddddd"])
 #synthesis5 = reconstruct_from_packet(x[1], 6, ["dddddd"])
@@ -163,9 +163,9 @@ synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
 # =============================================================================
 # calling Cross_corr
 # =============================================================================
-sample_delay_1_2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))
-sample_delay_1_3 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
-sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
+#sample_delay_1_2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))
+#sample_delay_1_3 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
+#sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
 
 
 
@@ -218,32 +218,36 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 # =============================================================================
 # Filtering synthetic signal
 # =============================================================================
-#wave = fsinew(J=18, freq1 = 10, freq2 = 0, freq3 = 0, freq4 = 0, freq5 =0)
-#noise = acoustics.generator.brown(2**18)
-#signal = wave + 0.25*noise
+wave = fsinew(J=18, freq1 = 10, freq2 = 125, freq3 = 250, freq4 = 0, freq5 =0)
+noise = acoustics.generator.brown(2**18)
+signal = wave + 0.25*noise
 
 #synthesis4=reconstruct_from_packet(signal,10,["aaaaaaaaaa"])
 
-#plots = []
-#plots.append(signal)
-#for i in [4,7,9,13]:
-#    synth_signal = reconstruct_from_packet(signal, i, [i*"a"])
-#    plots.append(synth_signal)
-#
-#plt.figure(figsize=(14, 8))
-#plt.subplot(2,1,1)
-#plt.plot(wave, 'b-')
-#plt.grid()
-#plt.subplot(2,1,2)
-#plt.plot(signal, 'r--')
-#plt.grid()
-#plt.savefig("signal_w.pdf")
-#plt.show()
-#
-#plt.figure(figsize=(14, 13))
-#for i in range(len(plots)-1):
-#    plt.subplot(len(plots)-1,1,i+1)
-#    plt.plot(plots[i+1], 'k-')
-#    plt.grid()
-#plt.savefig("filtered_signal_w.pdf")
-#plt.show()
+t = np.arange(0, 2**18) / 2**18
+
+plots = []
+plots.append(signal)
+for i in range(9,14):
+    synth_signal = reconstruct_from_packet(signal, i, [i*"a"])
+    plots.append(synth_signal)
+
+plt.figure(figsize=(14, 8))
+plt.subplot(2,1,1)
+plt.plot(t, wave, 'b-')
+plt.grid()
+plt.subplot(2,1,2)
+plt.plot(t, signal, 'r--')
+plt.grid()
+plt.xlabel("Time [s]", fontsize=14)
+plt.savefig("signal_f.pdf")
+plt.show()
+
+plt.figure(figsize=(14, 13))
+for i in range(len(plots)-1):
+    plt.subplot(len(plots)-1,1,i+1)
+    plt.plot(t, plots[i+1], 'k-')
+    plt.grid()
+plt.xlabel("Time [s]", fontsize=14)
+plt.savefig("filtered_signal_f.pdf")
+plt.show()

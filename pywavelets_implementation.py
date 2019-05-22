@@ -172,25 +172,25 @@ sample_delay_2_3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), s
 # =============================================================================
 # Plot of Data
 # =============================================================================
-#plt.figure(figsize=(14, 10))
-#plt.subplot(311)
-#plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "Microphone \u03B1")
-#plt.legend(loc="upper right")
-#
-#
-#plt.subplot(312)
-#plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "Microphone \u03B2")
-#plt.legend(loc='upper right')
-#
-#
-#plt.subplot(313)
-#plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "Microphone \u03B3")
-#plt.legend(loc="upper right")
-#plt.xlabel("Samples")
-#
-#
-#plt.savefig('reconstruction_experiment_7.png')
-#plt.show()
+plt.figure(figsize=(14, 10))
+plt.subplot(311)
+plt.plot(synthesis1/scipy.std(synthesis1), 'k,', label = "$\~\mathbf{x}_{\u03B1}$")
+plt.legend(loc="upper right", fontsize = 'xx-large')
+
+
+plt.subplot(312)
+plt.plot(synthesis2/scipy.std(synthesis2), 'k,', label = "$\~\mathbf{x}_{\u03B2}$")
+plt.legend(loc='upper right', fontsize = 'xx-large')
+
+
+plt.subplot(313)
+plt.plot(synthesis3/scipy.std(synthesis3), 'k,', label = "$\~\mathbf{x}_{\u03B3}$")
+plt.legend(loc="upper right", fontsize = 'xx-large')
+plt.xlabel("Samples")
+
+
+plt.savefig('reconstruction_experiment_7.png')
+plt.show()
 
 
 # =============================================================================

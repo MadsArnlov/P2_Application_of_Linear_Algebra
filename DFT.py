@@ -37,7 +37,7 @@ def fft(signal, fs = 1, highest_frequency = 1250):
     plt.plot(t, signal.real, 'r,')
     plt.grid()
     plt.subplot(2, 1, 2)
-    plt.plot(frequencies[:spectrum], 20*np.log10(np.abs(x_fft)[:spectrum])*0.8, 'k-')
+    plt.plot(frequencies[:spectrum], np.abs(x_fft)[:spectrum], 'k-')
     plt.grid()
     plt.show()
     return x_fft, duration, spectrum, frequencies
@@ -121,13 +121,8 @@ def sample_delay(time1, time2, time3, frequency):
 # =============================================================================
 # Data
 # =============================================================================
-<<<<<<< HEAD
-data_folder = Path("Test_recordings/")
-file_to_open = [data_folder / "Brown_noise_0.1amp.wav".format(i) for i in range(1,4)]
-=======
-data_folder = Path("Test_recordings/With_noise/240-480Hz_speaker4/")
+data_folder = Path("Test_recordings/With_noise/240-480Hz_speaker4")
 file_to_open = [data_folder / "Test_recording microphone{}_240-480Hz_speaker4.wav".format(i) for i in range(1,4)]
->>>>>>> c412101140707e2cb85869d2e2356ad424939751
 
 sampling_frequency, data1 = wavfile.read(file_to_open[1])
 sampling_frequency, data2 = wavfile.read(file_to_open[0])
@@ -145,20 +140,6 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 # =============================================================================
 # Execution
 # =============================================================================
-<<<<<<< HEAD
-x_fft0_prior, duration, spectrum, frequencies = fft(x_prior[0], sampling_frequency, 2500)
-x_fft0_fault, duration, spectrum, frequencies = fft(x_fault[0], sampling_frequency, 2500)
-new_signal, new_frequency = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
-#fft(new_signal, sampling_frequency)
-
-#time2 = cross_corr(new_signal[:len(new_signal)//2], data1[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-#time1 = cross_corr(new_signal[:len(new_signal)//2], data2[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-#time3 = cross_corr(new_signal[:len(new_signal)//2], data3[sampling_frequency*18:sampling_frequency*18 + int(duration*sampling_frequency)//2])
-
-#sample_delay(time1, time2, time3, new_frequency)
-#
-#end = time.time()
-=======
 x_fft0_prior, duration, spectrum, frequencies = fft(x_prior[0], sampling_frequency, sampling_frequency//2)
 x_fft0_fault, duration, spectrum, frequencies = fft(x_fault[0], sampling_frequency, sampling_frequency//2)
 new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
@@ -186,7 +167,6 @@ p2 = int(sampling_frequency - sampling_frequency//new_frequency0)
 #plt.plot(new_signal2[:p2], 'm-')
 #plt.grid()
 #plt.show()
->>>>>>> c412101140707e2cb85869d2e2356ad424939751
 
 sample1 = cross_corr(new_signal0[:p1], new_signal1[:p2])
 sample2 = cross_corr(new_signal0[:p1], new_signal2[:p2])

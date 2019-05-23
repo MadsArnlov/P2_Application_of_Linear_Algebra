@@ -198,19 +198,19 @@ sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(
 # =============================================================================
 plt.figure(figsize=(14, 10))
 plt.subplot(311)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation1, 'g-', label = "$\u03B1\star\u03B2$")
+plt.plot(np.linspace(-99999, 100000, 199999), correlation1, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B2}$")
 plt.plot(np.argmax(correlation1)-99999, max(correlation1), 'kx')
 plt.legend(loc="upper right", fontsize = 'x-large')
 
 
 plt.subplot(312)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation2, 'g-', label = "$\u03B1\star\u03B3$")
+plt.plot(np.linspace(-99999, 100000, 199999), correlation2, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B3}$")
 plt.plot(np.argmax(correlation2)-99999, max(correlation2), 'kx')
 plt.legend(loc='upper right', fontsize = 'x-large')
 
 
 plt.subplot(313)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation3, 'g-', label = "$\u03B2\star\u03B3$")
+plt.plot(np.linspace(-99999, 100000, 199999), correlation3, 'g-', label = "$\~\mathbf{x}_{\u03B2}\star\~\mathbf{x}_{\u03B3}$")
 plt.plot(np.argmax(correlation3)-99999, max(correlation3), 'kx')
 plt.legend(loc="upper right", fontsize = 'x-large')
 plt.xlabel("Samples")

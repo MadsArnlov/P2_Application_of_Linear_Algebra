@@ -1,148 +1,102 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu May  9 13:43:46 2019
-
-@author: lasse
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 15 10:37:12 2019
-
-@author: lasse
-"""
-import time
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from pathlib import Path
-from scipy import signal
-start = time.time()
-
+from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
 
 # =============================================================================
-# Fourier
+# FFT
 # =============================================================================
-def fft(signal, fs = 1, highest_frequency = 1250):
-    N = len(signal)
-    duration = N / fs
-    spectrum = int(highest_frequency*duration)
-    frequencies = np.arange(0, N // 2) / duration
-    x_fft = np.fft.fft(signal)
+def identify_f(x1, x2):
+    X1 = np.fft.fft(x1)
+    X2 = np.fft.fft(x2)
+    X_diff = np.abs(X2) - np.abs(X1)
 
-    t = np.arange(0, len(signal)) / 48000
-    plt.figure(figsize=(12, 7))
-    plt.subplot(2, 1, 1)
-    plt.plot(t, signal.real, 'r,')
-    plt.grid()
-    plt.subplot(2, 1, 2)
-    plt.plot(frequencies[:spectrum], np.abs(x_fft)[:spectrum], 'k-')
-    plt.grid()
-    plt.show()
-    return x_fft, duration, spectrum, frequencies
+    index = np.argmax(X_diff[:fs//2])
+    X_identity = np.zeros(len(X_diff), dtype=complex)
+    X_identity[index] = X2[index]
+    X_identity[-index] = X2[-index]
+    X = [X1, X2, X_identity]
+
+    frequency = index / duration
+    phase = np.angle(X_identity[index])
+    return phase, frequency, X
 
 
-def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
-    x_fft_difference = np.abs(x_fft2) - np.abs(x_fft1)
-    plt.figure(figsize=(12, 3.5))
-    plt.xlabel("Frequency [Hz]", fontsize=14)
-    plt.plot(frequencies[:spectrum], x_fft_difference[:spectrum], 'k-')
-    plt.show()
-    
-    i = np.argmax(x_fft_difference[:spectrum])
-    X = np.zeros(len(x_fft1), dtype=complex)
-    X[i] = x_fft2[i]
-    X[-i] = x_fft2[-i]
-    new_signal = np.fft.ifft(X)
-    frequency = i / duration
-    frequency = int(frequency*10)*10**-1
-    
-    plt.figure(figsize=(12, 3.5))
-    plt.plot(new_signal.real[:2000], 'k,')
-    plt.grid()
-    plt.show()
-    return new_signal, frequency
-
-
-# =============================================================================
-# Cross Correlation
-# =============================================================================
-def cross_corr(signal1, signal2):
-    correlation = signal.correlate(signal1, signal2, mode='full', method='direct')
-    plt.figure(figsize=(12, 4))
-    plt.title("Cross Correlation", fontsize=18)
-    plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
-    plt.show()
-    return len(signal1) - (np.argmax(correlation) + 1)
-
-
-# =============================================================================
-# Time Delay Estimation
-# =============================================================================
-def sample_delay(time1, time2, time3, frequency):
+def sample_delay(samples, frequency):
     delay = []
-    delay.append(time1)
-    delay.append(time2)
-    delay.append(time3)
-    period_samples = 48000/frequency
+    delay.append(samples[0] - samples[1])
+    delay.append(samples[0] - samples[2])
+    delay.append(samples[1] - samples[2])
+    period_samples = fs/frequency
     for i in range(len(delay)):
-        delay[i] = delay[i] % period_samples
-        if delay[i] >= 56:
-            delay[i] = delay[i] - period_samples
+        if delay[i] < 0:
+            while delay[i] <= -56:
+                delay[i] += period_samples
+        elif delay[i] > 0:
+            while delay[i] >= 56:
+                delay[i] -= period_samples
     return delay
 
 
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/With_noise/737-368.5Hz_speaker3")
-file_to_open = [data_folder / "Test_recording microphone{}_737-368.5Hz_speaker3.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/With_noise/1000-500Hz_speaker2")
+file_to_open = [data_folder / "Test_recording microphone{}_1000-500Hz_speaker2.wav".format(i) for i in range(1,4)]
 
-sampling_frequency, data1 = wavfile.read(file_to_open[1])
-sampling_frequency, data2 = wavfile.read(file_to_open[0])
-sampling_frequency, data3 = wavfile.read(file_to_open[2])
+fs, data1 = wavfile.read(file_to_open[1])
+fs, data2 = wavfile.read(file_to_open[0])
+fs, data3 = wavfile.read(file_to_open[2])
 
-data_s = sampling_frequency * 7
-data_m1 = data_s + 2**18
-data_e = len(data1) - sampling_frequency * 7
-data_m2 = data_e - 2**18
+
+data1, data2, data3 = data1/sp.std(data1), data2/sp.std(data2), data3/sp.std(data3)
+
+"Set frequency of the new frequency"
+f_new = 500
+
+data_s = fs * 0
+data_m1 = int(fs/f_new *1000)#data_s + fs*14
+data_e = int(fs*16 + fs/f_new*1000)#fs* 16
+data_m2 = fs*16
 
 x_prior = [data1[data_s:data_m1], data2[data_s:data_m1], data3[data_s:data_m1]]
 x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
-
-
 # =============================================================================
 # Execution
 # =============================================================================
-x_fft0_prior, duration, spectrum, frequencies = fft(x_prior[0], sampling_frequency, sampling_frequency//2)
-x_fft0_fault, duration, spectrum, frequencies = fft(x_fault[0], sampling_frequency, sampling_frequency//2)
-new_signal0, new_frequency0 = new_freq(x_fft0_prior, x_fft0_fault, frequencies, spectrum, duration)
+"Artificial x-axis for amplitude spectrum"
+#N = len(x_fault[0])
+#duration = N / fs
+#fmax = 1250
+#upper_limit = int(fmax*duration)
+#xfrequencies = np.arange(0, N // 2) / duration
 
-x_fft1_prior, duration, spectrum, frequencies = fft(x_prior[1], sampling_frequency, sampling_frequency//2)
-x_fft1_fault, duration, spectrum, frequencies = fft(x_fault[1], sampling_frequency, sampling_frequency//2)
-new_signal1, new_frequency1 = new_freq(x_fft1_prior, x_fft1_fault, frequencies, spectrum, duration)
+phase0, f0, X0 = identify_f(x_prior[0], x_fault[0])
+phase1, f1, X1= identify_f(x_prior[1], x_fault[1])
+phase2, f2, X2 = identify_f(x_prior[2], x_fault[2])
 
-x_fft2_prior, duration, spectrum, frequencies = fft(x_prior[2], sampling_frequency, sampling_frequency//2)
-x_fft2_fault, duration, spectrum, frequencies = fft(x_fault[2], sampling_frequency, sampling_frequency//2)
-new_signal2, new_frequency2 = new_freq(x_fft2_prior, x_fft2_fault, frequencies, spectrum, duration)
+f = (f0 + f1 + f2)/3
 
-p1 = sampling_frequency
-p2 = int(sampling_frequency - sampling_frequency//new_frequency0)
+w = 2*np.pi*f
 
+samples = [phase0/w * fs, phase1/w * fs, phase2/w * fs]
+delay = sample_delay(samples, f)
 
-sample1 = cross_corr(new_signal0[:p1], np.hstack((new_signal1[:p2], np.zeros(p1-p2))))
-sample2 = cross_corr(new_signal0[:p1], np.hstack((new_signal2[:p2], np.zeros(p1-p2))))
-sample3 = cross_corr(new_signal1[:p1], np.hstack((new_signal2[:p2], np.zeros(p1-p2))))
+plt.figure(figsize=(16,9))
+plt.subplot(3,1,1)
+plt.plot(np.fft.ifft(X0[2])[:int(fs/f)], 'r-')
+plt.grid()
+plt.subplot(3,1,2)
+plt.plot(np.fft.ifft(X1[2])[:int(fs/f)], 'r-')
+plt.grid()
+plt.subplot(3,1,3)
+plt.plot(np.fft.ifft(X2[2])[:int(fs/f)], 'r-')
+plt.grid()
+plt.show()
 
-print(sample1, sample2, sample3)
-print(new_frequency0, new_frequency1, new_frequency2)
-delay = sample_delay(sample1, sample2, sample3, new_frequency0)
+for i in range(len(delay)):
+    print("The sample delay is", "{:4d}".format(int(delay[i])), "samples.")
 
-print(56*"-", "\n", delay[0], delay[1], delay[2])
-
-
-# =============================================================================
-# Print of execution time
-# =============================================================================
-end = time.time()
-print('The code is executed in', end - start, "seconds")

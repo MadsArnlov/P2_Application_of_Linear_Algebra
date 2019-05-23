@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from pathlib import Path
-from data_manipulation import zpad, hann, hamming, recw, fsinew, sinew
+from scipy import signal
 start = time.time()
 
 
@@ -54,17 +54,12 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
     X[i] = x_fft2[i]
     X[-i] = x_fft2[-i]
     new_signal = np.fft.ifft(X)
-
     frequency = i / duration
     frequency = int(frequency*10)*10**-1
-#    new_signal = np.sin(t * 2*np.pi*frequency + phase)
+    
     plt.figure(figsize=(12, 3.5))
-#    plt.subplot(2,1,2)
-    t = np.arange(0,len(new_signal)) / 48000
-    plt.plot(t[:int(len(new_signal)/(duration*frequency))], new_signal.real[:int(len(new_signal)/(duration*frequency))], 'k-')
-    plt.xlabel("Time [s]", fontsize=14)
+    plt.plot(new_signal.real[:2000], 'k,')
     plt.grid()
-#    plt.savefig("frequency_spectrum.pdf")
     plt.show()
     return new_signal, frequency
 
@@ -73,7 +68,7 @@ def new_freq(x_fft1, x_fft2, frequencies, spectrum, duration):
 # Cross Correlation
 # =============================================================================
 def cross_corr(signal1, signal2):
-    correlation = np.correlate(signal1, signal2, 'full')
+    correlation = signal.correlate(signal1, signal2, mode='full', method='direct')
     plt.figure(figsize=(12, 4))
     plt.title("Cross Correlation", fontsize=18)
     plt.plot(correlation, 'g', np.argmax(correlation), max(correlation), 'kx')
@@ -132,12 +127,12 @@ x_fft2_fault, duration, spectrum, frequencies = fft(x_fault[2], sampling_frequen
 new_signal2, new_frequency2 = new_freq(x_fft2_prior, x_fft2_fault, frequencies, spectrum, duration)
 
 p1 = sampling_frequency
-p2 = int(sampling_frequency - sampling_frequency//new_frequency0*3)
+p2 = int(sampling_frequency - sampling_frequency//new_frequency0)
 
 
-sample1 = cross_corr(new_signal0[:p1], new_signal1[:p2])
-sample2 = cross_corr(new_signal0[:p1], new_signal2[:p2])
-sample3 = cross_corr(new_signal1[:p1], new_signal2[:p2])
+sample1 = cross_corr(new_signal0[:p1], np.hstack((new_signal1[:p2], np.zeros(p1-p2))))
+sample2 = cross_corr(new_signal0[:p1], np.hstack((new_signal2[:p2], np.zeros(p1-p2))))
+sample3 = cross_corr(new_signal1[:p1], np.hstack((new_signal2[:p2], np.zeros(p1-p2))))
 
 print(sample1, sample2, sample3)
 print(new_frequency0, new_frequency1, new_frequency2)

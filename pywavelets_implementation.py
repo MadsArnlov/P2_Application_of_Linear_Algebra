@@ -28,8 +28,8 @@ def format_array(a):
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker4")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker4.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker1")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker1.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
 #file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
@@ -169,7 +169,7 @@ sample_delay_1_3, correlation2 = cross_corr(synthesis1[300000:400000]/scipy.std(
 sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
 
 plt.figure(figsize=(16,9))
-plt.plot(synthesis1[30000:50000], 'k,')
+plt.plot(synthesis2[30000:50000], 'k,')
 plt.show()
 
 # =============================================================================

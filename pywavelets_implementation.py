@@ -24,11 +24,12 @@ def format_array(a):
     a = np.where(np.abs(a) < 1e-5, 0, a)
     return np.array2string(a, precision=5, separator=' ', suppress_small=True)
 
+
 # =============================================================================
 # Import af data
 # =============================================================================
-data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker2")
-file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker4")
+file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker4.wav".format(i) for i in range(1,4)]
 #
 #data_folder = Path("C:\\Users\\bergl\\OneDrive\\Documents\\GitHub\\P2_Application_of_Linear_Algebra\\Test_recordings\\Without_noise\\737-368.5Hz_speaker3_uden_støj")
 #file_to_open = [data_folder / "Test_recording microphone{:d}_737-368.5Hz_speaker3_uden_støj.wav".format(i) for i in range(1,4)]
@@ -47,6 +48,7 @@ x_1 = np.array([1,2,3,4,5,6,7,8])
 x[0] = x[0]/scipy.std(x[0])
 x[1] = x[1]/scipy.std(x[1])
 x[2] = x[2]/scipy.std(x[2])
+
 
 # =============================================================================
 # Cross correlation
@@ -147,9 +149,6 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
     return synthesis
 
 
-
-
-
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
@@ -160,6 +159,8 @@ synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
 #synthesis4 = reconstruct_from_packet(x[0], 6, ["dddddd"])
 #synthesis5 = reconstruct_from_packet(x[1], 6, ["dddddd"])
 #synthesis6 = reconstruct_from_packet(x[2], 6, ["dddddd"])
+
+
 # =============================================================================
 # calling Cross_corr
 # =============================================================================
@@ -167,7 +168,9 @@ sample_delay_1_2, correlation1 = cross_corr(synthesis1[300000:400000]/scipy.std(
 sample_delay_1_3, correlation2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
 sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
 
-
+plt.figure(figsize=(16,9))
+plt.plot(synthesis1[30000:50000], 'k,')
+plt.show()
 
 # =============================================================================
 # Plot of Reconstructed Signals
@@ -196,28 +199,28 @@ sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(
 # =============================================================================
 # Plot of Cross-correlations
 # =============================================================================
-plt.figure(figsize=(14, 10))
-plt.subplot(311)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation1, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B2}$")
-plt.plot(np.argmax(correlation1)-99999, max(correlation1), 'kx')
-plt.legend(loc="upper right", fontsize = 'x-large')
-
-
-plt.subplot(312)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation2, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B3}$")
-plt.plot(np.argmax(correlation2)-99999, max(correlation2), 'kx')
-plt.legend(loc='upper right', fontsize = 'x-large')
-
-
-plt.subplot(313)
-plt.plot(np.linspace(-99999, 100000, 199999), correlation3, 'g-', label = "$\~\mathbf{x}_{\u03B2}\star\~\mathbf{x}_{\u03B3}$")
-plt.plot(np.argmax(correlation3)-99999, max(correlation3), 'kx')
-plt.legend(loc="upper right", fontsize = 'x-large')
-plt.xlabel("Samples")
-
-
-plt.savefig('cross-correlation_experiment_7.png')
-plt.show()
+#plt.figure(figsize=(14, 10))
+#plt.subplot(311)
+#plt.plot(np.linspace(-99999, 100000, 199999), correlation1, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B2}$")
+#plt.plot(np.argmax(correlation1)-99999, max(correlation1), 'kx')
+#plt.legend(loc="upper right", fontsize = 'x-large')
+#
+#
+#plt.subplot(312)
+#plt.plot(np.linspace(-99999, 100000, 199999), correlation2, 'g-', label = "$\~\mathbf{x}_{\u03B1}\star\~\mathbf{x}_{\u03B3}$")
+#plt.plot(np.argmax(correlation2)-99999, max(correlation2), 'kx')
+#plt.legend(loc='upper right', fontsize = 'x-large')
+#
+#
+#plt.subplot(313)
+#plt.plot(np.linspace(-99999, 100000, 199999), correlation3, 'g-', label = "$\~\mathbf{x}_{\u03B2}\star\~\mathbf{x}_{\u03B3}$")
+#plt.plot(np.argmax(correlation3)-99999, max(correlation3), 'kx')
+#plt.legend(loc="upper right", fontsize = 'x-large')
+#plt.xlabel("Samples")
+#
+#
+#plt.savefig('cross-correlation_experiment_7.png')
+#plt.show()
 
 
 # =============================================================================
@@ -241,6 +244,7 @@ plt.show()
 #out = csv.writer(outfile)    
 #out.writerow(map(lambda x: x, sample_delay_list))
 #outfile.close()
+
 
 # =============================================================================
 # Filtering synthetic signal

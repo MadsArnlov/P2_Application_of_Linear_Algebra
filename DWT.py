@@ -8,6 +8,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
+import matplotlib as mpl
 from scipy import ndimage
 from scipy.io import wavfile
 from pathlib import Path
@@ -369,27 +370,39 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 plt.figure(figsize=(14, 10))
 plt.subplot(311)
 plt.plot(data1, 'r,', label = "\u03B1")
+plt.plot(np.linspace(100001, 624289, 524288), data1[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(800001, 1324289, 524288), data1[800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.ylabel('Voltage [mV]')
+plt.axvline(x=100001, linewidth = 2, color = 'k', linestyle = "--")
+plt.axvline(x=624289, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(312)
 plt.plot(data2, 'r,', label = "\u03B2")
+plt.plot(np.linspace(100001, 624289, 524288), data2[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(800001, 1324289, 524288), data2[800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.ylabel('Voltage [mV]')
+plt.axvline(x=100001, linewidth = 2, color = 'k', linestyle = "--")
+plt.axvline(x=624289, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(313)
 plt.plot(data3, 'r,', label = "\u03B3")
+plt.plot(np.linspace(100001, 624289, 524288), data3[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(800001, 1324289, 524288), data3 [800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.xlabel("Samples")
 plt.ylabel('Voltage [mV]')
+plt.axvline(x=100001, linewidth = 2, color = 'k', linestyle = "--")
+plt.axvline(x=624289, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=800001, linewidth = 2, color = 'k', linestyle = "--")
 plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
-plt.savefig('soundsignals_of_microphones_experiment_7.png')
+plt.savefig('soundsignals_of_microphones_recording_2.png')
 plt.show()
 
 

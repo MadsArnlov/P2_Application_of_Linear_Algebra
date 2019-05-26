@@ -347,8 +347,8 @@ def cross_corr(signal1, signal2):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/With_noise/impuls300pr.min_speaker2")
-file_to_open = [data_folder / "Test_recording microphone{}_impuls_speaker2.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/With_noise/1000-500Hz_speaker2")
+file_to_open = [data_folder / "Test_recording microphone{}_1000-500Hz_speaker2.wav".format(i) for i in range(1,4)]
 
 sampling_frequency, data1 = wavfile.read(file_to_open[0])
 sampling_frequency, data2 = wavfile.read(file_to_open[1])
@@ -370,7 +370,7 @@ x_fault_norm = [hamming(x_fault_norm[i]) for i in range(len(x_fault_norm))]
 plt.figure(figsize=(14, 10))
 plt.subplot(311)
 plt.plot(data1, 'r,', label = "\u03B1")
-plt.plot(np.linspace(100001, 624289, 524288), data1[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(100001, 624289, 524288), data1[100001:624289], color = (1, 0.3, 0))
 plt.plot(np.linspace(800001, 1324289, 524288), data1[800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.ylabel('Voltage [mV]')
@@ -381,7 +381,7 @@ plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(312)
 plt.plot(data2, 'r,', label = "\u03B2")
-plt.plot(np.linspace(100001, 624289, 524288), data2[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(100001, 624289, 524288), data2[100001:624289], color = (1, 0.3, 0))
 plt.plot(np.linspace(800001, 1324289, 524288), data2[800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.ylabel('Voltage [mV]')
@@ -392,7 +392,7 @@ plt.axvline(x=1324289, linewidth = 2, color = 'k', linestyle = "--")
 
 plt.subplot(313)
 plt.plot(data3, 'r,', label = "\u03B3")
-plt.plot(np.linspace(100001, 624289, 524288), data3[100001:624289], color = (1, 0.25, 0))
+plt.plot(np.linspace(100001, 624289, 524288), data3[100001:624289], color = (1, 0.3, 0))
 plt.plot(np.linspace(800001, 1324289, 524288), data3 [800001:1324289], color = (1, 0.5, 0))
 plt.legend(loc='upper right', fontsize = 'x-large')
 plt.xlabel("Samples")

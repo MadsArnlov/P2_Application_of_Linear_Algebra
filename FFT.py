@@ -185,6 +185,16 @@ plt.legend(fontsize = 'x-large')
 plt.savefig("phase_plot.png")
 plt.show()
 
+"Plot of sine with phases"
+plt.figure(figsize=(16,9))
+plt.subplot(3,1,1)
+plt.plot(t[:5*int(fs/f)], np.sin(w*t + phase0)[:5*int(fs/f)])
+plt.subplot(3,1,2)
+plt.plot(t[:5*int(fs/f)], np.sin(w*t + phase1)[:5*int(fs/f)])
+plt.subplot(3,1,3)
+plt.plot(t[:5*int(fs/f)], np.sin(w*t + phase2)[:5*int(fs/f)])
+plt.show()
+
 for i in range(len(delay)):
     print("The sample delay is", "{:4d}".format(int(delay[i])), "samples.")
 

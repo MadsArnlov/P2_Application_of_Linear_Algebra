@@ -65,8 +65,8 @@ def corr(x1, x2):
 # =============================================================================
 # Data
 # =============================================================================
-data_folder = Path("Test_recordings/With_noise/240-480Hz_speaker4")
-file_to_open = [data_folder / "Test_recording microphone{}_240-480Hz_speaker4.wav".format(i) for i in range(1,4)]
+data_folder = Path("Test_recordings/With_noise/737-368.5Hz_speaker3")
+file_to_open = [data_folder / "Test_recording microphone{}_737-368.5Hz_speaker3.wav".format(i) for i in range(1,4)]
 
 fs, data1 = wavfile.read(file_to_open[1])
 fs, data2 = wavfile.read(file_to_open[0])
@@ -91,7 +91,7 @@ x_fault = [data1[data_m2:data_e], data2[data_m2:data_e], data3[data_m2:data_e]]
 "Artificial x-axis for amplitude spectrum"
 N = len(x_fault[0])
 duration = N / fs
-fmax = 1250
+fmax = 1500
 upper_limit = int(fmax*duration)
 xfrequencies = np.arange(0, N // 2) / duration
 
@@ -100,6 +100,9 @@ phase0, f0, X0 = identify_f(x_prior[0], x_fault[0])
 phase1, f1, X1= identify_f(x_prior[1], x_fault[1])
 phase2, f2, X2 = identify_f(x_prior[2], x_fault[2])
 
+m0 = max(np.abs(X0[0][:upper_limit]))
+m1 = max(np.abs(X1[0][:upper_limit]))
+m2 = max(np.abs(X2[0][:upper_limit]))
 "IFFT"
 x0 = np.fft.ifft(X0[2]).real
 x1 = np.fft.ifft(X1[2]).real
@@ -118,20 +121,68 @@ s = [s10, s20, s21]
 samples = [phase0/w * fs, phase1/w * fs, phase2/w * fs]
 delay = sample_delay(samples, f)
 
+"DFT prior and fault"
+#plt.figure(figsize=(16,9))
+#plt.subplot(3,2,1)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X0[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{prior,\u03B1})|$")
+#plt.ylim((0, m0*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,2,2)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X0[1][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B1})|$")
+#plt.ylim((0, m0*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,2,3)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X1[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{prior,\u03B2})|$")
+#plt.ylim((0, m1*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,2,4)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X1[1][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B2})|$")
+#plt.ylim((0, m1*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,2,5)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X2[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{prior,\u03B3})|$")
+#plt.ylim((0, m2*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,2,6)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X2[1][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B3})|$")
+#plt.ylim((0, m2*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.savefig("DFT_prior_fault.pdf")
+#plt.show()
+
+
+"Identify frequencies from prior and fault"
+#plt.figure(figsize=(16,9))
+#plt.subplot(3,1,1)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X0[1][:upper_limit]) - np.abs(X0[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B1})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B1})|$")
+#plt.ylim((-m0*0.8, m0*0.8))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,1,2)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X1[1][:upper_limit]) - np.abs(X1[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B2})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B2})|$")
+#plt.ylim((-m1*0.6, m1*0.6))
+#plt.legend(fontsize = 'x-large')
+#plt.subplot(3,1,3)
+#plt.plot(xfrequencies[:upper_limit], np.abs(X2[1][:upper_limit]) - np.abs(X2[0][:upper_limit]), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B3})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B3})|$")
+#plt.ylim((-m2*1.1, m2*1.1))
+#plt.legend(fontsize = 'x-large')
+#plt.savefig("identified_frequencies.pdf")
+#plt.show()
+
+"Phase plot"
 plt.figure(figsize=(16,9))
 plt.subplot(3,1,1)
-plt.plot(x1[:10*int(fs/f)], 'r-', x0[:9*int(fs/f)], 'b-')
-plt.grid()
-plt.legend(())
+plt.plot(xfrequencies[:upper_limit], np.angle(X0[2][:upper_limit], deg=True), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B1})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B1})|$")
+#plt.ylim((-m0*0.8, m0*0.8))
+plt.legend(fontsize = 'x-large')
 plt.subplot(3,1,2)
-plt.plot(x2[:10*int(fs/f)], 'r-', x0[:9*int(fs/f)], 'b-')
-plt.grid()
-plt.legend(())
+plt.plot(xfrequencies[:upper_limit], np.angle(X1[2][:upper_limit], deg=True), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B2})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B2})|$")
+#plt.ylim((-m1*0.6, m1*0.6))
+plt.legend(fontsize = 'x-large')
 plt.subplot(3,1,3)
-plt.plot(x2[:10*int(fs/f)], 'r-', x1[:9*int(fs/f)], 'b-')
-plt.grid()
-plt.legend(())
-#plt.savefig("idft.png")
+plt.plot(xfrequencies[:upper_limit], np.angle(X2[2][:upper_limit], deg=True), 'k-', label="$|\mathcal{F}(\mathbf{x}_{fault,\u03B3})| - |\mathcal{F}(\mathbf{x}_{prior,\u03B3})|$")
+#plt.ylim((-m2*1.1, m2*1.1))
+plt.legend(fontsize = 'x-large')
+plt.savefig("phase_plot.png")
 plt.show()
 
 for i in range(len(delay)):

@@ -150,8 +150,10 @@ t = np.arange(0, N) / fs
 "The sample delays are computed and printed"
 samples = [phase0/w * fs, phase1/w * fs, phase2/w * fs]
 delay = sample_delay(samples, f)
-for i in range(len(delay)):
-    print("The sample delay is", "{:4d}".format(int(delay[i])), "samples.")
+
+print("The sample delay is", "{:4d}".format(int(delay[0])), "samples for microphone \u03B1 and \u03B2.")
+print("The sample delay is", "{:4d}".format(int(delay[1])), "samples for microphone \u03B1 and \u03B3.")
+print("The sample delay is", "{:4d}".format(int(delay[2])), "samples for microphone \u03B2 and \u03B3.")
 
 
 # =============================================================================

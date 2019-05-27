@@ -28,16 +28,15 @@ def format_array(a):
 data_folder = Path("Test_recordings\\With_noise\\impuls300pr.min_speaker2")
 file_to_open = [data_folder / "Test_recording microphone{:d}_impuls_speaker2.wav".format(i) for i in range(1,4)]
 
-sampling_frequency, data1 = wavfile.read(file_to_open[0])
-sampling_frequency, data2 = wavfile.read(file_to_open[1])
-sampling_frequency, data3 = wavfile.read(file_to_open[2])
+sampling_frequency, data1 = wavfile.read(file_to_open[0])       #Data from microphone beta
+sampling_frequency, data2 = wavfile.read(file_to_open[1])       #Data from microphone alpha
+sampling_frequency, data3 = wavfile.read(file_to_open[2])       #Data from microphone gamma
 
-#data_s = sampling_frequency * 21         # start value for data interval'
-data_s=800000
-data_e = data_s + 2**19                 # end value for data interval
+
+data_s=800000                                                   # first sample for data_interval
+data_e = data_s + 2**19                                         # last sample for data interval
 
 x = [data1[data_s:data_e], data2[data_s:data_e], data3[data_s:data_e]]
-x_1 = np.array([1,2,3,4,5,6,7,8])
 
 x[0] = x[0]/scipy.std(x[0])
 x[1] = x[1]/scipy.std(x[1])
@@ -174,17 +173,17 @@ def reconstruct_from_packet(signal, level, path_list, filters="db16"):
 # =============================================================================
 # calling packets_selection and Reconstruct_from_packet
 # =============================================================================
-synthesis1, usefull_path_list = packets_selection(x[1], 10)
-synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)
-synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)
+synthesis1, usefull_path_list = packets_selection(x[1], 10)         #Synthesis of alpha
+synthesis2 = reconstruct_from_packet(x[0], 10, usefull_path_list)   #Synthesis of beta
+synthesis3 = reconstruct_from_packet(x[2], 10, usefull_path_list)   #Synthesis og gamma
 
 
 # =============================================================================
 # calling Cross_corr
 # =============================================================================
-sample_delay_1_2, correlation1 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))
-sample_delay_1_3, correlation2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))
-sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))
+sample_delay_1_2, correlation1 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis2[300000:400000]/scipy.std(synthesis2))      #Delay alpha-beta
+sample_delay_1_3, correlation2 = cross_corr(synthesis1[300000:400000]/scipy.std(synthesis1), synthesis3[300000:400000]/scipy.std(synthesis3))      #Delay alpha-gamma
+sample_delay_2_3, correlation3 = cross_corr(synthesis2[300000:400000]/scipy.std(synthesis2), synthesis3[300000:400000]/scipy.std(synthesis3))      #Delay beta-gamma
 
 
 # =============================================================================

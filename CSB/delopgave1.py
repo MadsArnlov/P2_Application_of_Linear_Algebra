@@ -96,15 +96,17 @@ solution = 189.94865405998303
 fejl = [abs(solution - m), abs(solution - x0), abs(solution - x1)]
 
 print(fejl)
+print(count_B, count_N, count_S)
+
 
 #lamb_test = f_iter(g1, a, solution, eps, N)
-
-
+x = np.linspace(150, 20000, 500)
+plt.plot(x, f_4(x))
 
 
 #h0 = [0, 5, 25]
 #lamb = [10, 17, 25]
-
+#
 #lamb = np.linspace(180, 210, 10000)
 #
 #plt.figure(figsize=(14, 6))

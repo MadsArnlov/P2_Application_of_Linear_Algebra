@@ -24,8 +24,8 @@ def Euler(f, t, x, h):
 
 # time parameters
 t_start = 0.0
-t_stop = 20
-N = 500
+t_stop = 10**3
+N = 1000
 t_step = (t_stop - t_start)/float(N)
 
 # equation parameters
@@ -33,15 +33,21 @@ alpha = 0.7
 beta = 0.005
 gamma = 0.2
 delta = 0.001
+mu = 0.003
 
 # initial conditions
-x10 = 300
-x20 = 60
+x10 = 60
+x20 = 20
 
 # The system itself
 def fun(t, x):
     return np.array([alpha*x[0] - beta*x[0]*x[1],
                      -gamma*x[1] + delta*x[0]*x[1]])
+
+def fun2(t, x):
+    return np.array([alpha*x[0] - beta*x[0]*x[1] - mu*x[0]**2,
+                     -gamma*x[1] + delta*x[0]*x[1]])
+
 
 X1 = np.zeros(N + 1)
 X2 = np.zeros(N + 1)
@@ -59,8 +65,8 @@ X4[0] = x20
 t = 0.0
 t1 = t
 for k in range(N):
-    Xp1, t = rk4(fun, t, np.array([X1[k], X2[k]]), t_step)
-    Xp2, t1 = Euler(fun, t1, np.array([X1[k], X2[k]]), t_step)
+    Xp1, t = rk4(fun2, t, np.array([X1[k], X2[k]]), t_step)
+    Xp2, t1 = Euler(fun2, t1, np.array([X1[k], X2[k]]), t_step)
     X1[k+1] = Xp1[0]
     X2[k+1] = Xp1[1]
     X3[k+1] = Xp2[0]

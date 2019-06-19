@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Apr  9 09:32:50 2019
-
-@author: arnlambo
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -85,7 +79,7 @@ def dg2(lamb):
     return np.cosh(75/lamb) - (75*np.sinh(75/lamb))/lamb
 
 
-a, b, eps, N = 180, 210, 1E-8, 100
+a, b, eps, N = 180, 210, 1E-8, 200
 
 m, count_B = bisect(f_4, a, b, eps)
 x0, count_N = newton(f_4, df_4, a, eps)
@@ -97,15 +91,15 @@ fejl = [abs(solution - m), abs(solution - x0), abs(solution - x1)]
 
 iterations = [count_B, count_N, count_S]
 
-print("Bisektionsmetoden:", "\n", "Fejl: {}".format(fejl[0]), "\n", "Iterationer: {}".format(iterations[0]))
-print("Newtons metode:", "\n", "Fejl: {}".format(fejl[1]), "\n", "Iterationer: {}".format(iterations[1]))
-print("Sekant metoden:", "\n", "Fejl: {}".format(fejl[2]), "\n", "Iterationer: {}".format(iterations[2]))
+print("Bisektionsmetoden:", "\n", "Approksimation: {}".format(m), "\n", "Fejl: {}".format(fejl[0]), "\n", "Iterationer: {}".format(iterations[0]))
+print("Newtons metode:", "\n", "Approksimation: {}".format(x0), "\n", "Fejl: {}".format(fejl[1]), "\n", "Iterationer: {}".format(iterations[1]))
+print("Sekant metoden:", "\n", "Approksimation: {}".format(x1), "\n", "Fejl: {}".format(fejl[2]), "\n", "Iterationer: {}".format(iterations[2]))
 
 
 
-#lamb_test = f_iter(g1, a, solution, eps, N)
-x = np.linspace(a, b, 500)
-plt.plot(x, f_4(x))
+#lamb_test = f_iter(g2, a, solution, eps, N)
+#x = np.linspace(a, b, 500)
+#plt.plot(x, f_4(x))
 
 
 #h0 = [0, 5, 25]
@@ -132,4 +126,3 @@ plt.plot(x, f_4(x))
 #plt.legend()
 #plt.savefig("diff.pdf")
 #plt.show()
-

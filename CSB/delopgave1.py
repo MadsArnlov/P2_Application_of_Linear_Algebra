@@ -62,7 +62,7 @@ def f(x, h0, lamb):
 
 
 def f_4(lamb):
-    return lamb*np.cosh(75/lamb) - lamb - 15
+    return lamb*(np.cosh(75/lamb)) - lamb - 15
 
 
 def df_4(lamb):
@@ -91,16 +91,20 @@ m, count_B = bisect(f_4, a, b, eps)
 x0, count_N = newton(f_4, df_4, a, eps)
 x1, count_S = secant(f_4, a, b, eps)
 
-solution = 189.94865405998303
+solution = 189.94865405998324
 
 fejl = [abs(solution - m), abs(solution - x0), abs(solution - x1)]
 
-print(fejl)
-print(count_B, count_N, count_S)
+iterations = [count_B, count_N, count_S]
+
+print("Bisektionsmetoden:", "\n", "Fejl: {}".format(fejl[0]), "\n", "Iterationer: {}".format(iterations[0]))
+print("Newtons metode:", "\n", "Fejl: {}".format(fejl[1]), "\n", "Iterationer: {}".format(iterations[1]))
+print("Sekant metoden:", "\n", "Fejl: {}".format(fejl[2]), "\n", "Iterationer: {}".format(iterations[2]))
+
 
 
 #lamb_test = f_iter(g1, a, solution, eps, N)
-x = np.linspace(150, 20000, 500)
+x = np.linspace(a, b, 500)
 plt.plot(x, f_4(x))
 
 

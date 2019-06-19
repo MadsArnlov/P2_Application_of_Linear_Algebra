@@ -24,7 +24,7 @@ def lagrange(x, x_values, y_values):
     return p
 
 # Parameters for the experiment
-a = -2
+a = 0
 b = 3
 
 def f(x):
@@ -99,7 +99,7 @@ plt.show()
 # =============================================================================
 # Opgave 8 fejl
 # =============================================================================
-for N in range(5, 30, 5):
+for N in range(10, 61, 10):
     #Chebyshev parameters for Lagrange polynomial
     h_che = np.arange(0, N+1)
     x_values_che = 3*(1-np.cos(h_che*np.pi/N))/2

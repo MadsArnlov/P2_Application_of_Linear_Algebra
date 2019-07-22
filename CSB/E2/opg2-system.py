@@ -24,8 +24,8 @@ def Euler(f, t, x, h):
 
 # time parameters
 t_start = 0.0
-t_stop = 10**3
-N = 1000
+t_stop = 500
+N = 500
 t_step = (t_stop - t_start)/float(N)
 
 # equation parameters
@@ -36,8 +36,8 @@ delta = 0.001
 mu = 0.003
 
 # initial conditions
-x10 = 60
-x20 = 20
+x10 = 300
+x20 = 60
 
 # The system itself
 def fun(t, x):
@@ -73,12 +73,12 @@ for k in range(N):
     X4[k+1] = Xp2[1]
 
 plt.figure(figsize=(16, 9))
-plt.subplot(2, 1, 1)
+plt.subplot(1, 1, 1)
 plt.plot(X1, X2, 'r-', [x10], [x20], 'k.')
 plt.xlabel('$x_1$')
 plt.ylabel('$x_2$')
-plt.subplot(2, 1, 2)
-plt.plot(X3, X4, 'b-', [x10], [x20], 'k.')
-plt.xlabel('$x_1$')
-plt.ylabel('$x_2$')
+#plt.subplot(2, 1, 2)
+#plt.plot(X3, X4, 'b-', [x10], [x20], 'k.')
+#plt.xlabel('$x_1$')
+#plt.ylabel('$x_2$')
 plt.show()

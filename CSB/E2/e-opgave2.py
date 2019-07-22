@@ -1,16 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 11 11:44:26 2019
-
-@author: bergl
-"""
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-a=np.arange(-100,100)
+a=np.linspace(0, 3, 1000)
 
 def f(x):
     """
@@ -25,5 +18,5 @@ def f(x):
     return y
 
 plt.figure(figsize=(14,9))
-plt.plot(f(a),a, "k-")
+plt.plot(a, f(a), "k-")
 plt.show()

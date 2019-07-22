@@ -25,6 +25,14 @@ def fun2(x):
 
 def fun1(x):
     return -(x - np.sqrt(2))**2
+
+
+def fun(x):
+    if x < np.sqrt(2):
+        y = -(x - np.sqrt(2))**2
+    else:
+        y = (x - np.sqrt(2))**2
+    return y
   
 Iexact = 15 - ((31 * np.sqrt(2)) / 3)
     
@@ -42,11 +50,11 @@ b = 3.0
 for k in range(iter_max):
     N = 2**(k+1)
     L0[k] = N
-    J = simpsonrule(fun1, a, c, N//2) + simpsonrule(fun2, c, b, N//2)
+    J = simpsonrule(fun, a, b, N)
     L1[k] = J
     L2[k] = abs(J - Iexact)
     if k>0:
-        L3[k] = L2[k-1]/L2[k]
+        L3[k] = np.log2(L2[k-1]/L2[k])
     
     
 
